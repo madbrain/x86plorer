@@ -2,6 +2,7 @@
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Browser
 
 import Parser
 import Search
@@ -15,14 +16,14 @@ type Msg =
   | OperationModeChange
   | BitSizeChange
 
-main = beginnerProgram
-  { model = model
+main = Browser.sandbox
+  { init = initialModel
   , view = view
   , update = update
   }
 
-model: Model
-model = { content = "add [eax],ebx", decode = False, is32Bits = True }
+initialModel: Model
+initialModel = { content = "add [eax],ebx", decode = False, is32Bits = True }
 
 update: Msg -> Model -> Model
 update msg model = 
@@ -48,10 +49,10 @@ view model =
         , div [ id "errors" ] [ ul [] (List.map (\error ->li [] [ text error.msg ]) context.errors) ]
         , div [ id "instructions" ]
             [ ul []
-                (instructions |> List.map (\(instr, encoding) ->
+                (instructions |> List.map (\(i, encoding) ->
                     li []
                       [ div [ class "instruction" ]
-                          [ span [] [ text (X86.instrToString instr) ]
+                          [ span [] [ text (X86.instrToString i) ]
                           , Maybe.map EncodeDiagram.encode encoding |> Maybe.withDefault (text "")
                           ]
                       ]))

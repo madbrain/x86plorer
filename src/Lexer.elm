@@ -24,26 +24,26 @@ nextToken stream =
     case getChar stream of
         (Nothing, next) -> (T_EOF, next)
         (Just c, next) ->
-        if isSpace c then
-            nextToken next
-        else if isLetter c then
-            scanIdent next (String.fromChar c)
-        else if isDigit c then
-            scanInteger next (String.fromChar c)
-        else if c == ',' then
-            (T_COMA, next)
-        else if c == '[' then
-            (T_LBRT, next)
-        else if c == ']' then
-            (T_RBRT, next)
-        else if c == '+' then
-            (T_ADD, next)
-        else if c == '-' then
-            (T_SUB, next)
-        else if c == '*' then
-            (T_MUL, next)
-        else
-            (T_ERROR (String.fromChar c), next)
+            if isSpace c then
+                nextToken next
+            else if isLetter c then
+                scanIdent next (String.fromChar c)
+            else if isDigit c then
+                scanInteger next (String.fromChar c)
+            else if c == ',' then
+                (T_COMA, next)
+            else if c == '[' then
+                (T_LBRT, next)
+            else if c == ']' then
+                (T_RBRT, next)
+            else if c == '+' then
+                (T_ADD, next)
+            else if c == '-' then
+                (T_SUB, next)
+            else if c == '*' then
+                (T_MUL, next)
+            else
+                (T_ERROR (String.fromChar c), next)
 
 getChar: InputStream -> (Maybe Char, InputStream)
 getChar stream =

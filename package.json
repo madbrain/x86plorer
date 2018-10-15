@@ -1,0 +1,20 @@
+{
+  "name": "x86plorer",
+  "version": "1.0.0",
+  "description": "Explore the X86 instructions encoding with the help of Elm ([Demo](https://madbrain.github.io/x86plorer/))",
+  "author": "Ludovic L'HOURS",
+  "license": "ISC",
+  "main": "index.html",
+  "scripts": {
+    "dev": "elm-live src/Main.elm -- --output=elm.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madbrain/x86plorer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/madbrain/x86plorer/issues"
+  },
+  "homepage": "https://github.com/madbrain/x86plorer"
+}

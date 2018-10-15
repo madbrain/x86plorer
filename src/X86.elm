@@ -166,9 +166,9 @@ templatePattern tpl =
 templateSize: String -> Maybe Int
 templateSize s =
     case String.toInt s of
-        Ok 32 -> Just 32
-        Ok 16 -> Just 16
-        Ok 8  -> Just 8
+        Just 32 -> Just 32
+        Just 16 -> Just 16
+        Just 8  -> Just 8
         _ -> Nothing
 
 makeReg: String -> Maybe Register
@@ -186,9 +186,9 @@ instrToString (Instr (_, name, operands)) =
 operandString: Operand -> String
 operandString op =
     case op of
-        RM size -> "r/m" ++ (toString size)
-        R size  -> "r" ++ (toString size)
-        I size  -> "imm" ++ (toString size)
+        RM size -> "r/m" ++ (String.fromInt size)
+        R size  -> "r" ++ (String.fromInt size)
+        I size  -> "imm" ++ (String.fromInt size)
         Register reg -> regName reg
         _ -> "<error>"
 

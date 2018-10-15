@@ -32,9 +32,9 @@ drawDiagram level data =
 makeBlocks: Diagram -> Int -> (Collage msg, Collage msg)
 makeBlocks data level =
     let (blocks, descs) = Array.fromList data
-        |> Array.indexedMap (makeBlockAndDesc level)
-        |> Array.toList
-        |> List.unzip
+            |> Array.indexedMap (makeBlockAndDesc level)
+            |> Array.toList
+            |> List.unzip
     in
         (blocks |> List.intersperse (spacer 10 0) |> horizontal,
             descs |> List.intersperse (spacer 0 10) |> List.reverse |> vertical)
@@ -49,7 +49,7 @@ makeBlockAndDesc level i (label, element) =
 
 blockName: String -> Int -> Int -> String
 blockName prefix level i =
-    String.join "_" [ prefix, toString level, toString i ]
+    String.join "_" [ prefix, String.fromInt level, String.fromInt i ]
 
 makeBox: String -> Collage msg
 makeBox content =

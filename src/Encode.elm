@@ -64,7 +64,7 @@ encodeOperand context operandDef operand =
                 (_, r) -> { context | reg = Just r }
         (X86.I size,  Parser.AstImmediat value) ->
             case Parser.immValue value of
-                Ok v -> encodeReq (Immediat (size, v)) context
+                Just v -> encodeReq (Immediat (size, v)) context
                 _ -> context
         _ -> context
 

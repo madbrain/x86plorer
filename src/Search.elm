@@ -16,9 +16,9 @@ search instr =
                 instrDefs = List.concatMap (\a -> case Dict.get a X86.instructionsByName of
                         Just value -> filterByOperands operands value
                         _ -> []
-                ) keys
+                    ) keys
             in
-                List.map (\instr -> (instr, Encode.encode instr operands)) instrDefs
+                List.map (\i -> (i, Encode.encode i operands)) instrDefs
         _ -> []
 
 filterByOperands: List Parser.AstOperand -> List X86.Instr -> List X86.Instr
@@ -51,8 +51,8 @@ matchReg reg tpl =
 matchImm: String -> X86.Operand -> Bool
 matchImm strValue tpl =
     case (Parser.immValue strValue, tpl) of
-        (Err _, _) -> True
-        (Ok value, X86.I size) -> size == 32 || value < (Bitwise.shiftLeftBy size 1)
+        (Nothing, _) -> True
+        (Just value, X86.I size) -> size == 32 || value < (Bitwise.shiftLeftBy size 1)
         _ -> False
 
 matchMemory: Parser.MemoryOperand -> X86.Operand -> Bool

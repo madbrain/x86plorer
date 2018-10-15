@@ -7,10 +7,13 @@
 </head>
 
 <body>
-    <script type="text/javascript" src="/_compile/src/Main.elm"></script>
-    <script type="text/javascript">
-        runElmProgram();
-    </script>
+	<div id="container"></div>
+    <script type="text/javascript" src="elm.js"></script>
+	<script>
+	var app = Elm.Main.init({
+	  node: document.getElementById('container')
+	});
+	</script>
 </body>
 
 </html>

@@ -112,9 +112,9 @@ parseScale: ParserContext -> ParseResult (Maybe String)
 parseScale context =
     case context.current of
         T_MUL ->
-        case parseInteger (advance context) of
-            OK (value, next) -> OK (Just value, next)
-            NOK next -> NOK next
+            case parseInteger (advance context) of
+                OK (value, next) -> OK (Just value, next)
+                NOK next -> NOK next
         _ -> OK (Nothing, context)
 
 initMemoryOperand: Int -> MemoryOperand
@@ -141,21 +141,21 @@ analyseMemoryOperand element memory =
 
         EADisplacement (sign, disp) ->
             case immValue disp of
-                Ok value -> { memory | displacement = memory.displacement + (if sign then value else -value) }
+                Just value -> { memory | displacement = memory.displacement + (if sign then value else -value) }
                 _ -> memory
 
 scaleOf: String -> Int
 scaleOf value =
     case String.toInt value of
-        Ok 1 -> 1
-        Ok 2 -> 2
-        Ok 4 -> 4
+        Just 1 -> 1
+        Just 2 -> 2
+        Just 4 -> 4
         _ -> 1
 
-immValue: String -> Result String Int
+immValue: String -> Maybe Int
 immValue value =
     if String.endsWith "H" (String.toUpper value) then
-        Hex.fromString (String.slice 0 -1 value)
+        Hex.fromString (String.slice 0 -1 value) |> Result.toMaybe
     else
         String.toInt value
 

@@ -21,13 +21,13 @@ encodeElement element =
         OpcodeAndReg (opcode, reg) -> (bytes [ Bitwise.or opcode reg ], Leaf "Opcode and Register")
         ModRM (mode, reg, rm) -> encodeIntoByte modRmEncoding [ encodeMode mode, reg, rm ]
         Sib (base, index, scale) -> encodeIntoByte sibEncoding [ encodeScale scale, index, base ]
-        Disp8 value -> (bytes [ value ], "Displacement: " ++ (toString value) |> Leaf)
-        Disp32 value -> (toLitteEndian 32 value |> bytes, "Displacement: " ++ (toString value) |> Leaf)
-        Immediat (size, value) -> (toLitteEndian size value |> bytes, "Immediat value: " ++ (toString value) |> Leaf)
+        Disp8 value -> (bytes [ value ], "Displacement: " ++ (String.fromInt value) |> Leaf)
+        Disp32 value -> (toLitteEndian 32 value |> bytes, "Displacement: " ++ (String.fromInt value) |> Leaf)
+        Immediat (size, value) -> (toLitteEndian size value |> bytes, "Immediat value: " ++ (String.fromInt value) |> Leaf)
 
 toBits: Int -> Int -> String
 toBits size value =
-    Array.initialize size (\i -> toString (Bitwise.and 1 (Bitwise.shiftRightBy ((size - i) - 1) value)))
+    Array.initialize size (\i -> String.fromInt (Bitwise.and 1 (Bitwise.shiftRightBy ((size - i) - 1) value)))
         |> Array.toList
         |> String.join ""
 
@@ -45,8 +45,8 @@ toByteHex value = Hex.toString (value + 256) |> String.slice 1 3
 encodeIntoByte: EncodingInfo -> List Int -> (String, DiagramElement)
 encodeIntoByte encoding values =
     let
-        o = List.map2 (\e v -> (toBits e.size v, Leaf e.name)) encoding.elements values
-        e = List.map2 (\e v -> Bitwise.shiftLeftBy e.shift v) encoding.elements values
+        o = List.map2 (\el v -> (toBits el.size v, Leaf el.name)) encoding.elements values
+        e = List.map2 (\el v -> Bitwise.shiftLeftBy el.shift v) encoding.elements values
             |> List.foldl Bitwise.or 0
             |> List.singleton
     in
