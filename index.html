@@ -2,15 +2,18 @@
 <html>
 
 <head>
-    <meta charset="uft-8">
+    <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 
 <body>
+	<div id="container"></div>
     <script type="text/javascript" src="elm.js"></script>
-    <script type="text/javascript">
-        Elm.Main.fullscreen();
-    </script>
+	<script>
+	var app = Elm.Main.init({
+	  node: document.getElementById('container')
+	});
+	</script>
 </body>
 
 </html>
