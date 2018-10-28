@@ -1,305 +1,185 @@
-
-(function() {
+(function(scope){
 'use strict';
 
-function F2(fun)
-{
-  function wrapper(a) { return function(b) { return fun(a,b); }; }
-  wrapper.arity = 2;
-  wrapper.func = fun;
+function F(arity, fun, wrapper) {
+  wrapper.a = arity;
+  wrapper.f = fun;
   return wrapper;
 }
 
-function F3(fun)
-{
-  function wrapper(a) {
+function F2(fun) {
+  return F(2, fun, function(a) { return function(b) { return fun(a,b); }; })
+}
+function F3(fun) {
+  return F(3, fun, function(a) {
     return function(b) { return function(c) { return fun(a, b, c); }; };
-  }
-  wrapper.arity = 3;
-  wrapper.func = fun;
-  return wrapper;
+  });
 }
-
-function F4(fun)
-{
-  function wrapper(a) { return function(b) { return function(c) {
+function F4(fun) {
+  return F(4, fun, function(a) { return function(b) { return function(c) {
     return function(d) { return fun(a, b, c, d); }; }; };
-  }
-  wrapper.arity = 4;
-  wrapper.func = fun;
-  return wrapper;
+  });
 }
-
-function F5(fun)
-{
-  function wrapper(a) { return function(b) { return function(c) {
+function F5(fun) {
+  return F(5, fun, function(a) { return function(b) { return function(c) {
     return function(d) { return function(e) { return fun(a, b, c, d, e); }; }; }; };
-  }
-  wrapper.arity = 5;
-  wrapper.func = fun;
-  return wrapper;
+  });
 }
-
-function F6(fun)
-{
-  function wrapper(a) { return function(b) { return function(c) {
+function F6(fun) {
+  return F(6, fun, function(a) { return function(b) { return function(c) {
     return function(d) { return function(e) { return function(f) {
     return fun(a, b, c, d, e, f); }; }; }; }; };
-  }
-  wrapper.arity = 6;
-  wrapper.func = fun;
-  return wrapper;
+  });
 }
-
-function F7(fun)
-{
-  function wrapper(a) { return function(b) { return function(c) {
+function F7(fun) {
+  return F(7, fun, function(a) { return function(b) { return function(c) {
     return function(d) { return function(e) { return function(f) {
     return function(g) { return fun(a, b, c, d, e, f, g); }; }; }; }; }; };
-  }
-  wrapper.arity = 7;
-  wrapper.func = fun;
-  return wrapper;
+  });
 }
-
-function F8(fun)
-{
-  function wrapper(a) { return function(b) { return function(c) {
+function F8(fun) {
+  return F(8, fun, function(a) { return function(b) { return function(c) {
     return function(d) { return function(e) { return function(f) {
     return function(g) { return function(h) {
     return fun(a, b, c, d, e, f, g, h); }; }; }; }; }; }; };
-  }
-  wrapper.arity = 8;
-  wrapper.func = fun;
-  return wrapper;
+  });
 }
-
-function F9(fun)
-{
-  function wrapper(a) { return function(b) { return function(c) {
+function F9(fun) {
+  return F(9, fun, function(a) { return function(b) { return function(c) {
     return function(d) { return function(e) { return function(f) {
     return function(g) { return function(h) { return function(i) {
     return fun(a, b, c, d, e, f, g, h, i); }; }; }; }; }; }; }; };
-  }
-  wrapper.arity = 9;
-  wrapper.func = fun;
-  return wrapper;
+  });
 }
 
-function A2(fun, a, b)
-{
-  return fun.arity === 2
-    ? fun.func(a, b)
-    : fun(a)(b);
+function A2(fun, a, b) {
+  return fun.a === 2 ? fun.f(a, b) : fun(a)(b);
 }
-function A3(fun, a, b, c)
-{
-  return fun.arity === 3
-    ? fun.func(a, b, c)
-    : fun(a)(b)(c);
+function A3(fun, a, b, c) {
+  return fun.a === 3 ? fun.f(a, b, c) : fun(a)(b)(c);
 }
-function A4(fun, a, b, c, d)
-{
-  return fun.arity === 4
-    ? fun.func(a, b, c, d)
-    : fun(a)(b)(c)(d);
+function A4(fun, a, b, c, d) {
+  return fun.a === 4 ? fun.f(a, b, c, d) : fun(a)(b)(c)(d);
 }
-function A5(fun, a, b, c, d, e)
-{
-  return fun.arity === 5
-    ? fun.func(a, b, c, d, e)
-    : fun(a)(b)(c)(d)(e);
+function A5(fun, a, b, c, d, e) {
+  return fun.a === 5 ? fun.f(a, b, c, d, e) : fun(a)(b)(c)(d)(e);
 }
-function A6(fun, a, b, c, d, e, f)
-{
-  return fun.arity === 6
-    ? fun.func(a, b, c, d, e, f)
-    : fun(a)(b)(c)(d)(e)(f);
+function A6(fun, a, b, c, d, e, f) {
+  return fun.a === 6 ? fun.f(a, b, c, d, e, f) : fun(a)(b)(c)(d)(e)(f);
 }
-function A7(fun, a, b, c, d, e, f, g)
-{
-  return fun.arity === 7
-    ? fun.func(a, b, c, d, e, f, g)
-    : fun(a)(b)(c)(d)(e)(f)(g);
+function A7(fun, a, b, c, d, e, f, g) {
+  return fun.a === 7 ? fun.f(a, b, c, d, e, f, g) : fun(a)(b)(c)(d)(e)(f)(g);
 }
-function A8(fun, a, b, c, d, e, f, g, h)
-{
-  return fun.arity === 8
-    ? fun.func(a, b, c, d, e, f, g, h)
-    : fun(a)(b)(c)(d)(e)(f)(g)(h);
+function A8(fun, a, b, c, d, e, f, g, h) {
+  return fun.a === 8 ? fun.f(a, b, c, d, e, f, g, h) : fun(a)(b)(c)(d)(e)(f)(g)(h);
 }
-function A9(fun, a, b, c, d, e, f, g, h, i)
-{
-  return fun.arity === 9
-    ? fun.func(a, b, c, d, e, f, g, h, i)
-    : fun(a)(b)(c)(d)(e)(f)(g)(h)(i);
+function A9(fun, a, b, c, d, e, f, g, h, i) {
+  return fun.a === 9 ? fun.f(a, b, c, d, e, f, g, h, i) : fun(a)(b)(c)(d)(e)(f)(g)(h)(i);
 }
 
-//import Native.Utils //
+console.warn('Compiled in DEV mode. Follow the advice at https://elm-lang.org/0.19.0/optimize for better performance and smaller assets.');
 
-var _elm_lang$core$Native_Basics = function() {
 
-function div(a, b)
+var _List_Nil_UNUSED = { $: 0 };
+var _List_Nil = { $: '[]' };
+
+function _List_Cons_UNUSED(hd, tl) { return { $: 1, a: hd, b: tl }; }
+function _List_Cons(hd, tl) { return { $: '::', a: hd, b: tl }; }
+
+
+var _List_cons = F2(_List_Cons);
+
+function _List_fromArray(arr)
 {
-	return (a / b) | 0;
-}
-function rem(a, b)
-{
-	return a % b;
-}
-function mod(a, b)
-{
-	if (b === 0)
+	var out = _List_Nil;
+	for (var i = arr.length; i--; )
 	{
-		throw new Error('Cannot perform mod 0. Division by zero error.');
+		out = _List_Cons(arr[i], out);
 	}
-	var r = a % b;
-	var m = a === 0 ? 0 : (b > 0 ? (a >= 0 ? r : r + b) : -mod(-a, -b));
-
-	return m === b ? 0 : m;
-}
-function logBase(base, n)
-{
-	return Math.log(n) / Math.log(base);
-}
-function negate(n)
-{
-	return -n;
-}
-function abs(n)
-{
-	return n < 0 ? -n : n;
+	return out;
 }
 
-function min(a, b)
+function _List_toArray(xs)
 {
-	return _elm_lang$core$Native_Utils.cmp(a, b) < 0 ? a : b;
-}
-function max(a, b)
-{
-	return _elm_lang$core$Native_Utils.cmp(a, b) > 0 ? a : b;
-}
-function clamp(lo, hi, n)
-{
-	return _elm_lang$core$Native_Utils.cmp(n, lo) < 0
-		? lo
-		: _elm_lang$core$Native_Utils.cmp(n, hi) > 0
-			? hi
-			: n;
-}
-
-var ord = ['LT', 'EQ', 'GT'];
-
-function compare(x, y)
-{
-	return { ctor: ord[_elm_lang$core$Native_Utils.cmp(x, y) + 1] };
-}
-
-function xor(a, b)
-{
-	return a !== b;
-}
-function not(b)
-{
-	return !b;
-}
-function isInfinite(n)
-{
-	return n === Infinity || n === -Infinity;
-}
-
-function truncate(n)
-{
-	return n | 0;
-}
-
-function degrees(d)
-{
-	return d * Math.PI / 180;
-}
-function turns(t)
-{
-	return 2 * Math.PI * t;
-}
-function fromPolar(point)
-{
-	var r = point._0;
-	var t = point._1;
-	return _elm_lang$core$Native_Utils.Tuple2(r * Math.cos(t), r * Math.sin(t));
-}
-function toPolar(point)
-{
-	var x = point._0;
-	var y = point._1;
-	return _elm_lang$core$Native_Utils.Tuple2(Math.sqrt(x * x + y * y), Math.atan2(y, x));
-}
-
-return {
-	div: F2(div),
-	rem: F2(rem),
-	mod: F2(mod),
-
-	pi: Math.PI,
-	e: Math.E,
-	cos: Math.cos,
-	sin: Math.sin,
-	tan: Math.tan,
-	acos: Math.acos,
-	asin: Math.asin,
-	atan: Math.atan,
-	atan2: F2(Math.atan2),
-
-	degrees: degrees,
-	turns: turns,
-	fromPolar: fromPolar,
-	toPolar: toPolar,
-
-	sqrt: Math.sqrt,
-	logBase: F2(logBase),
-	negate: negate,
-	abs: abs,
-	min: F2(min),
-	max: F2(max),
-	clamp: F3(clamp),
-	compare: F2(compare),
-
-	xor: F2(xor),
-	not: not,
-
-	truncate: truncate,
-	ceiling: Math.ceil,
-	floor: Math.floor,
-	round: Math.round,
-	toFloat: function(x) { return x; },
-	isNaN: isNaN,
-	isInfinite: isInfinite
-};
-
-}();
-//import //
-
-var _elm_lang$core$Native_Utils = function() {
-
-// COMPARISONS
-
-function eq(x, y)
-{
-	var stack = [];
-	var isEqual = eqHelp(x, y, 0, stack);
-	var pair;
-	while (isEqual && (pair = stack.pop()))
+	for (var out = []; xs.b; xs = xs.b) // WHILE_CONS
 	{
-		isEqual = eqHelp(pair.x, pair.y, 0, stack);
+		out.push(xs.a);
 	}
+	return out;
+}
+
+var _List_map2 = F3(function(f, xs, ys)
+{
+	for (var arr = []; xs.b && ys.b; xs = xs.b, ys = ys.b) // WHILE_CONSES
+	{
+		arr.push(A2(f, xs.a, ys.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map3 = F4(function(f, xs, ys, zs)
+{
+	for (var arr = []; xs.b && ys.b && zs.b; xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A3(f, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map4 = F5(function(f, ws, xs, ys, zs)
+{
+	for (var arr = []; ws.b && xs.b && ys.b && zs.b; ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A4(f, ws.a, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map5 = F6(function(f, vs, ws, xs, ys, zs)
+{
+	for (var arr = []; vs.b && ws.b && xs.b && ys.b && zs.b; vs = vs.b, ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A5(f, vs.a, ws.a, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_sortBy = F2(function(f, xs)
+{
+	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
+		return _Utils_cmp(f(a), f(b));
+	}));
+});
+
+var _List_sortWith = F2(function(f, xs)
+{
+	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
+		var ord = A2(f, a, b);
+		return ord === elm$core$Basics$EQ ? 0 : ord === elm$core$Basics$LT ? -1 : 1;
+	}));
+});
+
+
+
+// EQUALITY
+
+function _Utils_eq(x, y)
+{
+	for (
+		var pair, stack = [], isEqual = _Utils_eqHelp(x, y, 0, stack);
+		isEqual && (pair = stack.pop());
+		isEqual = _Utils_eqHelp(pair.a, pair.b, 0, stack)
+		)
+	{}
+
 	return isEqual;
 }
 
-
-function eqHelp(x, y, depth, stack)
+function _Utils_eqHelp(x, y, depth, stack)
 {
 	if (depth > 100)
 	{
-		stack.push({ x: x, y: y });
+		stack.push(_Utils_Tuple2(x,y));
 		return true;
 	}
 
@@ -308,97 +188,36 @@ function eqHelp(x, y, depth, stack)
 		return true;
 	}
 
-	if (typeof x !== 'object')
+	if (typeof x !== 'object' || x === null || y === null)
 	{
-		if (typeof x === 'function')
-		{
-			throw new Error(
-				'Trying to use `(==)` on functions. There is no way to know if functions are "the same" in the Elm sense.'
-				+ ' Read more about this at http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#=='
-				+ ' which describes why it is this way and what the better version will look like.'
-			);
-		}
+		typeof x === 'function' && _Debug_crash(5);
 		return false;
 	}
 
-	if (x === null || y === null)
+	/**/
+	if (x.$ === 'Set_elm_builtin')
 	{
-		return false
+		x = elm$core$Set$toList(x);
+		y = elm$core$Set$toList(y);
 	}
+	if (x.$ === 'RBNode_elm_builtin' || x.$ === 'RBEmpty_elm_builtin')
+	{
+		x = elm$core$Dict$toList(x);
+		y = elm$core$Dict$toList(y);
+	}
+	//*/
 
-	if (x instanceof Date)
+	/**_UNUSED/
+	if (x.$ < 0)
 	{
-		return x.getTime() === y.getTime();
+		x = elm$core$Dict$toList(x);
+		y = elm$core$Dict$toList(y);
 	}
-
-	if (!('ctor' in x))
-	{
-		for (var key in x)
-		{
-			if (!eqHelp(x[key], y[key], depth + 1, stack))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
-	// convert Dicts and Sets to lists
-	if (x.ctor === 'RBNode_elm_builtin' || x.ctor === 'RBEmpty_elm_builtin')
-	{
-		x = _elm_lang$core$Dict$toList(x);
-		y = _elm_lang$core$Dict$toList(y);
-	}
-	if (x.ctor === 'Set_elm_builtin')
-	{
-		x = _elm_lang$core$Set$toList(x);
-		y = _elm_lang$core$Set$toList(y);
-	}
-
-	// check if lists are equal without recursion
-	if (x.ctor === '::')
-	{
-		var a = x;
-		var b = y;
-		while (a.ctor === '::' && b.ctor === '::')
-		{
-			if (!eqHelp(a._0, b._0, depth + 1, stack))
-			{
-				return false;
-			}
-			a = a._1;
-			b = b._1;
-		}
-		return a.ctor === b.ctor;
-	}
-
-	// check if Arrays are equal
-	if (x.ctor === '_Array')
-	{
-		var xs = _elm_lang$core$Native_Array.toJSArray(x);
-		var ys = _elm_lang$core$Native_Array.toJSArray(y);
-		if (xs.length !== ys.length)
-		{
-			return false;
-		}
-		for (var i = 0; i < xs.length; i++)
-		{
-			if (!eqHelp(xs[i], ys[i], depth + 1, stack))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
-	if (!eqHelp(x.ctor, y.ctor, depth + 1, stack))
-	{
-		return false;
-	}
+	//*/
 
 	for (var key in x)
 	{
-		if (!eqHelp(x[key], y[key], depth + 1, stack))
+		if (!_Utils_eqHelp(x[key], y[key], depth + 1, stack))
 		{
 			return false;
 		}
@@ -406,97 +225,81 @@ function eqHelp(x, y, depth, stack)
 	return true;
 }
 
+var _Utils_equal = F2(_Utils_eq);
+var _Utils_notEqual = F2(function(a, b) { return !_Utils_eq(a,b); });
+
+
+
+// COMPARISONS
+
 // Code in Generate/JavaScript.hs, Basics.js, and List.js depends on
 // the particular integer values assigned to LT, EQ, and GT.
 
-var LT = -1, EQ = 0, GT = 1;
-
-function cmp(x, y)
+function _Utils_cmp(x, y, ord)
 {
 	if (typeof x !== 'object')
 	{
-		return x === y ? EQ : x < y ? LT : GT;
+		return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;
 	}
 
+	/**/
 	if (x instanceof String)
 	{
 		var a = x.valueOf();
 		var b = y.valueOf();
-		return a === b ? EQ : a < b ? LT : GT;
+		return a === b ? 0 : a < b ? -1 : 1;
 	}
+	//*/
 
-	if (x.ctor === '::' || x.ctor === '[]')
+	/**_UNUSED/
+	if (!x.$)
+	//*/
+	/**/
+	if (x.$[0] === '#')
+	//*/
 	{
-		while (x.ctor === '::' && y.ctor === '::')
-		{
-			var ord = cmp(x._0, y._0);
-			if (ord !== EQ)
-			{
-				return ord;
-			}
-			x = x._1;
-			y = y._1;
-		}
-		return x.ctor === y.ctor ? EQ : x.ctor === '[]' ? LT : GT;
+		return (ord = _Utils_cmp(x.a, y.a))
+			? ord
+			: (ord = _Utils_cmp(x.b, y.b))
+				? ord
+				: _Utils_cmp(x.c, y.c);
 	}
 
-	if (x.ctor.slice(0, 6) === '_Tuple')
-	{
-		var ord;
-		var n = x.ctor.slice(6) - 0;
-		var err = 'cannot compare tuples with more than 6 elements.';
-		if (n === 0) return EQ;
-		if (n >= 1) { ord = cmp(x._0, y._0); if (ord !== EQ) return ord;
-		if (n >= 2) { ord = cmp(x._1, y._1); if (ord !== EQ) return ord;
-		if (n >= 3) { ord = cmp(x._2, y._2); if (ord !== EQ) return ord;
-		if (n >= 4) { ord = cmp(x._3, y._3); if (ord !== EQ) return ord;
-		if (n >= 5) { ord = cmp(x._4, y._4); if (ord !== EQ) return ord;
-		if (n >= 6) { ord = cmp(x._5, y._5); if (ord !== EQ) return ord;
-		if (n >= 7) throw new Error('Comparison error: ' + err); } } } } } }
-		return EQ;
-	}
-
-	throw new Error(
-		'Comparison error: comparison is only defined on ints, '
-		+ 'floats, times, chars, strings, lists of comparable values, '
-		+ 'and tuples of comparable values.'
-	);
+	// traverse conses until end of a list or a mismatch
+	for (; x.b && y.b && !(ord = _Utils_cmp(x.a, y.a)); x = x.b, y = y.b) {} // WHILE_CONSES
+	return ord || (x.b ? /*GT*/ 1 : y.b ? /*LT*/ -1 : /*EQ*/ 0);
 }
+
+var _Utils_lt = F2(function(a, b) { return _Utils_cmp(a, b) < 0; });
+var _Utils_le = F2(function(a, b) { return _Utils_cmp(a, b) < 1; });
+var _Utils_gt = F2(function(a, b) { return _Utils_cmp(a, b) > 0; });
+var _Utils_ge = F2(function(a, b) { return _Utils_cmp(a, b) >= 0; });
+
+var _Utils_compare = F2(function(x, y)
+{
+	var n = _Utils_cmp(x, y);
+	return n < 0 ? elm$core$Basics$LT : n ? elm$core$Basics$GT : elm$core$Basics$EQ;
+});
 
 
 // COMMON VALUES
 
-var Tuple0 = {
-	ctor: '_Tuple0'
-};
+var _Utils_Tuple0_UNUSED = 0;
+var _Utils_Tuple0 = { $: '#0' };
 
-function Tuple2(x, y)
-{
-	return {
-		ctor: '_Tuple2',
-		_0: x,
-		_1: y
-	};
-}
+function _Utils_Tuple2_UNUSED(a, b) { return { a: a, b: b }; }
+function _Utils_Tuple2(a, b) { return { $: '#2', a: a, b: b }; }
 
-function chr(c)
-{
-	return new String(c);
-}
+function _Utils_Tuple3_UNUSED(a, b, c) { return { a: a, b: b, c: c }; }
+function _Utils_Tuple3(a, b, c) { return { $: '#3', a: a, b: b, c: c }; }
 
-
-// GUID
-
-var count = 0;
-function guid(_)
-{
-	return count++;
-}
+function _Utils_chr_UNUSED(c) { return c; }
+function _Utils_chr(c) { return new String(c); }
 
 
 // RECORDS
 
-function update(oldRecord, updatedFields)
+function _Utils_update(oldRecord, updatedFields)
 {
 	var newRecord = {};
 
@@ -514,20 +317,11 @@ function update(oldRecord, updatedFields)
 }
 
 
-//// LIST STUFF ////
+// APPEND
 
-var Nil = { ctor: '[]' };
+var _Utils_append = F2(_Utils_ap);
 
-function Cons(hd, tl)
-{
-	return {
-		ctor: '::',
-		_0: hd,
-		_1: tl
-	};
-}
-
-function append(xs, ys)
+function _Utils_ap(xs, ys)
 {
 	// append Strings
 	if (typeof xs === 'string')
@@ -536,186 +330,316 @@ function append(xs, ys)
 	}
 
 	// append Lists
-	if (xs.ctor === '[]')
+	if (!xs.b)
 	{
 		return ys;
 	}
-	var root = Cons(xs._0, Nil);
-	var curr = root;
-	xs = xs._1;
-	while (xs.ctor !== '[]')
+	var root = _List_Cons(xs.a, ys);
+	xs = xs.b
+	for (var curr = root; xs.b; xs = xs.b) // WHILE_CONS
 	{
-		curr._1 = Cons(xs._0, Nil);
-		xs = xs._1;
-		curr = curr._1;
+		curr = curr.b = _List_Cons(xs.a, ys);
 	}
-	curr._1 = ys;
 	return root;
 }
 
 
-// CRASHES
 
-function crash(moduleName, region)
+var _JsArray_empty = [];
+
+function _JsArray_singleton(value)
+{
+    return [value];
+}
+
+function _JsArray_length(array)
+{
+    return array.length;
+}
+
+var _JsArray_initialize = F3(function(size, offset, func)
+{
+    var result = new Array(size);
+
+    for (var i = 0; i < size; i++)
+    {
+        result[i] = func(offset + i);
+    }
+
+    return result;
+});
+
+var _JsArray_initializeFromList = F2(function (max, ls)
+{
+    var result = new Array(max);
+
+    for (var i = 0; i < max && ls.b; i++)
+    {
+        result[i] = ls.a;
+        ls = ls.b;
+    }
+
+    result.length = i;
+    return _Utils_Tuple2(result, ls);
+});
+
+var _JsArray_unsafeGet = F2(function(index, array)
+{
+    return array[index];
+});
+
+var _JsArray_unsafeSet = F3(function(index, value, array)
+{
+    var length = array.length;
+    var result = new Array(length);
+
+    for (var i = 0; i < length; i++)
+    {
+        result[i] = array[i];
+    }
+
+    result[index] = value;
+    return result;
+});
+
+var _JsArray_push = F2(function(value, array)
+{
+    var length = array.length;
+    var result = new Array(length + 1);
+
+    for (var i = 0; i < length; i++)
+    {
+        result[i] = array[i];
+    }
+
+    result[length] = value;
+    return result;
+});
+
+var _JsArray_foldl = F3(function(func, acc, array)
+{
+    var length = array.length;
+
+    for (var i = 0; i < length; i++)
+    {
+        acc = A2(func, array[i], acc);
+    }
+
+    return acc;
+});
+
+var _JsArray_foldr = F3(function(func, acc, array)
+{
+    for (var i = array.length - 1; i >= 0; i--)
+    {
+        acc = A2(func, array[i], acc);
+    }
+
+    return acc;
+});
+
+var _JsArray_map = F2(function(func, array)
+{
+    var length = array.length;
+    var result = new Array(length);
+
+    for (var i = 0; i < length; i++)
+    {
+        result[i] = func(array[i]);
+    }
+
+    return result;
+});
+
+var _JsArray_indexedMap = F3(function(func, offset, array)
+{
+    var length = array.length;
+    var result = new Array(length);
+
+    for (var i = 0; i < length; i++)
+    {
+        result[i] = A2(func, offset + i, array[i]);
+    }
+
+    return result;
+});
+
+var _JsArray_slice = F3(function(from, to, array)
+{
+    return array.slice(from, to);
+});
+
+var _JsArray_appendN = F3(function(n, dest, source)
+{
+    var destLen = dest.length;
+    var itemsToCopy = n - destLen;
+
+    if (itemsToCopy > source.length)
+    {
+        itemsToCopy = source.length;
+    }
+
+    var size = destLen + itemsToCopy;
+    var result = new Array(size);
+
+    for (var i = 0; i < destLen; i++)
+    {
+        result[i] = dest[i];
+    }
+
+    for (var i = 0; i < itemsToCopy; i++)
+    {
+        result[i + destLen] = source[i];
+    }
+
+    return result;
+});
+
+
+
+// LOG
+
+var _Debug_log_UNUSED = F2(function(tag, value)
+{
+	return value;
+});
+
+var _Debug_log = F2(function(tag, value)
+{
+	console.log(tag + ': ' + _Debug_toString(value));
+	return value;
+});
+
+
+// TODOS
+
+function _Debug_todo(moduleName, region)
 {
 	return function(message) {
-		throw new Error(
-			'Ran into a `Debug.crash` in module `' + moduleName + '` ' + regionToString(region) + '\n'
-			+ 'The message provided by the code author is:\n\n    '
-			+ message
-		);
+		_Debug_crash(8, moduleName, region, message);
 	};
 }
 
-function crashCase(moduleName, region, value)
+function _Debug_todoCase(moduleName, region, value)
 {
 	return function(message) {
-		throw new Error(
-			'Ran into a `Debug.crash` in module `' + moduleName + '`\n\n'
-			+ 'This was caused by the `case` expression ' + regionToString(region) + '.\n'
-			+ 'One of the branches ended with a crash and the following value got through:\n\n    ' + toString(value) + '\n\n'
-			+ 'The message provided by the code author is:\n\n    '
-			+ message
-		);
+		_Debug_crash(9, moduleName, region, value, message);
 	};
-}
-
-function regionToString(region)
-{
-	if (region.start.line == region.end.line)
-	{
-		return 'on line ' + region.start.line;
-	}
-	return 'between lines ' + region.start.line + ' and ' + region.end.line;
 }
 
 
 // TO STRING
 
-function toString(v)
+function _Debug_toString_UNUSED(value)
 {
-	var type = typeof v;
-	if (type === 'function')
+	return '<internals>';
+}
+
+function _Debug_toString(value)
+{
+	return _Debug_toAnsiString(false, value);
+}
+
+function _Debug_toAnsiString(ansi, value)
+{
+	if (typeof value === 'function')
 	{
-		return '<function>';
+		return _Debug_internalColor(ansi, '<function>');
 	}
 
-	if (type === 'boolean')
+	if (typeof value === 'boolean')
 	{
-		return v ? 'True' : 'False';
+		return _Debug_ctorColor(ansi, value ? 'True' : 'False');
 	}
 
-	if (type === 'number')
+	if (typeof value === 'number')
 	{
-		return v + '';
+		return _Debug_numberColor(ansi, value + '');
 	}
 
-	if (v instanceof String)
+	if (value instanceof String)
 	{
-		return '\'' + addSlashes(v, true) + '\'';
+		return _Debug_charColor(ansi, "'" + _Debug_addSlashes(value, true) + "'");
 	}
 
-	if (type === 'string')
+	if (typeof value === 'string')
 	{
-		return '"' + addSlashes(v, false) + '"';
+		return _Debug_stringColor(ansi, '"' + _Debug_addSlashes(value, false) + '"');
 	}
 
-	if (v === null)
+	if (typeof value === 'object' && '$' in value)
 	{
-		return 'null';
-	}
+		var tag = value.$;
 
-	if (type === 'object' && 'ctor' in v)
-	{
-		var ctorStarter = v.ctor.substring(0, 5);
+		if (typeof tag === 'number')
+		{
+			return _Debug_internalColor(ansi, '<internals>');
+		}
 
-		if (ctorStarter === '_Tupl')
+		if (tag[0] === '#')
 		{
 			var output = [];
-			for (var k in v)
+			for (var k in value)
 			{
-				if (k === 'ctor') continue;
-				output.push(toString(v[k]));
+				if (k === '$') continue;
+				output.push(_Debug_toAnsiString(ansi, value[k]));
 			}
 			return '(' + output.join(',') + ')';
 		}
 
-		if (ctorStarter === '_Task')
+		if (tag === 'Set_elm_builtin')
 		{
-			return '<task>'
+			return _Debug_ctorColor(ansi, 'Set')
+				+ _Debug_fadeColor(ansi, '.fromList') + ' '
+				+ _Debug_toAnsiString(ansi, elm$core$Set$toList(value));
 		}
 
-		if (v.ctor === '_Array')
+		if (tag === 'RBNode_elm_builtin' || tag === 'RBEmpty_elm_builtin')
 		{
-			var list = _elm_lang$core$Array$toList(v);
-			return 'Array.fromList ' + toString(list);
+			return _Debug_ctorColor(ansi, 'Dict')
+				+ _Debug_fadeColor(ansi, '.fromList') + ' '
+				+ _Debug_toAnsiString(ansi, elm$core$Dict$toList(value));
 		}
 
-		if (v.ctor === '<decoder>')
+		if (tag === 'Array_elm_builtin')
 		{
-			return '<decoder>';
+			return _Debug_ctorColor(ansi, 'Array')
+				+ _Debug_fadeColor(ansi, '.fromList') + ' '
+				+ _Debug_toAnsiString(ansi, elm$core$Array$toList(value));
 		}
 
-		if (v.ctor === '_Process')
+		if (tag === '::' || tag === '[]')
 		{
-			return '<process:' + v.id + '>';
-		}
+			var output = '[';
 
-		if (v.ctor === '::')
-		{
-			var output = '[' + toString(v._0);
-			v = v._1;
-			while (v.ctor === '::')
+			value.b && (output += _Debug_toAnsiString(ansi, value.a), value = value.b)
+
+			for (; value.b; value = value.b) // WHILE_CONS
 			{
-				output += ',' + toString(v._0);
-				v = v._1;
+				output += ',' + _Debug_toAnsiString(ansi, value.a);
 			}
 			return output + ']';
 		}
 
-		if (v.ctor === '[]')
-		{
-			return '[]';
-		}
-
-		if (v.ctor === 'Set_elm_builtin')
-		{
-			return 'Set.fromList ' + toString(_elm_lang$core$Set$toList(v));
-		}
-
-		if (v.ctor === 'RBNode_elm_builtin' || v.ctor === 'RBEmpty_elm_builtin')
-		{
-			return 'Dict.fromList ' + toString(_elm_lang$core$Dict$toList(v));
-		}
-
 		var output = '';
-		for (var i in v)
+		for (var i in value)
 		{
-			if (i === 'ctor') continue;
-			var str = toString(v[i]);
+			if (i === '$') continue;
+			var str = _Debug_toAnsiString(ansi, value[i]);
 			var c0 = str[0];
-			var parenless = c0 === '{' || c0 === '(' || c0 === '<' || c0 === '"' || str.indexOf(' ') < 0;
+			var parenless = c0 === '{' || c0 === '(' || c0 === '[' || c0 === '<' || c0 === '"' || str.indexOf(' ') < 0;
 			output += ' ' + (parenless ? str : '(' + str + ')');
 		}
-		return v.ctor + output;
+		return _Debug_ctorColor(ansi, tag) + output;
 	}
 
-	if (type === 'object')
+	if (typeof value === 'object')
 	{
-		if (v instanceof Date)
-		{
-			return '<' + v.toString() + '>';
-		}
-
-		if (v.elm_web_socket)
-		{
-			return '<websocket>';
-		}
-
 		var output = [];
-		for (var k in v)
+		for (var key in value)
 		{
-			output.push(k + ' = ' + toString(v[k]));
+			var field = key[0] === '_' ? key.slice(1) : key;
+			output.push(_Debug_fadeColor(ansi, field) + ' = ' + _Debug_toAnsiString(ansi, value[key]));
 		}
 		if (output.length === 0)
 		{
@@ -724,17 +648,19 @@ function toString(v)
 		return '{ ' + output.join(', ') + ' }';
 	}
 
-	return '<internal structure>';
+	return _Debug_internalColor(ansi, '<internals>');
 }
 
-function addSlashes(str, isChar)
+function _Debug_addSlashes(str, isChar)
 {
-	var s = str.replace(/\\/g, '\\\\')
-			  .replace(/\n/g, '\\n')
-			  .replace(/\t/g, '\\t')
-			  .replace(/\r/g, '\\r')
-			  .replace(/\v/g, '\\v')
-			  .replace(/\0/g, '\\0');
+	var s = str
+		.replace(/\\/g, '\\\\')
+		.replace(/\n/g, '\\n')
+		.replace(/\t/g, '\\t')
+		.replace(/\r/g, '\\r')
+		.replace(/\v/g, '\\v')
+		.replace(/\0/g, '\\0');
+
 	if (isChar)
 	{
 		return s.replace(/\'/g, '\\\'');
@@ -745,1140 +671,417 @@ function addSlashes(str, isChar)
 	}
 }
 
-
-return {
-	eq: eq,
-	cmp: cmp,
-	Tuple0: Tuple0,
-	Tuple2: Tuple2,
-	chr: chr,
-	update: update,
-	guid: guid,
-
-	append: F2(append),
-
-	crash: crash,
-	crashCase: crashCase,
-
-	toString: toString
-};
-
-}();
-var _elm_lang$core$Basics$never = function (_p0) {
-	never:
-	while (true) {
-		var _p1 = _p0;
-		var _v1 = _p1._0;
-		_p0 = _v1;
-		continue never;
-	}
-};
-var _elm_lang$core$Basics$uncurry = F2(
-	function (f, _p2) {
-		var _p3 = _p2;
-		return A2(f, _p3._0, _p3._1);
-	});
-var _elm_lang$core$Basics$curry = F3(
-	function (f, a, b) {
-		return f(
-			{ctor: '_Tuple2', _0: a, _1: b});
-	});
-var _elm_lang$core$Basics$flip = F3(
-	function (f, b, a) {
-		return A2(f, a, b);
-	});
-var _elm_lang$core$Basics$always = F2(
-	function (a, _p4) {
-		return a;
-	});
-var _elm_lang$core$Basics$identity = function (x) {
-	return x;
-};
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['<|'] = F2(
-	function (f, x) {
-		return f(x);
-	});
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['|>'] = F2(
-	function (x, f) {
-		return f(x);
-	});
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['>>'] = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
-	});
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['<<'] = F3(
-	function (g, f, x) {
-		return g(
-			f(x));
-	});
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['++'] = _elm_lang$core$Native_Utils.append;
-var _elm_lang$core$Basics$toString = _elm_lang$core$Native_Utils.toString;
-var _elm_lang$core$Basics$isInfinite = _elm_lang$core$Native_Basics.isInfinite;
-var _elm_lang$core$Basics$isNaN = _elm_lang$core$Native_Basics.isNaN;
-var _elm_lang$core$Basics$toFloat = _elm_lang$core$Native_Basics.toFloat;
-var _elm_lang$core$Basics$ceiling = _elm_lang$core$Native_Basics.ceiling;
-var _elm_lang$core$Basics$floor = _elm_lang$core$Native_Basics.floor;
-var _elm_lang$core$Basics$truncate = _elm_lang$core$Native_Basics.truncate;
-var _elm_lang$core$Basics$round = _elm_lang$core$Native_Basics.round;
-var _elm_lang$core$Basics$not = _elm_lang$core$Native_Basics.not;
-var _elm_lang$core$Basics$xor = _elm_lang$core$Native_Basics.xor;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['||'] = _elm_lang$core$Native_Basics.or;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['&&'] = _elm_lang$core$Native_Basics.and;
-var _elm_lang$core$Basics$max = _elm_lang$core$Native_Basics.max;
-var _elm_lang$core$Basics$min = _elm_lang$core$Native_Basics.min;
-var _elm_lang$core$Basics$compare = _elm_lang$core$Native_Basics.compare;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['>='] = _elm_lang$core$Native_Basics.ge;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['<='] = _elm_lang$core$Native_Basics.le;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['>'] = _elm_lang$core$Native_Basics.gt;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['<'] = _elm_lang$core$Native_Basics.lt;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['/='] = _elm_lang$core$Native_Basics.neq;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['=='] = _elm_lang$core$Native_Basics.eq;
-var _elm_lang$core$Basics$e = _elm_lang$core$Native_Basics.e;
-var _elm_lang$core$Basics$pi = _elm_lang$core$Native_Basics.pi;
-var _elm_lang$core$Basics$clamp = _elm_lang$core$Native_Basics.clamp;
-var _elm_lang$core$Basics$logBase = _elm_lang$core$Native_Basics.logBase;
-var _elm_lang$core$Basics$abs = _elm_lang$core$Native_Basics.abs;
-var _elm_lang$core$Basics$negate = _elm_lang$core$Native_Basics.negate;
-var _elm_lang$core$Basics$sqrt = _elm_lang$core$Native_Basics.sqrt;
-var _elm_lang$core$Basics$atan2 = _elm_lang$core$Native_Basics.atan2;
-var _elm_lang$core$Basics$atan = _elm_lang$core$Native_Basics.atan;
-var _elm_lang$core$Basics$asin = _elm_lang$core$Native_Basics.asin;
-var _elm_lang$core$Basics$acos = _elm_lang$core$Native_Basics.acos;
-var _elm_lang$core$Basics$tan = _elm_lang$core$Native_Basics.tan;
-var _elm_lang$core$Basics$sin = _elm_lang$core$Native_Basics.sin;
-var _elm_lang$core$Basics$cos = _elm_lang$core$Native_Basics.cos;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['^'] = _elm_lang$core$Native_Basics.exp;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['%'] = _elm_lang$core$Native_Basics.mod;
-var _elm_lang$core$Basics$rem = _elm_lang$core$Native_Basics.rem;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['//'] = _elm_lang$core$Native_Basics.div;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['/'] = _elm_lang$core$Native_Basics.floatDiv;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['*'] = _elm_lang$core$Native_Basics.mul;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['-'] = _elm_lang$core$Native_Basics.sub;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['+'] = _elm_lang$core$Native_Basics.add;
-var _elm_lang$core$Basics$toPolar = _elm_lang$core$Native_Basics.toPolar;
-var _elm_lang$core$Basics$fromPolar = _elm_lang$core$Native_Basics.fromPolar;
-var _elm_lang$core$Basics$turns = _elm_lang$core$Native_Basics.turns;
-var _elm_lang$core$Basics$degrees = _elm_lang$core$Native_Basics.degrees;
-var _elm_lang$core$Basics$radians = function (t) {
-	return t;
-};
-var _elm_lang$core$Basics$GT = {ctor: 'GT'};
-var _elm_lang$core$Basics$EQ = {ctor: 'EQ'};
-var _elm_lang$core$Basics$LT = {ctor: 'LT'};
-var _elm_lang$core$Basics$JustOneMore = function (a) {
-	return {ctor: 'JustOneMore', _0: a};
-};
-
-var _elm_lang$core$Maybe$withDefault = F2(
-	function ($default, maybe) {
-		var _p0 = maybe;
-		if (_p0.ctor === 'Just') {
-			return _p0._0;
-		} else {
-			return $default;
-		}
-	});
-var _elm_lang$core$Maybe$Nothing = {ctor: 'Nothing'};
-var _elm_lang$core$Maybe$andThen = F2(
-	function (callback, maybeValue) {
-		var _p1 = maybeValue;
-		if (_p1.ctor === 'Just') {
-			return callback(_p1._0);
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	});
-var _elm_lang$core$Maybe$Just = function (a) {
-	return {ctor: 'Just', _0: a};
-};
-var _elm_lang$core$Maybe$map = F2(
-	function (f, maybe) {
-		var _p2 = maybe;
-		if (_p2.ctor === 'Just') {
-			return _elm_lang$core$Maybe$Just(
-				f(_p2._0));
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	});
-var _elm_lang$core$Maybe$map2 = F3(
-	function (func, ma, mb) {
-		var _p3 = {ctor: '_Tuple2', _0: ma, _1: mb};
-		if (((_p3.ctor === '_Tuple2') && (_p3._0.ctor === 'Just')) && (_p3._1.ctor === 'Just')) {
-			return _elm_lang$core$Maybe$Just(
-				A2(func, _p3._0._0, _p3._1._0));
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	});
-var _elm_lang$core$Maybe$map3 = F4(
-	function (func, ma, mb, mc) {
-		var _p4 = {ctor: '_Tuple3', _0: ma, _1: mb, _2: mc};
-		if ((((_p4.ctor === '_Tuple3') && (_p4._0.ctor === 'Just')) && (_p4._1.ctor === 'Just')) && (_p4._2.ctor === 'Just')) {
-			return _elm_lang$core$Maybe$Just(
-				A3(func, _p4._0._0, _p4._1._0, _p4._2._0));
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	});
-var _elm_lang$core$Maybe$map4 = F5(
-	function (func, ma, mb, mc, md) {
-		var _p5 = {ctor: '_Tuple4', _0: ma, _1: mb, _2: mc, _3: md};
-		if (((((_p5.ctor === '_Tuple4') && (_p5._0.ctor === 'Just')) && (_p5._1.ctor === 'Just')) && (_p5._2.ctor === 'Just')) && (_p5._3.ctor === 'Just')) {
-			return _elm_lang$core$Maybe$Just(
-				A4(func, _p5._0._0, _p5._1._0, _p5._2._0, _p5._3._0));
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	});
-var _elm_lang$core$Maybe$map5 = F6(
-	function (func, ma, mb, mc, md, me) {
-		var _p6 = {ctor: '_Tuple5', _0: ma, _1: mb, _2: mc, _3: md, _4: me};
-		if ((((((_p6.ctor === '_Tuple5') && (_p6._0.ctor === 'Just')) && (_p6._1.ctor === 'Just')) && (_p6._2.ctor === 'Just')) && (_p6._3.ctor === 'Just')) && (_p6._4.ctor === 'Just')) {
-			return _elm_lang$core$Maybe$Just(
-				A5(func, _p6._0._0, _p6._1._0, _p6._2._0, _p6._3._0, _p6._4._0));
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	});
-
-//import Native.Utils //
-
-var _elm_lang$core$Native_List = function() {
-
-var Nil = { ctor: '[]' };
-
-function Cons(hd, tl)
+function _Debug_ctorColor(ansi, string)
 {
-	return { ctor: '::', _0: hd, _1: tl };
+	return ansi ? '\x1b[96m' + string + '\x1b[0m' : string;
 }
 
-function fromArray(arr)
+function _Debug_numberColor(ansi, string)
 {
-	var out = Nil;
-	for (var i = arr.length; i--; )
+	return ansi ? '\x1b[95m' + string + '\x1b[0m' : string;
+}
+
+function _Debug_stringColor(ansi, string)
+{
+	return ansi ? '\x1b[93m' + string + '\x1b[0m' : string;
+}
+
+function _Debug_charColor(ansi, string)
+{
+	return ansi ? '\x1b[92m' + string + '\x1b[0m' : string;
+}
+
+function _Debug_fadeColor(ansi, string)
+{
+	return ansi ? '\x1b[37m' + string + '\x1b[0m' : string;
+}
+
+function _Debug_internalColor(ansi, string)
+{
+	return ansi ? '\x1b[94m' + string + '\x1b[0m' : string;
+}
+
+
+
+// CRASH
+
+
+function _Debug_crash_UNUSED(identifier)
+{
+	throw new Error('https://github.com/elm/core/blob/1.0.0/hints/' + identifier + '.md');
+}
+
+
+function _Debug_crash(identifier, fact1, fact2, fact3, fact4)
+{
+	switch(identifier)
 	{
-		out = Cons(arr[i], out);
+		case 0:
+			throw new Error('What node should I take over? In JavaScript I need something like:\n\n    Elm.Main.init({\n        node: document.getElementById("elm-node")\n    })\n\nYou need to do this with any Browser.sandbox or Browser.element program.');
+
+		case 1:
+			throw new Error('Browser.application programs cannot handle URLs like this:\n\n    ' + document.location.href + '\n\nWhat is the root? The root of your file system? Try looking at this program with `elm reactor` or some other server.');
+
+		case 2:
+			var jsonErrorString = fact1;
+			throw new Error('Problem with the flags given to your Elm program on initialization.\n\n' + jsonErrorString);
+
+		case 3:
+			var portName = fact1;
+			throw new Error('There can only be one port named `' + portName + '`, but your program has multiple.');
+
+		case 4:
+			var portName = fact1;
+			var problem = fact2;
+			throw new Error('Trying to send an unexpected type of value through port `' + portName + '`:\n' + problem);
+
+		case 5:
+			throw new Error('Trying to use `(==)` on functions.\nThere is no way to know if functions are "the same" in the Elm sense.\nRead more about this at https://package.elm-lang.org/packages/elm/core/latest/Basics#== which describes why it is this way and what the better version will look like.');
+
+		case 6:
+			var moduleName = fact1;
+			throw new Error('Your page is loading multiple Elm scripts with a module named ' + moduleName + '. Maybe a duplicate script is getting loaded accidentally? If not, rename one of them so I know which is which!');
+
+		case 8:
+			var moduleName = fact1;
+			var region = fact2;
+			var message = fact3;
+			throw new Error('TODO in module `' + moduleName + '` ' + _Debug_regionToString(region) + '\n\n' + message);
+
+		case 9:
+			var moduleName = fact1;
+			var region = fact2;
+			var value = fact3;
+			var message = fact4;
+			throw new Error(
+				'TODO in module `' + moduleName + '` from the `case` expression '
+				+ _Debug_regionToString(region) + '\n\nIt received the following value:\n\n    '
+				+ _Debug_toString(value).replace('\n', '\n    ')
+				+ '\n\nBut the branch that handles it says:\n\n    ' + message.replace('\n', '\n    ')
+			);
+
+		case 10:
+			throw new Error('Bug in https://github.com/elm/virtual-dom/issues');
+
+		case 11:
+			throw new Error('Cannot perform mod 0. Division by zero error.');
 	}
-	return out;
 }
 
-function toArray(xs)
+function _Debug_regionToString(region)
 {
-	var out = [];
-	while (xs.ctor !== '[]')
+	if (region.start.line === region.end.line)
 	{
-		out.push(xs._0);
-		xs = xs._1;
+		return 'on line ' + region.start.line;
 	}
-	return out;
+	return 'on lines ' + region.start.line + ' through ' + region.end.line;
 }
 
-function foldr(f, b, xs)
+
+
+// MATH
+
+var _Basics_add = F2(function(a, b) { return a + b; });
+var _Basics_sub = F2(function(a, b) { return a - b; });
+var _Basics_mul = F2(function(a, b) { return a * b; });
+var _Basics_fdiv = F2(function(a, b) { return a / b; });
+var _Basics_idiv = F2(function(a, b) { return (a / b) | 0; });
+var _Basics_pow = F2(Math.pow);
+
+var _Basics_remainderBy = F2(function(b, a) { return a % b; });
+
+// https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/divmodnote-letter.pdf
+var _Basics_modBy = F2(function(modulus, x)
 {
-	var arr = toArray(xs);
-	var acc = b;
-	for (var i = arr.length; i--; )
-	{
-		acc = A2(f, arr[i], acc);
-	}
-	return acc;
-}
+	var answer = x % modulus;
+	return modulus === 0
+		? _Debug_crash(11)
+		:
+	((answer > 0 && modulus < 0) || (answer < 0 && modulus > 0))
+		? answer + modulus
+		: answer;
+});
 
-function map2(f, xs, ys)
-{
-	var arr = [];
-	while (xs.ctor !== '[]' && ys.ctor !== '[]')
-	{
-		arr.push(A2(f, xs._0, ys._0));
-		xs = xs._1;
-		ys = ys._1;
-	}
-	return fromArray(arr);
-}
 
-function map3(f, xs, ys, zs)
-{
-	var arr = [];
-	while (xs.ctor !== '[]' && ys.ctor !== '[]' && zs.ctor !== '[]')
-	{
-		arr.push(A3(f, xs._0, ys._0, zs._0));
-		xs = xs._1;
-		ys = ys._1;
-		zs = zs._1;
-	}
-	return fromArray(arr);
-}
+// TRIGONOMETRY
 
-function map4(f, ws, xs, ys, zs)
-{
-	var arr = [];
-	while (   ws.ctor !== '[]'
-		   && xs.ctor !== '[]'
-		   && ys.ctor !== '[]'
-		   && zs.ctor !== '[]')
-	{
-		arr.push(A4(f, ws._0, xs._0, ys._0, zs._0));
-		ws = ws._1;
-		xs = xs._1;
-		ys = ys._1;
-		zs = zs._1;
-	}
-	return fromArray(arr);
-}
+var _Basics_pi = Math.PI;
+var _Basics_e = Math.E;
+var _Basics_cos = Math.cos;
+var _Basics_sin = Math.sin;
+var _Basics_tan = Math.tan;
+var _Basics_acos = Math.acos;
+var _Basics_asin = Math.asin;
+var _Basics_atan = Math.atan;
+var _Basics_atan2 = F2(Math.atan2);
 
-function map5(f, vs, ws, xs, ys, zs)
-{
-	var arr = [];
-	while (   vs.ctor !== '[]'
-		   && ws.ctor !== '[]'
-		   && xs.ctor !== '[]'
-		   && ys.ctor !== '[]'
-		   && zs.ctor !== '[]')
-	{
-		arr.push(A5(f, vs._0, ws._0, xs._0, ys._0, zs._0));
-		vs = vs._1;
-		ws = ws._1;
-		xs = xs._1;
-		ys = ys._1;
-		zs = zs._1;
-	}
-	return fromArray(arr);
-}
 
-function sortBy(f, xs)
-{
-	return fromArray(toArray(xs).sort(function(a, b) {
-		return _elm_lang$core$Native_Utils.cmp(f(a), f(b));
-	}));
-}
+// MORE MATH
 
-function sortWith(f, xs)
-{
-	return fromArray(toArray(xs).sort(function(a, b) {
-		var ord = f(a)(b).ctor;
-		return ord === 'EQ' ? 0 : ord === 'LT' ? -1 : 1;
-	}));
-}
+function _Basics_toFloat(x) { return x; }
+function _Basics_truncate(n) { return n | 0; }
+function _Basics_isInfinite(n) { return n === Infinity || n === -Infinity; }
 
-return {
-	Nil: Nil,
-	Cons: Cons,
-	cons: F2(Cons),
-	toArray: toArray,
-	fromArray: fromArray,
+var _Basics_ceiling = Math.ceil;
+var _Basics_floor = Math.floor;
+var _Basics_round = Math.round;
+var _Basics_sqrt = Math.sqrt;
+var _Basics_log = Math.log;
+var _Basics_isNaN = isNaN;
 
-	foldr: F3(foldr),
 
-	map2: F3(map2),
-	map3: F4(map3),
-	map4: F5(map4),
-	map5: F6(map5),
-	sortBy: F2(sortBy),
-	sortWith: F2(sortWith)
-};
+// BOOLEANS
 
-}();
-var _elm_lang$core$List$sortWith = _elm_lang$core$Native_List.sortWith;
-var _elm_lang$core$List$sortBy = _elm_lang$core$Native_List.sortBy;
-var _elm_lang$core$List$sort = function (xs) {
-	return A2(_elm_lang$core$List$sortBy, _elm_lang$core$Basics$identity, xs);
-};
-var _elm_lang$core$List$singleton = function (value) {
-	return {
-		ctor: '::',
-		_0: value,
-		_1: {ctor: '[]'}
-	};
-};
-var _elm_lang$core$List$drop = F2(
-	function (n, list) {
-		drop:
-		while (true) {
-			if (_elm_lang$core$Native_Utils.cmp(n, 0) < 1) {
-				return list;
-			} else {
-				var _p0 = list;
-				if (_p0.ctor === '[]') {
-					return list;
-				} else {
-					var _v1 = n - 1,
-						_v2 = _p0._1;
-					n = _v1;
-					list = _v2;
-					continue drop;
-				}
-			}
-		}
-	});
-var _elm_lang$core$List$map5 = _elm_lang$core$Native_List.map5;
-var _elm_lang$core$List$map4 = _elm_lang$core$Native_List.map4;
-var _elm_lang$core$List$map3 = _elm_lang$core$Native_List.map3;
-var _elm_lang$core$List$map2 = _elm_lang$core$Native_List.map2;
-var _elm_lang$core$List$any = F2(
-	function (isOkay, list) {
-		any:
-		while (true) {
-			var _p1 = list;
-			if (_p1.ctor === '[]') {
-				return false;
-			} else {
-				if (isOkay(_p1._0)) {
-					return true;
-				} else {
-					var _v4 = isOkay,
-						_v5 = _p1._1;
-					isOkay = _v4;
-					list = _v5;
-					continue any;
-				}
-			}
-		}
-	});
-var _elm_lang$core$List$all = F2(
-	function (isOkay, list) {
-		return !A2(
-			_elm_lang$core$List$any,
-			function (_p2) {
-				return !isOkay(_p2);
-			},
-			list);
-	});
-var _elm_lang$core$List$foldr = _elm_lang$core$Native_List.foldr;
-var _elm_lang$core$List$foldl = F3(
-	function (func, acc, list) {
-		foldl:
-		while (true) {
-			var _p3 = list;
-			if (_p3.ctor === '[]') {
-				return acc;
-			} else {
-				var _v7 = func,
-					_v8 = A2(func, _p3._0, acc),
-					_v9 = _p3._1;
-				func = _v7;
-				acc = _v8;
-				list = _v9;
-				continue foldl;
-			}
-		}
-	});
-var _elm_lang$core$List$length = function (xs) {
-	return A3(
-		_elm_lang$core$List$foldl,
-		F2(
-			function (_p4, i) {
-				return i + 1;
-			}),
-		0,
-		xs);
-};
-var _elm_lang$core$List$sum = function (numbers) {
-	return A3(
-		_elm_lang$core$List$foldl,
-		F2(
-			function (x, y) {
-				return x + y;
-			}),
-		0,
-		numbers);
-};
-var _elm_lang$core$List$product = function (numbers) {
-	return A3(
-		_elm_lang$core$List$foldl,
-		F2(
-			function (x, y) {
-				return x * y;
-			}),
-		1,
-		numbers);
-};
-var _elm_lang$core$List$maximum = function (list) {
-	var _p5 = list;
-	if (_p5.ctor === '::') {
-		return _elm_lang$core$Maybe$Just(
-			A3(_elm_lang$core$List$foldl, _elm_lang$core$Basics$max, _p5._0, _p5._1));
-	} else {
-		return _elm_lang$core$Maybe$Nothing;
-	}
-};
-var _elm_lang$core$List$minimum = function (list) {
-	var _p6 = list;
-	if (_p6.ctor === '::') {
-		return _elm_lang$core$Maybe$Just(
-			A3(_elm_lang$core$List$foldl, _elm_lang$core$Basics$min, _p6._0, _p6._1));
-	} else {
-		return _elm_lang$core$Maybe$Nothing;
-	}
-};
-var _elm_lang$core$List$member = F2(
-	function (x, xs) {
-		return A2(
-			_elm_lang$core$List$any,
-			function (a) {
-				return _elm_lang$core$Native_Utils.eq(a, x);
-			},
-			xs);
-	});
-var _elm_lang$core$List$isEmpty = function (xs) {
-	var _p7 = xs;
-	if (_p7.ctor === '[]') {
-		return true;
-	} else {
-		return false;
-	}
-};
-var _elm_lang$core$List$tail = function (list) {
-	var _p8 = list;
-	if (_p8.ctor === '::') {
-		return _elm_lang$core$Maybe$Just(_p8._1);
-	} else {
-		return _elm_lang$core$Maybe$Nothing;
-	}
-};
-var _elm_lang$core$List$head = function (list) {
-	var _p9 = list;
-	if (_p9.ctor === '::') {
-		return _elm_lang$core$Maybe$Just(_p9._0);
-	} else {
-		return _elm_lang$core$Maybe$Nothing;
-	}
-};
-var _elm_lang$core$List_ops = _elm_lang$core$List_ops || {};
-_elm_lang$core$List_ops['::'] = _elm_lang$core$Native_List.cons;
-var _elm_lang$core$List$map = F2(
-	function (f, xs) {
-		return A3(
-			_elm_lang$core$List$foldr,
-			F2(
-				function (x, acc) {
-					return {
-						ctor: '::',
-						_0: f(x),
-						_1: acc
-					};
-				}),
-			{ctor: '[]'},
-			xs);
-	});
-var _elm_lang$core$List$filter = F2(
-	function (pred, xs) {
-		var conditionalCons = F2(
-			function (front, back) {
-				return pred(front) ? {ctor: '::', _0: front, _1: back} : back;
-			});
-		return A3(
-			_elm_lang$core$List$foldr,
-			conditionalCons,
-			{ctor: '[]'},
-			xs);
-	});
-var _elm_lang$core$List$maybeCons = F3(
-	function (f, mx, xs) {
-		var _p10 = f(mx);
-		if (_p10.ctor === 'Just') {
-			return {ctor: '::', _0: _p10._0, _1: xs};
-		} else {
-			return xs;
-		}
-	});
-var _elm_lang$core$List$filterMap = F2(
-	function (f, xs) {
-		return A3(
-			_elm_lang$core$List$foldr,
-			_elm_lang$core$List$maybeCons(f),
-			{ctor: '[]'},
-			xs);
-	});
-var _elm_lang$core$List$reverse = function (list) {
-	return A3(
-		_elm_lang$core$List$foldl,
-		F2(
-			function (x, y) {
-				return {ctor: '::', _0: x, _1: y};
-			}),
-		{ctor: '[]'},
-		list);
-};
-var _elm_lang$core$List$scanl = F3(
-	function (f, b, xs) {
-		var scan1 = F2(
-			function (x, accAcc) {
-				var _p11 = accAcc;
-				if (_p11.ctor === '::') {
-					return {
-						ctor: '::',
-						_0: A2(f, x, _p11._0),
-						_1: accAcc
-					};
-				} else {
-					return {ctor: '[]'};
-				}
-			});
-		return _elm_lang$core$List$reverse(
-			A3(
-				_elm_lang$core$List$foldl,
-				scan1,
-				{
-					ctor: '::',
-					_0: b,
-					_1: {ctor: '[]'}
-				},
-				xs));
-	});
-var _elm_lang$core$List$append = F2(
-	function (xs, ys) {
-		var _p12 = ys;
-		if (_p12.ctor === '[]') {
-			return xs;
-		} else {
-			return A3(
-				_elm_lang$core$List$foldr,
-				F2(
-					function (x, y) {
-						return {ctor: '::', _0: x, _1: y};
-					}),
-				ys,
-				xs);
-		}
-	});
-var _elm_lang$core$List$concat = function (lists) {
-	return A3(
-		_elm_lang$core$List$foldr,
-		_elm_lang$core$List$append,
-		{ctor: '[]'},
-		lists);
-};
-var _elm_lang$core$List$concatMap = F2(
-	function (f, list) {
-		return _elm_lang$core$List$concat(
-			A2(_elm_lang$core$List$map, f, list));
-	});
-var _elm_lang$core$List$partition = F2(
-	function (pred, list) {
-		var step = F2(
-			function (x, _p13) {
-				var _p14 = _p13;
-				var _p16 = _p14._0;
-				var _p15 = _p14._1;
-				return pred(x) ? {
-					ctor: '_Tuple2',
-					_0: {ctor: '::', _0: x, _1: _p16},
-					_1: _p15
-				} : {
-					ctor: '_Tuple2',
-					_0: _p16,
-					_1: {ctor: '::', _0: x, _1: _p15}
-				};
-			});
-		return A3(
-			_elm_lang$core$List$foldr,
-			step,
-			{
-				ctor: '_Tuple2',
-				_0: {ctor: '[]'},
-				_1: {ctor: '[]'}
-			},
-			list);
-	});
-var _elm_lang$core$List$unzip = function (pairs) {
-	var step = F2(
-		function (_p18, _p17) {
-			var _p19 = _p18;
-			var _p20 = _p17;
-			return {
-				ctor: '_Tuple2',
-				_0: {ctor: '::', _0: _p19._0, _1: _p20._0},
-				_1: {ctor: '::', _0: _p19._1, _1: _p20._1}
-			};
-		});
-	return A3(
-		_elm_lang$core$List$foldr,
-		step,
-		{
-			ctor: '_Tuple2',
-			_0: {ctor: '[]'},
-			_1: {ctor: '[]'}
-		},
-		pairs);
-};
-var _elm_lang$core$List$intersperse = F2(
-	function (sep, xs) {
-		var _p21 = xs;
-		if (_p21.ctor === '[]') {
-			return {ctor: '[]'};
-		} else {
-			var step = F2(
-				function (x, rest) {
-					return {
-						ctor: '::',
-						_0: sep,
-						_1: {ctor: '::', _0: x, _1: rest}
-					};
-				});
-			var spersed = A3(
-				_elm_lang$core$List$foldr,
-				step,
-				{ctor: '[]'},
-				_p21._1);
-			return {ctor: '::', _0: _p21._0, _1: spersed};
-		}
-	});
-var _elm_lang$core$List$takeReverse = F3(
-	function (n, list, taken) {
-		takeReverse:
-		while (true) {
-			if (_elm_lang$core$Native_Utils.cmp(n, 0) < 1) {
-				return taken;
-			} else {
-				var _p22 = list;
-				if (_p22.ctor === '[]') {
-					return taken;
-				} else {
-					var _v23 = n - 1,
-						_v24 = _p22._1,
-						_v25 = {ctor: '::', _0: _p22._0, _1: taken};
-					n = _v23;
-					list = _v24;
-					taken = _v25;
-					continue takeReverse;
-				}
-			}
-		}
-	});
-var _elm_lang$core$List$takeTailRec = F2(
-	function (n, list) {
-		return _elm_lang$core$List$reverse(
-			A3(
-				_elm_lang$core$List$takeReverse,
-				n,
-				list,
-				{ctor: '[]'}));
-	});
-var _elm_lang$core$List$takeFast = F3(
-	function (ctr, n, list) {
-		if (_elm_lang$core$Native_Utils.cmp(n, 0) < 1) {
-			return {ctor: '[]'};
-		} else {
-			var _p23 = {ctor: '_Tuple2', _0: n, _1: list};
-			_v26_5:
-			do {
-				_v26_1:
-				do {
-					if (_p23.ctor === '_Tuple2') {
-						if (_p23._1.ctor === '[]') {
-							return list;
-						} else {
-							if (_p23._1._1.ctor === '::') {
-								switch (_p23._0) {
-									case 1:
-										break _v26_1;
-									case 2:
-										return {
-											ctor: '::',
-											_0: _p23._1._0,
-											_1: {
-												ctor: '::',
-												_0: _p23._1._1._0,
-												_1: {ctor: '[]'}
-											}
-										};
-									case 3:
-										if (_p23._1._1._1.ctor === '::') {
-											return {
-												ctor: '::',
-												_0: _p23._1._0,
-												_1: {
-													ctor: '::',
-													_0: _p23._1._1._0,
-													_1: {
-														ctor: '::',
-														_0: _p23._1._1._1._0,
-														_1: {ctor: '[]'}
-													}
-												}
-											};
-										} else {
-											break _v26_5;
-										}
-									default:
-										if ((_p23._1._1._1.ctor === '::') && (_p23._1._1._1._1.ctor === '::')) {
-											var _p28 = _p23._1._1._1._0;
-											var _p27 = _p23._1._1._0;
-											var _p26 = _p23._1._0;
-											var _p25 = _p23._1._1._1._1._0;
-											var _p24 = _p23._1._1._1._1._1;
-											return (_elm_lang$core$Native_Utils.cmp(ctr, 1000) > 0) ? {
-												ctor: '::',
-												_0: _p26,
-												_1: {
-													ctor: '::',
-													_0: _p27,
-													_1: {
-														ctor: '::',
-														_0: _p28,
-														_1: {
-															ctor: '::',
-															_0: _p25,
-															_1: A2(_elm_lang$core$List$takeTailRec, n - 4, _p24)
-														}
-													}
-												}
-											} : {
-												ctor: '::',
-												_0: _p26,
-												_1: {
-													ctor: '::',
-													_0: _p27,
-													_1: {
-														ctor: '::',
-														_0: _p28,
-														_1: {
-															ctor: '::',
-															_0: _p25,
-															_1: A3(_elm_lang$core$List$takeFast, ctr + 1, n - 4, _p24)
-														}
-													}
-												}
-											};
-										} else {
-											break _v26_5;
-										}
-								}
-							} else {
-								if (_p23._0 === 1) {
-									break _v26_1;
-								} else {
-									break _v26_5;
-								}
-							}
-						}
-					} else {
-						break _v26_5;
-					}
-				} while(false);
-				return {
-					ctor: '::',
-					_0: _p23._1._0,
-					_1: {ctor: '[]'}
-				};
-			} while(false);
-			return list;
-		}
-	});
-var _elm_lang$core$List$take = F2(
-	function (n, list) {
-		return A3(_elm_lang$core$List$takeFast, 0, n, list);
-	});
-var _elm_lang$core$List$repeatHelp = F3(
-	function (result, n, value) {
-		repeatHelp:
-		while (true) {
-			if (_elm_lang$core$Native_Utils.cmp(n, 0) < 1) {
-				return result;
-			} else {
-				var _v27 = {ctor: '::', _0: value, _1: result},
-					_v28 = n - 1,
-					_v29 = value;
-				result = _v27;
-				n = _v28;
-				value = _v29;
-				continue repeatHelp;
-			}
-		}
-	});
-var _elm_lang$core$List$repeat = F2(
-	function (n, value) {
-		return A3(
-			_elm_lang$core$List$repeatHelp,
-			{ctor: '[]'},
-			n,
-			value);
-	});
-var _elm_lang$core$List$rangeHelp = F3(
-	function (lo, hi, list) {
-		rangeHelp:
-		while (true) {
-			if (_elm_lang$core$Native_Utils.cmp(lo, hi) < 1) {
-				var _v30 = lo,
-					_v31 = hi - 1,
-					_v32 = {ctor: '::', _0: hi, _1: list};
-				lo = _v30;
-				hi = _v31;
-				list = _v32;
-				continue rangeHelp;
-			} else {
-				return list;
-			}
-		}
-	});
-var _elm_lang$core$List$range = F2(
-	function (lo, hi) {
-		return A3(
-			_elm_lang$core$List$rangeHelp,
-			lo,
-			hi,
-			{ctor: '[]'});
-	});
-var _elm_lang$core$List$indexedMap = F2(
-	function (f, xs) {
-		return A3(
-			_elm_lang$core$List$map2,
-			f,
-			A2(
-				_elm_lang$core$List$range,
-				0,
-				_elm_lang$core$List$length(xs) - 1),
-			xs);
-	});
+function _Basics_not(bool) { return !bool; }
+var _Basics_and = F2(function(a, b) { return a && b; });
+var _Basics_or  = F2(function(a, b) { return a || b; });
+var _Basics_xor = F2(function(a, b) { return a !== b; });
 
-//import Native.Utils //
 
-var _elm_lang$core$Native_Debug = function() {
 
-function log(tag, value)
-{
-	var msg = tag + ': ' + _elm_lang$core$Native_Utils.toString(value);
-	var process = process || {};
-	if (process.stdout)
-	{
-		process.stdout.write(msg);
-	}
-	else
-	{
-		console.log(msg);
-	}
-	return value;
-}
-
-function crash(message)
-{
-	throw new Error(message);
-}
-
-return {
-	crash: crash,
-	log: F2(log)
-};
-
-}();
-//import Maybe, Native.List, Native.Utils, Result //
-
-var _elm_lang$core$Native_String = function() {
-
-function isEmpty(str)
-{
-	return str.length === 0;
-}
-function cons(chr, str)
+var _String_cons = F2(function(chr, str)
 {
 	return chr + str;
-}
-function uncons(str)
+});
+
+function _String_uncons(string)
 {
-	var hd = str[0];
-	if (hd)
-	{
-		return _elm_lang$core$Maybe$Just(_elm_lang$core$Native_Utils.Tuple2(_elm_lang$core$Native_Utils.chr(hd), str.slice(1)));
-	}
-	return _elm_lang$core$Maybe$Nothing;
+	var word = string.charCodeAt(0);
+	return word
+		? elm$core$Maybe$Just(
+			0xD800 <= word && word <= 0xDBFF
+				? _Utils_Tuple2(_Utils_chr(string[0] + string[1]), string.slice(2))
+				: _Utils_Tuple2(_Utils_chr(string[0]), string.slice(1))
+		)
+		: elm$core$Maybe$Nothing;
 }
-function append(a, b)
+
+var _String_append = F2(function(a, b)
 {
 	return a + b;
-}
-function concat(strs)
-{
-	return _elm_lang$core$Native_List.toArray(strs).join('');
-}
-function length(str)
+});
+
+function _String_length(str)
 {
 	return str.length;
 }
-function map(f, str)
+
+var _String_map = F2(function(func, string)
 {
-	var out = str.split('');
-	for (var i = out.length; i--; )
+	var len = string.length;
+	var array = new Array(len);
+	var i = 0;
+	while (i < len)
 	{
-		out[i] = f(_elm_lang$core$Native_Utils.chr(out[i]));
+		var word = string.charCodeAt(i);
+		if (0xD800 <= word && word <= 0xDBFF)
+		{
+			array[i] = func(_Utils_chr(string[i] + string[i+1]));
+			i += 2;
+			continue;
+		}
+		array[i] = func(_Utils_chr(string[i]));
+		i++;
 	}
-	return out.join('');
-}
-function filter(pred, str)
+	return array.join('');
+});
+
+var _String_filter = F2(function(isGood, str)
 {
-	return str.split('').map(_elm_lang$core$Native_Utils.chr).filter(pred).join('');
-}
-function reverse(str)
-{
-	return str.split('').reverse().join('');
-}
-function foldl(f, b, str)
+	var arr = [];
+	var len = str.length;
+	var i = 0;
+	while (i < len)
+	{
+		var char = str[i];
+		var word = str.charCodeAt(i);
+		i++;
+		if (0xD800 <= word && word <= 0xDBFF)
+		{
+			char += str[i];
+			i++;
+		}
+
+		if (isGood(_Utils_chr(char)))
+		{
+			arr.push(char);
+		}
+	}
+	return arr.join('');
+});
+
+function _String_reverse(str)
 {
 	var len = str.length;
-	for (var i = 0; i < len; ++i)
+	var arr = new Array(len);
+	var i = 0;
+	while (i < len)
 	{
-		b = A2(f, _elm_lang$core$Native_Utils.chr(str[i]), b);
-	}
-	return b;
-}
-function foldr(f, b, str)
-{
-	for (var i = str.length; i--; )
-	{
-		b = A2(f, _elm_lang$core$Native_Utils.chr(str[i]), b);
-	}
-	return b;
-}
-function split(sep, str)
-{
-	return _elm_lang$core$Native_List.fromArray(str.split(sep));
-}
-function join(sep, strs)
-{
-	return _elm_lang$core$Native_List.toArray(strs).join(sep);
-}
-function repeat(n, str)
-{
-	var result = '';
-	while (n > 0)
-	{
-		if (n & 1)
+		var word = str.charCodeAt(i);
+		if (0xD800 <= word && word <= 0xDBFF)
 		{
-			result += str;
+			arr[len - i] = str[i + 1];
+			i++;
+			arr[len - i] = str[i - 1];
+			i++;
 		}
-		n >>= 1, str += str;
+		else
+		{
+			arr[len - i] = str[i];
+			i++;
+		}
 	}
-	return result;
-}
-function slice(start, end, str)
-{
-	return str.slice(start, end);
-}
-function left(n, str)
-{
-	return n < 1 ? '' : str.slice(0, n);
-}
-function right(n, str)
-{
-	return n < 1 ? '' : str.slice(-n);
-}
-function dropLeft(n, str)
-{
-	return n < 1 ? str : str.slice(n);
-}
-function dropRight(n, str)
-{
-	return n < 1 ? str : str.slice(0, -n);
-}
-function pad(n, chr, str)
-{
-	var half = (n - str.length) / 2;
-	return repeat(Math.ceil(half), chr) + str + repeat(half | 0, chr);
-}
-function padRight(n, chr, str)
-{
-	return str + repeat(n - str.length, chr);
-}
-function padLeft(n, chr, str)
-{
-	return repeat(n - str.length, chr) + str;
+	return arr.join('');
 }
 
-function trim(str)
+var _String_foldl = F3(function(func, state, string)
+{
+	var len = string.length;
+	var i = 0;
+	while (i < len)
+	{
+		var char = string[i];
+		var word = string.charCodeAt(i);
+		i++;
+		if (0xD800 <= word && word <= 0xDBFF)
+		{
+			char += string[i];
+			i++;
+		}
+		state = A2(func, _Utils_chr(char), state);
+	}
+	return state;
+});
+
+var _String_foldr = F3(function(func, state, string)
+{
+	var i = string.length;
+	while (i--)
+	{
+		var char = string[i];
+		var word = string.charCodeAt(i);
+		if (0xDC00 <= word && word <= 0xDFFF)
+		{
+			i--;
+			char = string[i] + char;
+		}
+		state = A2(func, _Utils_chr(char), state);
+	}
+	return state;
+});
+
+var _String_split = F2(function(sep, str)
+{
+	return str.split(sep);
+});
+
+var _String_join = F2(function(sep, strs)
+{
+	return strs.join(sep);
+});
+
+var _String_slice = F3(function(start, end, str) {
+	return str.slice(start, end);
+});
+
+function _String_trim(str)
 {
 	return str.trim();
 }
-function trimLeft(str)
+
+function _String_trimLeft(str)
 {
 	return str.replace(/^\s+/, '');
 }
-function trimRight(str)
+
+function _String_trimRight(str)
 {
 	return str.replace(/\s+$/, '');
 }
 
-function words(str)
+function _String_words(str)
 {
-	return _elm_lang$core$Native_List.fromArray(str.trim().split(/\s+/g));
-}
-function lines(str)
-{
-	return _elm_lang$core$Native_List.fromArray(str.split(/\r\n|\r|\n/g));
+	return _List_fromArray(str.trim().split(/\s+/g));
 }
 
-function toUpper(str)
+function _String_lines(str)
+{
+	return _List_fromArray(str.split(/\r\n|\r|\n/g));
+}
+
+function _String_toUpper(str)
 {
 	return str.toUpperCase();
 }
-function toLower(str)
+
+function _String_toLower(str)
 {
 	return str.toLowerCase();
 }
 
-function any(pred, str)
+var _String_any = F2(function(isGood, string)
 {
-	for (var i = str.length; i--; )
+	var i = string.length;
+	while (i--)
 	{
-		if (pred(_elm_lang$core$Native_Utils.chr(str[i])))
+		var char = string[i];
+		var word = string.charCodeAt(i);
+		if (0xDC00 <= word && word <= 0xDFFF)
+		{
+			i--;
+			char = string[i] + char;
+		}
+		if (isGood(_Utils_chr(char)))
 		{
 			return true;
 		}
 	}
 	return false;
-}
-function all(pred, str)
+});
+
+var _String_all = F2(function(isGood, string)
 {
-	for (var i = str.length; i--; )
+	var i = string.length;
+	while (i--)
 	{
-		if (!pred(_elm_lang$core$Native_Utils.chr(str[i])))
+		var char = string[i];
+		var word = string.charCodeAt(i);
+		if (0xDC00 <= word && word <= 0xDFFF)
+		{
+			i--;
+			char = string[i] + char;
+		}
+		if (!isGood(_Utils_chr(char)))
 		{
 			return false;
 		}
 	}
 	return true;
-}
+});
 
-function contains(sub, str)
+var _String_contains = F2(function(sub, str)
 {
 	return str.indexOf(sub) > -1;
-}
-function startsWith(sub, str)
+});
+
+var _String_startsWith = F2(function(sub, str)
 {
 	return str.indexOf(sub) === 0;
-}
-function endsWith(sub, str)
+});
+
+var _String_endsWith = F2(function(sub, str)
 {
 	return str.length >= sub.length &&
 		str.lastIndexOf(sub) === str.length - sub.length;
-}
-function indexes(sub, str)
+});
+
+var _String_indexes = F2(function(sub, str)
 {
 	var subLen = sub.length;
 
 	if (subLen < 1)
 	{
-		return _elm_lang$core$Native_List.Nil;
+		return _List_Nil;
 	}
 
 	var i = 0;
@@ -1890,1745 +1093,1110 @@ function indexes(sub, str)
 		i = i + subLen;
 	}
 
-	return _elm_lang$core$Native_List.fromArray(is);
-}
+	return _List_fromArray(is);
+});
 
 
-function toInt(s)
+// TO STRING
+
+function _String_fromNumber(number)
 {
-	var len = s.length;
-
-	// if empty
-	if (len === 0)
-	{
-		return intErr(s);
-	}
-
-	// if hex
-	var c = s[0];
-	if (c === '0' && s[1] === 'x')
-	{
-		for (var i = 2; i < len; ++i)
-		{
-			var c = s[i];
-			if (('0' <= c && c <= '9') || ('A' <= c && c <= 'F') || ('a' <= c && c <= 'f'))
-			{
-				continue;
-			}
-			return intErr(s);
-		}
-		return _elm_lang$core$Result$Ok(parseInt(s, 16));
-	}
-
-	// is decimal
-	if (c > '9' || (c < '0' && c !== '-' && c !== '+'))
-	{
-		return intErr(s);
-	}
-	for (var i = 1; i < len; ++i)
-	{
-		var c = s[i];
-		if (c < '0' || '9' < c)
-		{
-			return intErr(s);
-		}
-	}
-
-	return _elm_lang$core$Result$Ok(parseInt(s, 10));
+	return number + '';
 }
 
-function intErr(s)
+
+// INT CONVERSIONS
+
+function _String_toInt(str)
 {
-	return _elm_lang$core$Result$Err("could not convert string '" + s + "' to an Int");
+	var total = 0;
+	var code0 = str.charCodeAt(0);
+	var start = code0 == 0x2B /* + */ || code0 == 0x2D /* - */ ? 1 : 0;
+
+	for (var i = start; i < str.length; ++i)
+	{
+		var code = str.charCodeAt(i);
+		if (code < 0x30 || 0x39 < code)
+		{
+			return elm$core$Maybe$Nothing;
+		}
+		total = 10 * total + code - 0x30;
+	}
+
+	return i == start
+		? elm$core$Maybe$Nothing
+		: elm$core$Maybe$Just(code0 == 0x2D ? -total : total);
 }
 
 
-function toFloat(s)
+// FLOAT CONVERSIONS
+
+function _String_toFloat(s)
 {
 	// check if it is a hex, octal, or binary number
 	if (s.length === 0 || /[\sxbo]/.test(s))
 	{
-		return floatErr(s);
+		return elm$core$Maybe$Nothing;
 	}
 	var n = +s;
 	// faster isNaN check
-	return n === n ? _elm_lang$core$Result$Ok(n) : floatErr(s);
+	return n === n ? elm$core$Maybe$Just(n) : elm$core$Maybe$Nothing;
 }
 
-function floatErr(s)
+function _String_fromList(chars)
 {
-	return _elm_lang$core$Result$Err("could not convert string '" + s + "' to a Float");
+	return _List_toArray(chars).join('');
 }
 
 
-function toList(str)
+
+
+var _Bitwise_and = F2(function(a, b)
 {
-	return _elm_lang$core$Native_List.fromArray(str.split('').map(_elm_lang$core$Native_Utils.chr));
-}
-function fromList(chars)
+	return a & b;
+});
+
+var _Bitwise_or = F2(function(a, b)
 {
-	return _elm_lang$core$Native_List.toArray(chars).join('');
-}
+	return a | b;
+});
 
-return {
-	isEmpty: isEmpty,
-	cons: F2(cons),
-	uncons: uncons,
-	append: F2(append),
-	concat: concat,
-	length: length,
-	map: F2(map),
-	filter: F2(filter),
-	reverse: reverse,
-	foldl: F3(foldl),
-	foldr: F3(foldr),
+var _Bitwise_xor = F2(function(a, b)
+{
+	return a ^ b;
+});
 
-	split: F2(split),
-	join: F2(join),
-	repeat: F2(repeat),
-
-	slice: F3(slice),
-	left: F2(left),
-	right: F2(right),
-	dropLeft: F2(dropLeft),
-	dropRight: F2(dropRight),
-
-	pad: F3(pad),
-	padLeft: F3(padLeft),
-	padRight: F3(padRight),
-
-	trim: trim,
-	trimLeft: trimLeft,
-	trimRight: trimRight,
-
-	words: words,
-	lines: lines,
-
-	toUpper: toUpper,
-	toLower: toLower,
-
-	any: F2(any),
-	all: F2(all),
-
-	contains: F2(contains),
-	startsWith: F2(startsWith),
-	endsWith: F2(endsWith),
-	indexes: F2(indexes),
-
-	toInt: toInt,
-	toFloat: toFloat,
-	toList: toList,
-	fromList: fromList
+function _Bitwise_complement(a)
+{
+	return ~a;
 };
 
-}();
+var _Bitwise_shiftLeftBy = F2(function(offset, a)
+{
+	return a << offset;
+});
 
-//import Native.Utils //
+var _Bitwise_shiftRightBy = F2(function(offset, a)
+{
+	return a >> offset;
+});
 
-var _elm_lang$core$Native_Char = function() {
+var _Bitwise_shiftRightZfBy = F2(function(offset, a)
+{
+	return a >>> offset;
+});
 
-return {
-	fromCode: function(c) { return _elm_lang$core$Native_Utils.chr(String.fromCharCode(c)); },
-	toCode: function(c) { return c.charCodeAt(0); },
-	toUpper: function(c) { return _elm_lang$core$Native_Utils.chr(c.toUpperCase()); },
-	toLower: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLowerCase()); },
-	toLocaleUpper: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLocaleUpperCase()); },
-	toLocaleLower: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLocaleLowerCase()); }
-};
 
-}();
-var _elm_lang$core$Char$fromCode = _elm_lang$core$Native_Char.fromCode;
-var _elm_lang$core$Char$toCode = _elm_lang$core$Native_Char.toCode;
-var _elm_lang$core$Char$toLocaleLower = _elm_lang$core$Native_Char.toLocaleLower;
-var _elm_lang$core$Char$toLocaleUpper = _elm_lang$core$Native_Char.toLocaleUpper;
-var _elm_lang$core$Char$toLower = _elm_lang$core$Native_Char.toLower;
-var _elm_lang$core$Char$toUpper = _elm_lang$core$Native_Char.toUpper;
-var _elm_lang$core$Char$isBetween = F3(
-	function (low, high, $char) {
-		var code = _elm_lang$core$Char$toCode($char);
-		return (_elm_lang$core$Native_Utils.cmp(
-			code,
-			_elm_lang$core$Char$toCode(low)) > -1) && (_elm_lang$core$Native_Utils.cmp(
-			code,
-			_elm_lang$core$Char$toCode(high)) < 1);
-	});
-var _elm_lang$core$Char$isUpper = A2(
-	_elm_lang$core$Char$isBetween,
-	_elm_lang$core$Native_Utils.chr('A'),
-	_elm_lang$core$Native_Utils.chr('Z'));
-var _elm_lang$core$Char$isLower = A2(
-	_elm_lang$core$Char$isBetween,
-	_elm_lang$core$Native_Utils.chr('a'),
-	_elm_lang$core$Native_Utils.chr('z'));
-var _elm_lang$core$Char$isDigit = A2(
-	_elm_lang$core$Char$isBetween,
-	_elm_lang$core$Native_Utils.chr('0'),
-	_elm_lang$core$Native_Utils.chr('9'));
-var _elm_lang$core$Char$isOctDigit = A2(
-	_elm_lang$core$Char$isBetween,
-	_elm_lang$core$Native_Utils.chr('0'),
-	_elm_lang$core$Native_Utils.chr('7'));
-var _elm_lang$core$Char$isHexDigit = function ($char) {
-	return _elm_lang$core$Char$isDigit($char) || (A3(
-		_elm_lang$core$Char$isBetween,
-		_elm_lang$core$Native_Utils.chr('a'),
-		_elm_lang$core$Native_Utils.chr('f'),
-		$char) || A3(
-		_elm_lang$core$Char$isBetween,
-		_elm_lang$core$Native_Utils.chr('A'),
-		_elm_lang$core$Native_Utils.chr('F'),
-		$char));
-};
 
-var _elm_lang$core$Result$toMaybe = function (result) {
-	var _p0 = result;
-	if (_p0.ctor === 'Ok') {
-		return _elm_lang$core$Maybe$Just(_p0._0);
-	} else {
-		return _elm_lang$core$Maybe$Nothing;
+function _Char_toCode(char)
+{
+	var code = char.charCodeAt(0);
+	if (0xD800 <= code && code <= 0xDBFF)
+	{
+		return (code - 0xD800) * 0x400 + char.charCodeAt(1) - 0xDC00 + 0x10000
 	}
-};
-var _elm_lang$core$Result$withDefault = F2(
-	function (def, result) {
-		var _p1 = result;
-		if (_p1.ctor === 'Ok') {
-			return _p1._0;
-		} else {
-			return def;
-		}
-	});
-var _elm_lang$core$Result$Err = function (a) {
-	return {ctor: 'Err', _0: a};
-};
-var _elm_lang$core$Result$andThen = F2(
-	function (callback, result) {
-		var _p2 = result;
-		if (_p2.ctor === 'Ok') {
-			return callback(_p2._0);
-		} else {
-			return _elm_lang$core$Result$Err(_p2._0);
-		}
-	});
-var _elm_lang$core$Result$Ok = function (a) {
-	return {ctor: 'Ok', _0: a};
-};
-var _elm_lang$core$Result$map = F2(
-	function (func, ra) {
-		var _p3 = ra;
-		if (_p3.ctor === 'Ok') {
-			return _elm_lang$core$Result$Ok(
-				func(_p3._0));
-		} else {
-			return _elm_lang$core$Result$Err(_p3._0);
-		}
-	});
-var _elm_lang$core$Result$map2 = F3(
-	function (func, ra, rb) {
-		var _p4 = {ctor: '_Tuple2', _0: ra, _1: rb};
-		if (_p4._0.ctor === 'Ok') {
-			if (_p4._1.ctor === 'Ok') {
-				return _elm_lang$core$Result$Ok(
-					A2(func, _p4._0._0, _p4._1._0));
-			} else {
-				return _elm_lang$core$Result$Err(_p4._1._0);
-			}
-		} else {
-			return _elm_lang$core$Result$Err(_p4._0._0);
-		}
-	});
-var _elm_lang$core$Result$map3 = F4(
-	function (func, ra, rb, rc) {
-		var _p5 = {ctor: '_Tuple3', _0: ra, _1: rb, _2: rc};
-		if (_p5._0.ctor === 'Ok') {
-			if (_p5._1.ctor === 'Ok') {
-				if (_p5._2.ctor === 'Ok') {
-					return _elm_lang$core$Result$Ok(
-						A3(func, _p5._0._0, _p5._1._0, _p5._2._0));
-				} else {
-					return _elm_lang$core$Result$Err(_p5._2._0);
-				}
-			} else {
-				return _elm_lang$core$Result$Err(_p5._1._0);
-			}
-		} else {
-			return _elm_lang$core$Result$Err(_p5._0._0);
-		}
-	});
-var _elm_lang$core$Result$map4 = F5(
-	function (func, ra, rb, rc, rd) {
-		var _p6 = {ctor: '_Tuple4', _0: ra, _1: rb, _2: rc, _3: rd};
-		if (_p6._0.ctor === 'Ok') {
-			if (_p6._1.ctor === 'Ok') {
-				if (_p6._2.ctor === 'Ok') {
-					if (_p6._3.ctor === 'Ok') {
-						return _elm_lang$core$Result$Ok(
-							A4(func, _p6._0._0, _p6._1._0, _p6._2._0, _p6._3._0));
-					} else {
-						return _elm_lang$core$Result$Err(_p6._3._0);
-					}
-				} else {
-					return _elm_lang$core$Result$Err(_p6._2._0);
-				}
-			} else {
-				return _elm_lang$core$Result$Err(_p6._1._0);
-			}
-		} else {
-			return _elm_lang$core$Result$Err(_p6._0._0);
-		}
-	});
-var _elm_lang$core$Result$map5 = F6(
-	function (func, ra, rb, rc, rd, re) {
-		var _p7 = {ctor: '_Tuple5', _0: ra, _1: rb, _2: rc, _3: rd, _4: re};
-		if (_p7._0.ctor === 'Ok') {
-			if (_p7._1.ctor === 'Ok') {
-				if (_p7._2.ctor === 'Ok') {
-					if (_p7._3.ctor === 'Ok') {
-						if (_p7._4.ctor === 'Ok') {
-							return _elm_lang$core$Result$Ok(
-								A5(func, _p7._0._0, _p7._1._0, _p7._2._0, _p7._3._0, _p7._4._0));
-						} else {
-							return _elm_lang$core$Result$Err(_p7._4._0);
-						}
-					} else {
-						return _elm_lang$core$Result$Err(_p7._3._0);
-					}
-				} else {
-					return _elm_lang$core$Result$Err(_p7._2._0);
-				}
-			} else {
-				return _elm_lang$core$Result$Err(_p7._1._0);
-			}
-		} else {
-			return _elm_lang$core$Result$Err(_p7._0._0);
-		}
-	});
-var _elm_lang$core$Result$mapError = F2(
-	function (f, result) {
-		var _p8 = result;
-		if (_p8.ctor === 'Ok') {
-			return _elm_lang$core$Result$Ok(_p8._0);
-		} else {
-			return _elm_lang$core$Result$Err(
-				f(_p8._0));
-		}
-	});
-var _elm_lang$core$Result$fromMaybe = F2(
-	function (err, maybe) {
-		var _p9 = maybe;
-		if (_p9.ctor === 'Just') {
-			return _elm_lang$core$Result$Ok(_p9._0);
-		} else {
-			return _elm_lang$core$Result$Err(err);
-		}
-	});
+	return code;
+}
 
-var _elm_lang$core$String$fromList = _elm_lang$core$Native_String.fromList;
-var _elm_lang$core$String$toList = _elm_lang$core$Native_String.toList;
-var _elm_lang$core$String$toFloat = _elm_lang$core$Native_String.toFloat;
-var _elm_lang$core$String$toInt = _elm_lang$core$Native_String.toInt;
-var _elm_lang$core$String$indices = _elm_lang$core$Native_String.indexes;
-var _elm_lang$core$String$indexes = _elm_lang$core$Native_String.indexes;
-var _elm_lang$core$String$endsWith = _elm_lang$core$Native_String.endsWith;
-var _elm_lang$core$String$startsWith = _elm_lang$core$Native_String.startsWith;
-var _elm_lang$core$String$contains = _elm_lang$core$Native_String.contains;
-var _elm_lang$core$String$all = _elm_lang$core$Native_String.all;
-var _elm_lang$core$String$any = _elm_lang$core$Native_String.any;
-var _elm_lang$core$String$toLower = _elm_lang$core$Native_String.toLower;
-var _elm_lang$core$String$toUpper = _elm_lang$core$Native_String.toUpper;
-var _elm_lang$core$String$lines = _elm_lang$core$Native_String.lines;
-var _elm_lang$core$String$words = _elm_lang$core$Native_String.words;
-var _elm_lang$core$String$trimRight = _elm_lang$core$Native_String.trimRight;
-var _elm_lang$core$String$trimLeft = _elm_lang$core$Native_String.trimLeft;
-var _elm_lang$core$String$trim = _elm_lang$core$Native_String.trim;
-var _elm_lang$core$String$padRight = _elm_lang$core$Native_String.padRight;
-var _elm_lang$core$String$padLeft = _elm_lang$core$Native_String.padLeft;
-var _elm_lang$core$String$pad = _elm_lang$core$Native_String.pad;
-var _elm_lang$core$String$dropRight = _elm_lang$core$Native_String.dropRight;
-var _elm_lang$core$String$dropLeft = _elm_lang$core$Native_String.dropLeft;
-var _elm_lang$core$String$right = _elm_lang$core$Native_String.right;
-var _elm_lang$core$String$left = _elm_lang$core$Native_String.left;
-var _elm_lang$core$String$slice = _elm_lang$core$Native_String.slice;
-var _elm_lang$core$String$repeat = _elm_lang$core$Native_String.repeat;
-var _elm_lang$core$String$join = _elm_lang$core$Native_String.join;
-var _elm_lang$core$String$split = _elm_lang$core$Native_String.split;
-var _elm_lang$core$String$foldr = _elm_lang$core$Native_String.foldr;
-var _elm_lang$core$String$foldl = _elm_lang$core$Native_String.foldl;
-var _elm_lang$core$String$reverse = _elm_lang$core$Native_String.reverse;
-var _elm_lang$core$String$filter = _elm_lang$core$Native_String.filter;
-var _elm_lang$core$String$map = _elm_lang$core$Native_String.map;
-var _elm_lang$core$String$length = _elm_lang$core$Native_String.length;
-var _elm_lang$core$String$concat = _elm_lang$core$Native_String.concat;
-var _elm_lang$core$String$append = _elm_lang$core$Native_String.append;
-var _elm_lang$core$String$uncons = _elm_lang$core$Native_String.uncons;
-var _elm_lang$core$String$cons = _elm_lang$core$Native_String.cons;
-var _elm_lang$core$String$fromChar = function ($char) {
-	return A2(_elm_lang$core$String$cons, $char, '');
-};
-var _elm_lang$core$String$isEmpty = _elm_lang$core$Native_String.isEmpty;
+function _Char_fromCode(code)
+{
+	return _Utils_chr(
+		(code < 0 || 0x10FFFF < code)
+			? '\uFFFD'
+			:
+		(code <= 0xFFFF)
+			? String.fromCharCode(code)
+			:
+		(code -= 0x10000,
+			String.fromCharCode(Math.floor(code / 0x400) + 0xD800)
+			+
+			String.fromCharCode(code % 0x400 + 0xDC00)
+		)
+	);
+}
 
-var _elm_lang$core$Dict$foldr = F3(
-	function (f, acc, t) {
-		foldr:
-		while (true) {
-			var _p0 = t;
-			if (_p0.ctor === 'RBEmpty_elm_builtin') {
-				return acc;
-			} else {
-				var _v1 = f,
-					_v2 = A3(
-					f,
-					_p0._1,
-					_p0._2,
-					A3(_elm_lang$core$Dict$foldr, f, acc, _p0._4)),
-					_v3 = _p0._3;
-				f = _v1;
-				acc = _v2;
-				t = _v3;
-				continue foldr;
+function _Char_toUpper(char)
+{
+	return _Utils_chr(char.toUpperCase());
+}
+
+function _Char_toLower(char)
+{
+	return _Utils_chr(char.toLowerCase());
+}
+
+function _Char_toLocaleUpper(char)
+{
+	return _Utils_chr(char.toLocaleUpperCase());
+}
+
+function _Char_toLocaleLower(char)
+{
+	return _Utils_chr(char.toLocaleLowerCase());
+}
+
+
+
+/**/
+function _Json_errorToString(error)
+{
+	return elm$json$Json$Decode$errorToString(error);
+}
+//*/
+
+
+// CORE DECODERS
+
+function _Json_succeed(msg)
+{
+	return {
+		$: 0,
+		a: msg
+	};
+}
+
+function _Json_fail(msg)
+{
+	return {
+		$: 1,
+		a: msg
+	};
+}
+
+var _Json_decodeInt = { $: 2 };
+var _Json_decodeBool = { $: 3 };
+var _Json_decodeFloat = { $: 4 };
+var _Json_decodeValue = { $: 5 };
+var _Json_decodeString = { $: 6 };
+
+function _Json_decodeList(decoder) { return { $: 7, b: decoder }; }
+function _Json_decodeArray(decoder) { return { $: 8, b: decoder }; }
+
+function _Json_decodeNull(value) { return { $: 9, c: value }; }
+
+var _Json_decodeField = F2(function(field, decoder)
+{
+	return {
+		$: 10,
+		d: field,
+		b: decoder
+	};
+});
+
+var _Json_decodeIndex = F2(function(index, decoder)
+{
+	return {
+		$: 11,
+		e: index,
+		b: decoder
+	};
+});
+
+function _Json_decodeKeyValuePairs(decoder)
+{
+	return {
+		$: 12,
+		b: decoder
+	};
+}
+
+function _Json_mapMany(f, decoders)
+{
+	return {
+		$: 13,
+		f: f,
+		g: decoders
+	};
+}
+
+var _Json_andThen = F2(function(callback, decoder)
+{
+	return {
+		$: 14,
+		b: decoder,
+		h: callback
+	};
+});
+
+function _Json_oneOf(decoders)
+{
+	return {
+		$: 15,
+		g: decoders
+	};
+}
+
+
+// DECODING OBJECTS
+
+var _Json_map1 = F2(function(f, d1)
+{
+	return _Json_mapMany(f, [d1]);
+});
+
+var _Json_map2 = F3(function(f, d1, d2)
+{
+	return _Json_mapMany(f, [d1, d2]);
+});
+
+var _Json_map3 = F4(function(f, d1, d2, d3)
+{
+	return _Json_mapMany(f, [d1, d2, d3]);
+});
+
+var _Json_map4 = F5(function(f, d1, d2, d3, d4)
+{
+	return _Json_mapMany(f, [d1, d2, d3, d4]);
+});
+
+var _Json_map5 = F6(function(f, d1, d2, d3, d4, d5)
+{
+	return _Json_mapMany(f, [d1, d2, d3, d4, d5]);
+});
+
+var _Json_map6 = F7(function(f, d1, d2, d3, d4, d5, d6)
+{
+	return _Json_mapMany(f, [d1, d2, d3, d4, d5, d6]);
+});
+
+var _Json_map7 = F8(function(f, d1, d2, d3, d4, d5, d6, d7)
+{
+	return _Json_mapMany(f, [d1, d2, d3, d4, d5, d6, d7]);
+});
+
+var _Json_map8 = F9(function(f, d1, d2, d3, d4, d5, d6, d7, d8)
+{
+	return _Json_mapMany(f, [d1, d2, d3, d4, d5, d6, d7, d8]);
+});
+
+
+// DECODE
+
+var _Json_runOnString = F2(function(decoder, string)
+{
+	try
+	{
+		var value = JSON.parse(string);
+		return _Json_runHelp(decoder, value);
+	}
+	catch (e)
+	{
+		return elm$core$Result$Err(A2(elm$json$Json$Decode$Failure, 'This is not valid JSON! ' + e.message, _Json_wrap(string)));
+	}
+});
+
+var _Json_run = F2(function(decoder, value)
+{
+	return _Json_runHelp(decoder, _Json_unwrap(value));
+});
+
+function _Json_runHelp(decoder, value)
+{
+	switch (decoder.$)
+	{
+		case 3:
+			return (typeof value === 'boolean')
+				? elm$core$Result$Ok(value)
+				: _Json_expecting('a BOOL', value);
+
+		case 2:
+			if (typeof value !== 'number') {
+				return _Json_expecting('an INT', value);
 			}
-		}
-	});
-var _elm_lang$core$Dict$keys = function (dict) {
-	return A3(
-		_elm_lang$core$Dict$foldr,
-		F3(
-			function (key, value, keyList) {
-				return {ctor: '::', _0: key, _1: keyList};
-			}),
-		{ctor: '[]'},
-		dict);
-};
-var _elm_lang$core$Dict$values = function (dict) {
-	return A3(
-		_elm_lang$core$Dict$foldr,
-		F3(
-			function (key, value, valueList) {
-				return {ctor: '::', _0: value, _1: valueList};
-			}),
-		{ctor: '[]'},
-		dict);
-};
-var _elm_lang$core$Dict$toList = function (dict) {
-	return A3(
-		_elm_lang$core$Dict$foldr,
-		F3(
-			function (key, value, list) {
-				return {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: key, _1: value},
-					_1: list
-				};
-			}),
-		{ctor: '[]'},
-		dict);
-};
-var _elm_lang$core$Dict$foldl = F3(
-	function (f, acc, dict) {
-		foldl:
-		while (true) {
-			var _p1 = dict;
-			if (_p1.ctor === 'RBEmpty_elm_builtin') {
-				return acc;
-			} else {
-				var _v5 = f,
-					_v6 = A3(
-					f,
-					_p1._1,
-					_p1._2,
-					A3(_elm_lang$core$Dict$foldl, f, acc, _p1._3)),
-					_v7 = _p1._4;
-				f = _v5;
-				acc = _v6;
-				dict = _v7;
-				continue foldl;
+
+			if (-2147483647 < value && value < 2147483647 && (value | 0) === value) {
+				return elm$core$Result$Ok(value);
 			}
-		}
-	});
-var _elm_lang$core$Dict$merge = F6(
-	function (leftStep, bothStep, rightStep, leftDict, rightDict, initialResult) {
-		var stepState = F3(
-			function (rKey, rValue, _p2) {
-				stepState:
-				while (true) {
-					var _p3 = _p2;
-					var _p9 = _p3._1;
-					var _p8 = _p3._0;
-					var _p4 = _p8;
-					if (_p4.ctor === '[]') {
-						return {
-							ctor: '_Tuple2',
-							_0: _p8,
-							_1: A3(rightStep, rKey, rValue, _p9)
-						};
-					} else {
-						var _p7 = _p4._1;
-						var _p6 = _p4._0._1;
-						var _p5 = _p4._0._0;
-						if (_elm_lang$core$Native_Utils.cmp(_p5, rKey) < 0) {
-							var _v10 = rKey,
-								_v11 = rValue,
-								_v12 = {
-								ctor: '_Tuple2',
-								_0: _p7,
-								_1: A3(leftStep, _p5, _p6, _p9)
-							};
-							rKey = _v10;
-							rValue = _v11;
-							_p2 = _v12;
-							continue stepState;
-						} else {
-							if (_elm_lang$core$Native_Utils.cmp(_p5, rKey) > 0) {
-								return {
-									ctor: '_Tuple2',
-									_0: _p8,
-									_1: A3(rightStep, rKey, rValue, _p9)
-								};
-							} else {
-								return {
-									ctor: '_Tuple2',
-									_0: _p7,
-									_1: A4(bothStep, _p5, _p6, rValue, _p9)
-								};
-							}
-						}
-					}
-				}
-			});
-		var _p10 = A3(
-			_elm_lang$core$Dict$foldl,
-			stepState,
+
+			if (isFinite(value) && !(value % 1)) {
+				return elm$core$Result$Ok(value);
+			}
+
+			return _Json_expecting('an INT', value);
+
+		case 4:
+			return (typeof value === 'number')
+				? elm$core$Result$Ok(value)
+				: _Json_expecting('a FLOAT', value);
+
+		case 6:
+			return (typeof value === 'string')
+				? elm$core$Result$Ok(value)
+				: (value instanceof String)
+					? elm$core$Result$Ok(value + '')
+					: _Json_expecting('a STRING', value);
+
+		case 9:
+			return (value === null)
+				? elm$core$Result$Ok(decoder.c)
+				: _Json_expecting('null', value);
+
+		case 5:
+			return elm$core$Result$Ok(_Json_wrap(value));
+
+		case 7:
+			if (!Array.isArray(value))
 			{
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Dict$toList(leftDict),
-				_1: initialResult
-			},
-			rightDict);
-		var leftovers = _p10._0;
-		var intermediateResult = _p10._1;
-		return A3(
-			_elm_lang$core$List$foldl,
-			F2(
-				function (_p11, result) {
-					var _p12 = _p11;
-					return A3(leftStep, _p12._0, _p12._1, result);
-				}),
-			intermediateResult,
-			leftovers);
-	});
-var _elm_lang$core$Dict$reportRemBug = F4(
-	function (msg, c, lgot, rgot) {
-		return _elm_lang$core$Native_Debug.crash(
-			_elm_lang$core$String$concat(
+				return _Json_expecting('a LIST', value);
+			}
+			return _Json_runArrayDecoder(decoder.b, value, _List_fromArray);
+
+		case 8:
+			if (!Array.isArray(value))
+			{
+				return _Json_expecting('an ARRAY', value);
+			}
+			return _Json_runArrayDecoder(decoder.b, value, _Json_toElmArray);
+
+		case 10:
+			var field = decoder.d;
+			if (typeof value !== 'object' || value === null || !(field in value))
+			{
+				return _Json_expecting('an OBJECT with a field named `' + field + '`', value);
+			}
+			var result = _Json_runHelp(decoder.b, value[field]);
+			return (elm$core$Result$isOk(result)) ? result : elm$core$Result$Err(A2(elm$json$Json$Decode$Field, field, result.a));
+
+		case 11:
+			var index = decoder.e;
+			if (!Array.isArray(value))
+			{
+				return _Json_expecting('an ARRAY', value);
+			}
+			if (index >= value.length)
+			{
+				return _Json_expecting('a LONGER array. Need index ' + index + ' but only see ' + value.length + ' entries', value);
+			}
+			var result = _Json_runHelp(decoder.b, value[index]);
+			return (elm$core$Result$isOk(result)) ? result : elm$core$Result$Err(A2(elm$json$Json$Decode$Index, index, result.a));
+
+		case 12:
+			if (typeof value !== 'object' || value === null || Array.isArray(value))
+			{
+				return _Json_expecting('an OBJECT', value);
+			}
+
+			var keyValuePairs = _List_Nil;
+			// TODO test perf of Object.keys and switch when support is good enough
+			for (var key in value)
+			{
+				if (value.hasOwnProperty(key))
 				{
-					ctor: '::',
-					_0: 'Internal red-black tree invariant violated, expected ',
-					_1: {
-						ctor: '::',
-						_0: msg,
-						_1: {
-							ctor: '::',
-							_0: ' and got ',
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$core$Basics$toString(c),
-								_1: {
-									ctor: '::',
-									_0: '/',
-									_1: {
-										ctor: '::',
-										_0: lgot,
-										_1: {
-											ctor: '::',
-											_0: '/',
-											_1: {
-												ctor: '::',
-												_0: rgot,
-												_1: {
-													ctor: '::',
-													_0: '\nPlease report this bug to <https://github.com/elm-lang/core/issues>',
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
+					var result = _Json_runHelp(decoder.b, value[key]);
+					if (!elm$core$Result$isOk(result))
+					{
+						return elm$core$Result$Err(A2(elm$json$Json$Decode$Field, key, result.a));
 					}
-				}));
-	});
-var _elm_lang$core$Dict$isBBlack = function (dict) {
-	var _p13 = dict;
-	_v14_2:
-	do {
-		if (_p13.ctor === 'RBNode_elm_builtin') {
-			if (_p13._0.ctor === 'BBlack') {
-				return true;
-			} else {
-				break _v14_2;
-			}
-		} else {
-			if (_p13._0.ctor === 'LBBlack') {
-				return true;
-			} else {
-				break _v14_2;
-			}
-		}
-	} while(false);
-	return false;
-};
-var _elm_lang$core$Dict$sizeHelp = F2(
-	function (n, dict) {
-		sizeHelp:
-		while (true) {
-			var _p14 = dict;
-			if (_p14.ctor === 'RBEmpty_elm_builtin') {
-				return n;
-			} else {
-				var _v16 = A2(_elm_lang$core$Dict$sizeHelp, n + 1, _p14._4),
-					_v17 = _p14._3;
-				n = _v16;
-				dict = _v17;
-				continue sizeHelp;
-			}
-		}
-	});
-var _elm_lang$core$Dict$size = function (dict) {
-	return A2(_elm_lang$core$Dict$sizeHelp, 0, dict);
-};
-var _elm_lang$core$Dict$get = F2(
-	function (targetKey, dict) {
-		get:
-		while (true) {
-			var _p15 = dict;
-			if (_p15.ctor === 'RBEmpty_elm_builtin') {
-				return _elm_lang$core$Maybe$Nothing;
-			} else {
-				var _p16 = A2(_elm_lang$core$Basics$compare, targetKey, _p15._1);
-				switch (_p16.ctor) {
-					case 'LT':
-						var _v20 = targetKey,
-							_v21 = _p15._3;
-						targetKey = _v20;
-						dict = _v21;
-						continue get;
-					case 'EQ':
-						return _elm_lang$core$Maybe$Just(_p15._2);
-					default:
-						var _v22 = targetKey,
-							_v23 = _p15._4;
-						targetKey = _v22;
-						dict = _v23;
-						continue get;
+					keyValuePairs = _List_Cons(_Utils_Tuple2(key, result.a), keyValuePairs);
 				}
 			}
-		}
-	});
-var _elm_lang$core$Dict$member = F2(
-	function (key, dict) {
-		var _p17 = A2(_elm_lang$core$Dict$get, key, dict);
-		if (_p17.ctor === 'Just') {
-			return true;
-		} else {
-			return false;
-		}
-	});
-var _elm_lang$core$Dict$maxWithDefault = F3(
-	function (k, v, r) {
-		maxWithDefault:
-		while (true) {
-			var _p18 = r;
-			if (_p18.ctor === 'RBEmpty_elm_builtin') {
-				return {ctor: '_Tuple2', _0: k, _1: v};
-			} else {
-				var _v26 = _p18._1,
-					_v27 = _p18._2,
-					_v28 = _p18._4;
-				k = _v26;
-				v = _v27;
-				r = _v28;
-				continue maxWithDefault;
+			return elm$core$Result$Ok(elm$core$List$reverse(keyValuePairs));
+
+		case 13:
+			var answer = decoder.f;
+			var decoders = decoder.g;
+			for (var i = 0; i < decoders.length; i++)
+			{
+				var result = _Json_runHelp(decoders[i], value);
+				if (!elm$core$Result$isOk(result))
+				{
+					return result;
+				}
+				answer = answer(result.a);
 			}
+			return elm$core$Result$Ok(answer);
+
+		case 14:
+			var result = _Json_runHelp(decoder.b, value);
+			return (!elm$core$Result$isOk(result))
+				? result
+				: _Json_runHelp(decoder.h(result.a), value);
+
+		case 15:
+			var errors = _List_Nil;
+			for (var temp = decoder.g; temp.b; temp = temp.b) // WHILE_CONS
+			{
+				var result = _Json_runHelp(temp.a, value);
+				if (elm$core$Result$isOk(result))
+				{
+					return result;
+				}
+				errors = _List_Cons(result.a, errors);
+			}
+			return elm$core$Result$Err(elm$json$Json$Decode$OneOf(elm$core$List$reverse(errors)));
+
+		case 1:
+			return elm$core$Result$Err(A2(elm$json$Json$Decode$Failure, decoder.a, _Json_wrap(value)));
+
+		case 0:
+			return elm$core$Result$Ok(decoder.a);
+	}
+}
+
+function _Json_runArrayDecoder(decoder, value, toElmValue)
+{
+	var len = value.length;
+	var array = new Array(len);
+	for (var i = 0; i < len; i++)
+	{
+		var result = _Json_runHelp(decoder, value[i]);
+		if (!elm$core$Result$isOk(result))
+		{
+			return elm$core$Result$Err(A2(elm$json$Json$Decode$Index, i, result.a));
 		}
-	});
-var _elm_lang$core$Dict$NBlack = {ctor: 'NBlack'};
-var _elm_lang$core$Dict$BBlack = {ctor: 'BBlack'};
-var _elm_lang$core$Dict$Black = {ctor: 'Black'};
-var _elm_lang$core$Dict$blackish = function (t) {
-	var _p19 = t;
-	if (_p19.ctor === 'RBNode_elm_builtin') {
-		var _p20 = _p19._0;
-		return _elm_lang$core$Native_Utils.eq(_p20, _elm_lang$core$Dict$Black) || _elm_lang$core$Native_Utils.eq(_p20, _elm_lang$core$Dict$BBlack);
-	} else {
+		array[i] = result.a;
+	}
+	return elm$core$Result$Ok(toElmValue(array));
+}
+
+function _Json_toElmArray(array)
+{
+	return A2(elm$core$Array$initialize, array.length, function(i) { return array[i]; });
+}
+
+function _Json_expecting(type, value)
+{
+	return elm$core$Result$Err(A2(elm$json$Json$Decode$Failure, 'Expecting ' + type, _Json_wrap(value)));
+}
+
+
+// EQUALITY
+
+function _Json_equality(x, y)
+{
+	if (x === y)
+	{
 		return true;
 	}
-};
-var _elm_lang$core$Dict$Red = {ctor: 'Red'};
-var _elm_lang$core$Dict$moreBlack = function (color) {
-	var _p21 = color;
-	switch (_p21.ctor) {
-		case 'Black':
-			return _elm_lang$core$Dict$BBlack;
-		case 'Red':
-			return _elm_lang$core$Dict$Black;
-		case 'NBlack':
-			return _elm_lang$core$Dict$Red;
-		default:
-			return _elm_lang$core$Native_Debug.crash('Can\'t make a double black node more black!');
+
+	if (x.$ !== y.$)
+	{
+		return false;
 	}
-};
-var _elm_lang$core$Dict$lessBlack = function (color) {
-	var _p22 = color;
-	switch (_p22.ctor) {
-		case 'BBlack':
-			return _elm_lang$core$Dict$Black;
-		case 'Black':
-			return _elm_lang$core$Dict$Red;
-		case 'Red':
-			return _elm_lang$core$Dict$NBlack;
-		default:
-			return _elm_lang$core$Native_Debug.crash('Can\'t make a negative black node less black!');
+
+	switch (x.$)
+	{
+		case 0:
+		case 1:
+			return x.a === y.a;
+
+		case 3:
+		case 2:
+		case 4:
+		case 6:
+		case 5:
+			return true;
+
+		case 9:
+			return x.c === y.c;
+
+		case 7:
+		case 8:
+		case 12:
+			return _Json_equality(x.b, y.b);
+
+		case 10:
+			return x.d === y.d && _Json_equality(x.b, y.b);
+
+		case 11:
+			return x.e === y.e && _Json_equality(x.b, y.b);
+
+		case 13:
+			return x.f === y.f && _Json_listEquality(x.g, y.g);
+
+		case 14:
+			return x.h === y.h && _Json_equality(x.b, y.b);
+
+		case 15:
+			return _Json_listEquality(x.g, y.g);
 	}
-};
-var _elm_lang$core$Dict$LBBlack = {ctor: 'LBBlack'};
-var _elm_lang$core$Dict$LBlack = {ctor: 'LBlack'};
-var _elm_lang$core$Dict$RBEmpty_elm_builtin = function (a) {
-	return {ctor: 'RBEmpty_elm_builtin', _0: a};
-};
-var _elm_lang$core$Dict$empty = _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBlack);
-var _elm_lang$core$Dict$isEmpty = function (dict) {
-	return _elm_lang$core$Native_Utils.eq(dict, _elm_lang$core$Dict$empty);
-};
-var _elm_lang$core$Dict$RBNode_elm_builtin = F5(
-	function (a, b, c, d, e) {
-		return {ctor: 'RBNode_elm_builtin', _0: a, _1: b, _2: c, _3: d, _4: e};
+}
+
+function _Json_listEquality(aDecoders, bDecoders)
+{
+	var len = aDecoders.length;
+	if (len !== bDecoders.length)
+	{
+		return false;
+	}
+	for (var i = 0; i < len; i++)
+	{
+		if (!_Json_equality(aDecoders[i], bDecoders[i]))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+
+// ENCODE
+
+var _Json_encode = F2(function(indentLevel, value)
+{
+	return JSON.stringify(_Json_unwrap(value), null, indentLevel) + '';
+});
+
+function _Json_wrap(value) { return { $: 0, a: value }; }
+function _Json_unwrap(value) { return value.a; }
+
+function _Json_wrap_UNUSED(value) { return value; }
+function _Json_unwrap_UNUSED(value) { return value; }
+
+function _Json_emptyArray() { return []; }
+function _Json_emptyObject() { return {}; }
+
+var _Json_addField = F3(function(key, value, object)
+{
+	object[key] = _Json_unwrap(value);
+	return object;
+});
+
+function _Json_addEntry(func)
+{
+	return F2(function(entry, array)
+	{
+		array.push(_Json_unwrap(func(entry)));
+		return array;
 	});
-var _elm_lang$core$Dict$ensureBlackRoot = function (dict) {
-	var _p23 = dict;
-	if ((_p23.ctor === 'RBNode_elm_builtin') && (_p23._0.ctor === 'Red')) {
-		return A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p23._1, _p23._2, _p23._3, _p23._4);
-	} else {
-		return dict;
-	}
-};
-var _elm_lang$core$Dict$lessBlackTree = function (dict) {
-	var _p24 = dict;
-	if (_p24.ctor === 'RBNode_elm_builtin') {
-		return A5(
-			_elm_lang$core$Dict$RBNode_elm_builtin,
-			_elm_lang$core$Dict$lessBlack(_p24._0),
-			_p24._1,
-			_p24._2,
-			_p24._3,
-			_p24._4);
-	} else {
-		return _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBlack);
-	}
-};
-var _elm_lang$core$Dict$balancedTree = function (col) {
-	return function (xk) {
-		return function (xv) {
-			return function (yk) {
-				return function (yv) {
-					return function (zk) {
-						return function (zv) {
-							return function (a) {
-								return function (b) {
-									return function (c) {
-										return function (d) {
-											return A5(
-												_elm_lang$core$Dict$RBNode_elm_builtin,
-												_elm_lang$core$Dict$lessBlack(col),
-												yk,
-												yv,
-												A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, xk, xv, a, b),
-												A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, zk, zv, c, d));
-										};
-									};
-								};
-							};
-						};
-					};
-				};
-			};
-		};
+}
+
+var _Json_encodeNull = _Json_wrap(null);
+
+
+
+// TASKS
+
+function _Scheduler_succeed(value)
+{
+	return {
+		$: 0,
+		a: value
 	};
-};
-var _elm_lang$core$Dict$blacken = function (t) {
-	var _p25 = t;
-	if (_p25.ctor === 'RBEmpty_elm_builtin') {
-		return _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBlack);
-	} else {
-		return A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p25._1, _p25._2, _p25._3, _p25._4);
+}
+
+function _Scheduler_fail(error)
+{
+	return {
+		$: 1,
+		a: error
+	};
+}
+
+function _Scheduler_binding(callback)
+{
+	return {
+		$: 2,
+		b: callback,
+		c: null
+	};
+}
+
+var _Scheduler_andThen = F2(function(callback, task)
+{
+	return {
+		$: 3,
+		b: callback,
+		d: task
+	};
+});
+
+var _Scheduler_onError = F2(function(callback, task)
+{
+	return {
+		$: 4,
+		b: callback,
+		d: task
+	};
+});
+
+function _Scheduler_receive(callback)
+{
+	return {
+		$: 5,
+		b: callback
+	};
+}
+
+
+// PROCESSES
+
+var _Scheduler_guid = 0;
+
+function _Scheduler_rawSpawn(task)
+{
+	var proc = {
+		$: 0,
+		e: _Scheduler_guid++,
+		f: task,
+		g: null,
+		h: []
+	};
+
+	_Scheduler_enqueue(proc);
+
+	return proc;
+}
+
+function _Scheduler_spawn(task)
+{
+	return _Scheduler_binding(function(callback) {
+		callback(_Scheduler_succeed(_Scheduler_rawSpawn(task)));
+	});
+}
+
+function _Scheduler_rawSend(proc, msg)
+{
+	proc.h.push(msg);
+	_Scheduler_enqueue(proc);
+}
+
+var _Scheduler_send = F2(function(proc, msg)
+{
+	return _Scheduler_binding(function(callback) {
+		_Scheduler_rawSend(proc, msg);
+		callback(_Scheduler_succeed(_Utils_Tuple0));
+	});
+});
+
+function _Scheduler_kill(proc)
+{
+	return _Scheduler_binding(function(callback) {
+		var task = proc.f;
+		if (task.$ === 2 && task.c)
+		{
+			task.c();
+		}
+
+		proc.f = null;
+
+		callback(_Scheduler_succeed(_Utils_Tuple0));
+	});
+}
+
+
+/* STEP PROCESSES
+
+type alias Process =
+  { $ : tag
+  , id : unique_id
+  , root : Task
+  , stack : null | { $: SUCCEED | FAIL, a: callback, b: stack }
+  , mailbox : [msg]
+  }
+
+*/
+
+
+var _Scheduler_working = false;
+var _Scheduler_queue = [];
+
+
+function _Scheduler_enqueue(proc)
+{
+	_Scheduler_queue.push(proc);
+	if (_Scheduler_working)
+	{
+		return;
 	}
-};
-var _elm_lang$core$Dict$redden = function (t) {
-	var _p26 = t;
-	if (_p26.ctor === 'RBEmpty_elm_builtin') {
-		return _elm_lang$core$Native_Debug.crash('can\'t make a Leaf red');
-	} else {
-		return A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Red, _p26._1, _p26._2, _p26._3, _p26._4);
+	_Scheduler_working = true;
+	while (proc = _Scheduler_queue.shift())
+	{
+		_Scheduler_step(proc);
 	}
-};
-var _elm_lang$core$Dict$balanceHelp = function (tree) {
-	var _p27 = tree;
-	_v36_6:
-	do {
-		_v36_5:
-		do {
-			_v36_4:
-			do {
-				_v36_3:
-				do {
-					_v36_2:
-					do {
-						_v36_1:
-						do {
-							_v36_0:
-							do {
-								if (_p27.ctor === 'RBNode_elm_builtin') {
-									if (_p27._3.ctor === 'RBNode_elm_builtin') {
-										if (_p27._4.ctor === 'RBNode_elm_builtin') {
-											switch (_p27._3._0.ctor) {
-												case 'Red':
-													switch (_p27._4._0.ctor) {
-														case 'Red':
-															if ((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Red')) {
-																break _v36_0;
-															} else {
-																if ((_p27._3._4.ctor === 'RBNode_elm_builtin') && (_p27._3._4._0.ctor === 'Red')) {
-																	break _v36_1;
-																} else {
-																	if ((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Red')) {
-																		break _v36_2;
-																	} else {
-																		if ((_p27._4._4.ctor === 'RBNode_elm_builtin') && (_p27._4._4._0.ctor === 'Red')) {
-																			break _v36_3;
-																		} else {
-																			break _v36_6;
-																		}
-																	}
-																}
-															}
-														case 'NBlack':
-															if ((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Red')) {
-																break _v36_0;
-															} else {
-																if ((_p27._3._4.ctor === 'RBNode_elm_builtin') && (_p27._3._4._0.ctor === 'Red')) {
-																	break _v36_1;
-																} else {
-																	if (((((_p27._0.ctor === 'BBlack') && (_p27._4._3.ctor === 'RBNode_elm_builtin')) && (_p27._4._3._0.ctor === 'Black')) && (_p27._4._4.ctor === 'RBNode_elm_builtin')) && (_p27._4._4._0.ctor === 'Black')) {
-																		break _v36_4;
-																	} else {
-																		break _v36_6;
-																	}
-																}
-															}
-														default:
-															if ((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Red')) {
-																break _v36_0;
-															} else {
-																if ((_p27._3._4.ctor === 'RBNode_elm_builtin') && (_p27._3._4._0.ctor === 'Red')) {
-																	break _v36_1;
-																} else {
-																	break _v36_6;
-																}
-															}
-													}
-												case 'NBlack':
-													switch (_p27._4._0.ctor) {
-														case 'Red':
-															if ((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Red')) {
-																break _v36_2;
-															} else {
-																if ((_p27._4._4.ctor === 'RBNode_elm_builtin') && (_p27._4._4._0.ctor === 'Red')) {
-																	break _v36_3;
-																} else {
-																	if (((((_p27._0.ctor === 'BBlack') && (_p27._3._3.ctor === 'RBNode_elm_builtin')) && (_p27._3._3._0.ctor === 'Black')) && (_p27._3._4.ctor === 'RBNode_elm_builtin')) && (_p27._3._4._0.ctor === 'Black')) {
-																		break _v36_5;
-																	} else {
-																		break _v36_6;
-																	}
-																}
-															}
-														case 'NBlack':
-															if (_p27._0.ctor === 'BBlack') {
-																if ((((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Black')) && (_p27._4._4.ctor === 'RBNode_elm_builtin')) && (_p27._4._4._0.ctor === 'Black')) {
-																	break _v36_4;
-																} else {
-																	if ((((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Black')) && (_p27._3._4.ctor === 'RBNode_elm_builtin')) && (_p27._3._4._0.ctor === 'Black')) {
-																		break _v36_5;
-																	} else {
-																		break _v36_6;
-																	}
-																}
-															} else {
-																break _v36_6;
-															}
-														default:
-															if (((((_p27._0.ctor === 'BBlack') && (_p27._3._3.ctor === 'RBNode_elm_builtin')) && (_p27._3._3._0.ctor === 'Black')) && (_p27._3._4.ctor === 'RBNode_elm_builtin')) && (_p27._3._4._0.ctor === 'Black')) {
-																break _v36_5;
-															} else {
-																break _v36_6;
-															}
-													}
-												default:
-													switch (_p27._4._0.ctor) {
-														case 'Red':
-															if ((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Red')) {
-																break _v36_2;
-															} else {
-																if ((_p27._4._4.ctor === 'RBNode_elm_builtin') && (_p27._4._4._0.ctor === 'Red')) {
-																	break _v36_3;
-																} else {
-																	break _v36_6;
-																}
-															}
-														case 'NBlack':
-															if (((((_p27._0.ctor === 'BBlack') && (_p27._4._3.ctor === 'RBNode_elm_builtin')) && (_p27._4._3._0.ctor === 'Black')) && (_p27._4._4.ctor === 'RBNode_elm_builtin')) && (_p27._4._4._0.ctor === 'Black')) {
-																break _v36_4;
-															} else {
-																break _v36_6;
-															}
-														default:
-															break _v36_6;
-													}
-											}
-										} else {
-											switch (_p27._3._0.ctor) {
-												case 'Red':
-													if ((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Red')) {
-														break _v36_0;
-													} else {
-														if ((_p27._3._4.ctor === 'RBNode_elm_builtin') && (_p27._3._4._0.ctor === 'Red')) {
-															break _v36_1;
-														} else {
-															break _v36_6;
-														}
-													}
-												case 'NBlack':
-													if (((((_p27._0.ctor === 'BBlack') && (_p27._3._3.ctor === 'RBNode_elm_builtin')) && (_p27._3._3._0.ctor === 'Black')) && (_p27._3._4.ctor === 'RBNode_elm_builtin')) && (_p27._3._4._0.ctor === 'Black')) {
-														break _v36_5;
-													} else {
-														break _v36_6;
-													}
-												default:
-													break _v36_6;
-											}
-										}
-									} else {
-										if (_p27._4.ctor === 'RBNode_elm_builtin') {
-											switch (_p27._4._0.ctor) {
-												case 'Red':
-													if ((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Red')) {
-														break _v36_2;
-													} else {
-														if ((_p27._4._4.ctor === 'RBNode_elm_builtin') && (_p27._4._4._0.ctor === 'Red')) {
-															break _v36_3;
-														} else {
-															break _v36_6;
-														}
-													}
-												case 'NBlack':
-													if (((((_p27._0.ctor === 'BBlack') && (_p27._4._3.ctor === 'RBNode_elm_builtin')) && (_p27._4._3._0.ctor === 'Black')) && (_p27._4._4.ctor === 'RBNode_elm_builtin')) && (_p27._4._4._0.ctor === 'Black')) {
-														break _v36_4;
-													} else {
-														break _v36_6;
-													}
-												default:
-													break _v36_6;
-											}
-										} else {
-											break _v36_6;
-										}
-									}
-								} else {
-									break _v36_6;
-								}
-							} while(false);
-							return _elm_lang$core$Dict$balancedTree(_p27._0)(_p27._3._3._1)(_p27._3._3._2)(_p27._3._1)(_p27._3._2)(_p27._1)(_p27._2)(_p27._3._3._3)(_p27._3._3._4)(_p27._3._4)(_p27._4);
-						} while(false);
-						return _elm_lang$core$Dict$balancedTree(_p27._0)(_p27._3._1)(_p27._3._2)(_p27._3._4._1)(_p27._3._4._2)(_p27._1)(_p27._2)(_p27._3._3)(_p27._3._4._3)(_p27._3._4._4)(_p27._4);
-					} while(false);
-					return _elm_lang$core$Dict$balancedTree(_p27._0)(_p27._1)(_p27._2)(_p27._4._3._1)(_p27._4._3._2)(_p27._4._1)(_p27._4._2)(_p27._3)(_p27._4._3._3)(_p27._4._3._4)(_p27._4._4);
-				} while(false);
-				return _elm_lang$core$Dict$balancedTree(_p27._0)(_p27._1)(_p27._2)(_p27._4._1)(_p27._4._2)(_p27._4._4._1)(_p27._4._4._2)(_p27._3)(_p27._4._3)(_p27._4._4._3)(_p27._4._4._4);
-			} while(false);
-			return A5(
-				_elm_lang$core$Dict$RBNode_elm_builtin,
-				_elm_lang$core$Dict$Black,
-				_p27._4._3._1,
-				_p27._4._3._2,
-				A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p27._1, _p27._2, _p27._3, _p27._4._3._3),
-				A5(
-					_elm_lang$core$Dict$balance,
-					_elm_lang$core$Dict$Black,
-					_p27._4._1,
-					_p27._4._2,
-					_p27._4._3._4,
-					_elm_lang$core$Dict$redden(_p27._4._4)));
-		} while(false);
-		return A5(
-			_elm_lang$core$Dict$RBNode_elm_builtin,
-			_elm_lang$core$Dict$Black,
-			_p27._3._4._1,
-			_p27._3._4._2,
-			A5(
-				_elm_lang$core$Dict$balance,
-				_elm_lang$core$Dict$Black,
-				_p27._3._1,
-				_p27._3._2,
-				_elm_lang$core$Dict$redden(_p27._3._3),
-				_p27._3._4._3),
-			A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p27._1, _p27._2, _p27._3._4._4, _p27._4));
-	} while(false);
-	return tree;
-};
-var _elm_lang$core$Dict$balance = F5(
-	function (c, k, v, l, r) {
-		var tree = A5(_elm_lang$core$Dict$RBNode_elm_builtin, c, k, v, l, r);
-		return _elm_lang$core$Dict$blackish(tree) ? _elm_lang$core$Dict$balanceHelp(tree) : tree;
-	});
-var _elm_lang$core$Dict$bubble = F5(
-	function (c, k, v, l, r) {
-		return (_elm_lang$core$Dict$isBBlack(l) || _elm_lang$core$Dict$isBBlack(r)) ? A5(
-			_elm_lang$core$Dict$balance,
-			_elm_lang$core$Dict$moreBlack(c),
-			k,
-			v,
-			_elm_lang$core$Dict$lessBlackTree(l),
-			_elm_lang$core$Dict$lessBlackTree(r)) : A5(_elm_lang$core$Dict$RBNode_elm_builtin, c, k, v, l, r);
-	});
-var _elm_lang$core$Dict$removeMax = F5(
-	function (c, k, v, l, r) {
-		var _p28 = r;
-		if (_p28.ctor === 'RBEmpty_elm_builtin') {
-			return A3(_elm_lang$core$Dict$rem, c, l, r);
-		} else {
-			return A5(
-				_elm_lang$core$Dict$bubble,
-				c,
-				k,
-				v,
-				l,
-				A5(_elm_lang$core$Dict$removeMax, _p28._0, _p28._1, _p28._2, _p28._3, _p28._4));
-		}
-	});
-var _elm_lang$core$Dict$rem = F3(
-	function (color, left, right) {
-		var _p29 = {ctor: '_Tuple2', _0: left, _1: right};
-		if (_p29._0.ctor === 'RBEmpty_elm_builtin') {
-			if (_p29._1.ctor === 'RBEmpty_elm_builtin') {
-				var _p30 = color;
-				switch (_p30.ctor) {
-					case 'Red':
-						return _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBlack);
-					case 'Black':
-						return _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBBlack);
-					default:
-						return _elm_lang$core$Native_Debug.crash('cannot have bblack or nblack nodes at this point');
-				}
-			} else {
-				var _p33 = _p29._1._0;
-				var _p32 = _p29._0._0;
-				var _p31 = {ctor: '_Tuple3', _0: color, _1: _p32, _2: _p33};
-				if ((((_p31.ctor === '_Tuple3') && (_p31._0.ctor === 'Black')) && (_p31._1.ctor === 'LBlack')) && (_p31._2.ctor === 'Red')) {
-					return A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p29._1._1, _p29._1._2, _p29._1._3, _p29._1._4);
-				} else {
-					return A4(
-						_elm_lang$core$Dict$reportRemBug,
-						'Black/LBlack/Red',
-						color,
-						_elm_lang$core$Basics$toString(_p32),
-						_elm_lang$core$Basics$toString(_p33));
-				}
+	_Scheduler_working = false;
+}
+
+
+function _Scheduler_step(proc)
+{
+	while (proc.f)
+	{
+		var rootTag = proc.f.$;
+		if (rootTag === 0 || rootTag === 1)
+		{
+			while (proc.g && proc.g.$ !== rootTag)
+			{
+				proc.g = proc.g.i;
 			}
-		} else {
-			if (_p29._1.ctor === 'RBEmpty_elm_builtin') {
-				var _p36 = _p29._1._0;
-				var _p35 = _p29._0._0;
-				var _p34 = {ctor: '_Tuple3', _0: color, _1: _p35, _2: _p36};
-				if ((((_p34.ctor === '_Tuple3') && (_p34._0.ctor === 'Black')) && (_p34._1.ctor === 'Red')) && (_p34._2.ctor === 'LBlack')) {
-					return A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p29._0._1, _p29._0._2, _p29._0._3, _p29._0._4);
-				} else {
-					return A4(
-						_elm_lang$core$Dict$reportRemBug,
-						'Black/Red/LBlack',
-						color,
-						_elm_lang$core$Basics$toString(_p35),
-						_elm_lang$core$Basics$toString(_p36));
-				}
-			} else {
-				var _p40 = _p29._0._2;
-				var _p39 = _p29._0._4;
-				var _p38 = _p29._0._1;
-				var newLeft = A5(_elm_lang$core$Dict$removeMax, _p29._0._0, _p38, _p40, _p29._0._3, _p39);
-				var _p37 = A3(_elm_lang$core$Dict$maxWithDefault, _p38, _p40, _p39);
-				var k = _p37._0;
-				var v = _p37._1;
-				return A5(_elm_lang$core$Dict$bubble, color, k, v, newLeft, right);
+			if (!proc.g)
+			{
+				return;
 			}
+			proc.f = proc.g.b(proc.f.a);
+			proc.g = proc.g.i;
 		}
-	});
-var _elm_lang$core$Dict$map = F2(
-	function (f, dict) {
-		var _p41 = dict;
-		if (_p41.ctor === 'RBEmpty_elm_builtin') {
-			return _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBlack);
-		} else {
-			var _p42 = _p41._1;
-			return A5(
-				_elm_lang$core$Dict$RBNode_elm_builtin,
-				_p41._0,
-				_p42,
-				A2(f, _p42, _p41._2),
-				A2(_elm_lang$core$Dict$map, f, _p41._3),
-				A2(_elm_lang$core$Dict$map, f, _p41._4));
-		}
-	});
-var _elm_lang$core$Dict$Same = {ctor: 'Same'};
-var _elm_lang$core$Dict$Remove = {ctor: 'Remove'};
-var _elm_lang$core$Dict$Insert = {ctor: 'Insert'};
-var _elm_lang$core$Dict$update = F3(
-	function (k, alter, dict) {
-		var up = function (dict) {
-			var _p43 = dict;
-			if (_p43.ctor === 'RBEmpty_elm_builtin') {
-				var _p44 = alter(_elm_lang$core$Maybe$Nothing);
-				if (_p44.ctor === 'Nothing') {
-					return {ctor: '_Tuple2', _0: _elm_lang$core$Dict$Same, _1: _elm_lang$core$Dict$empty};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Dict$Insert,
-						_1: A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Red, k, _p44._0, _elm_lang$core$Dict$empty, _elm_lang$core$Dict$empty)
-					};
-				}
-			} else {
-				var _p55 = _p43._2;
-				var _p54 = _p43._4;
-				var _p53 = _p43._3;
-				var _p52 = _p43._1;
-				var _p51 = _p43._0;
-				var _p45 = A2(_elm_lang$core$Basics$compare, k, _p52);
-				switch (_p45.ctor) {
-					case 'EQ':
-						var _p46 = alter(
-							_elm_lang$core$Maybe$Just(_p55));
-						if (_p46.ctor === 'Nothing') {
-							return {
-								ctor: '_Tuple2',
-								_0: _elm_lang$core$Dict$Remove,
-								_1: A3(_elm_lang$core$Dict$rem, _p51, _p53, _p54)
-							};
-						} else {
-							return {
-								ctor: '_Tuple2',
-								_0: _elm_lang$core$Dict$Same,
-								_1: A5(_elm_lang$core$Dict$RBNode_elm_builtin, _p51, _p52, _p46._0, _p53, _p54)
-							};
-						}
-					case 'LT':
-						var _p47 = up(_p53);
-						var flag = _p47._0;
-						var newLeft = _p47._1;
-						var _p48 = flag;
-						switch (_p48.ctor) {
-							case 'Same':
-								return {
-									ctor: '_Tuple2',
-									_0: _elm_lang$core$Dict$Same,
-									_1: A5(_elm_lang$core$Dict$RBNode_elm_builtin, _p51, _p52, _p55, newLeft, _p54)
-								};
-							case 'Insert':
-								return {
-									ctor: '_Tuple2',
-									_0: _elm_lang$core$Dict$Insert,
-									_1: A5(_elm_lang$core$Dict$balance, _p51, _p52, _p55, newLeft, _p54)
-								};
-							default:
-								return {
-									ctor: '_Tuple2',
-									_0: _elm_lang$core$Dict$Remove,
-									_1: A5(_elm_lang$core$Dict$bubble, _p51, _p52, _p55, newLeft, _p54)
-								};
-						}
-					default:
-						var _p49 = up(_p54);
-						var flag = _p49._0;
-						var newRight = _p49._1;
-						var _p50 = flag;
-						switch (_p50.ctor) {
-							case 'Same':
-								return {
-									ctor: '_Tuple2',
-									_0: _elm_lang$core$Dict$Same,
-									_1: A5(_elm_lang$core$Dict$RBNode_elm_builtin, _p51, _p52, _p55, _p53, newRight)
-								};
-							case 'Insert':
-								return {
-									ctor: '_Tuple2',
-									_0: _elm_lang$core$Dict$Insert,
-									_1: A5(_elm_lang$core$Dict$balance, _p51, _p52, _p55, _p53, newRight)
-								};
-							default:
-								return {
-									ctor: '_Tuple2',
-									_0: _elm_lang$core$Dict$Remove,
-									_1: A5(_elm_lang$core$Dict$bubble, _p51, _p52, _p55, _p53, newRight)
-								};
-						}
-				}
-			}
-		};
-		var _p56 = up(dict);
-		var flag = _p56._0;
-		var updatedDict = _p56._1;
-		var _p57 = flag;
-		switch (_p57.ctor) {
-			case 'Same':
-				return updatedDict;
-			case 'Insert':
-				return _elm_lang$core$Dict$ensureBlackRoot(updatedDict);
-			default:
-				return _elm_lang$core$Dict$blacken(updatedDict);
-		}
-	});
-var _elm_lang$core$Dict$insert = F3(
-	function (key, value, dict) {
-		return A3(
-			_elm_lang$core$Dict$update,
-			key,
-			_elm_lang$core$Basics$always(
-				_elm_lang$core$Maybe$Just(value)),
-			dict);
-	});
-var _elm_lang$core$Dict$singleton = F2(
-	function (key, value) {
-		return A3(_elm_lang$core$Dict$insert, key, value, _elm_lang$core$Dict$empty);
-	});
-var _elm_lang$core$Dict$union = F2(
-	function (t1, t2) {
-		return A3(_elm_lang$core$Dict$foldl, _elm_lang$core$Dict$insert, t2, t1);
-	});
-var _elm_lang$core$Dict$filter = F2(
-	function (predicate, dictionary) {
-		var add = F3(
-			function (key, value, dict) {
-				return A2(predicate, key, value) ? A3(_elm_lang$core$Dict$insert, key, value, dict) : dict;
+		else if (rootTag === 2)
+		{
+			proc.f.c = proc.f.b(function(newRoot) {
+				proc.f = newRoot;
+				_Scheduler_enqueue(proc);
 			});
-		return A3(_elm_lang$core$Dict$foldl, add, _elm_lang$core$Dict$empty, dictionary);
-	});
-var _elm_lang$core$Dict$intersect = F2(
-	function (t1, t2) {
-		return A2(
-			_elm_lang$core$Dict$filter,
-			F2(
-				function (k, _p58) {
-					return A2(_elm_lang$core$Dict$member, k, t2);
-				}),
-			t1);
-	});
-var _elm_lang$core$Dict$partition = F2(
-	function (predicate, dict) {
-		var add = F3(
-			function (key, value, _p59) {
-				var _p60 = _p59;
-				var _p62 = _p60._1;
-				var _p61 = _p60._0;
-				return A2(predicate, key, value) ? {
-					ctor: '_Tuple2',
-					_0: A3(_elm_lang$core$Dict$insert, key, value, _p61),
-					_1: _p62
-				} : {
-					ctor: '_Tuple2',
-					_0: _p61,
-					_1: A3(_elm_lang$core$Dict$insert, key, value, _p62)
-				};
-			});
-		return A3(
-			_elm_lang$core$Dict$foldl,
-			add,
-			{ctor: '_Tuple2', _0: _elm_lang$core$Dict$empty, _1: _elm_lang$core$Dict$empty},
-			dict);
-	});
-var _elm_lang$core$Dict$fromList = function (assocs) {
-	return A3(
-		_elm_lang$core$List$foldl,
-		F2(
-			function (_p63, dict) {
-				var _p64 = _p63;
-				return A3(_elm_lang$core$Dict$insert, _p64._0, _p64._1, dict);
-			}),
-		_elm_lang$core$Dict$empty,
-		assocs);
-};
-var _elm_lang$core$Dict$remove = F2(
-	function (key, dict) {
-		return A3(
-			_elm_lang$core$Dict$update,
-			key,
-			_elm_lang$core$Basics$always(_elm_lang$core$Maybe$Nothing),
-			dict);
-	});
-var _elm_lang$core$Dict$diff = F2(
-	function (t1, t2) {
-		return A3(
-			_elm_lang$core$Dict$foldl,
-			F3(
-				function (k, v, t) {
-					return A2(_elm_lang$core$Dict$remove, k, t);
-				}),
-			t1,
-			t2);
-	});
+			return;
+		}
+		else if (rootTag === 5)
+		{
+			if (proc.h.length === 0)
+			{
+				return;
+			}
+			proc.f = proc.f.b(proc.h.shift());
+		}
+		else // if (rootTag === 3 || rootTag === 4)
+		{
+			proc.g = {
+				$: rootTag === 3 ? 0 : 1,
+				b: proc.f.b,
+				i: proc.g
+			};
+			proc.f = proc.f.d;
+		}
+	}
+}
 
-var _elm_lang$core$Tuple$mapSecond = F2(
-	function (func, _p0) {
-		var _p1 = _p0;
-		return {
-			ctor: '_Tuple2',
-			_0: _p1._0,
-			_1: func(_p1._1)
-		};
+
+
+function _Process_sleep(time)
+{
+	return _Scheduler_binding(function(callback) {
+		var id = setTimeout(function() {
+			callback(_Scheduler_succeed(_Utils_Tuple0));
+		}, time);
+
+		return function() { clearTimeout(id); };
 	});
-var _elm_lang$core$Tuple$mapFirst = F2(
-	function (func, _p2) {
-		var _p3 = _p2;
-		return {
-			ctor: '_Tuple2',
-			_0: func(_p3._0),
-			_1: _p3._1
-		};
-	});
-var _elm_lang$core$Tuple$second = function (_p4) {
-	var _p5 = _p4;
-	return _p5._1;
-};
-var _elm_lang$core$Tuple$first = function (_p6) {
-	var _p7 = _p6;
-	return _p7._0;
-};
+}
 
-var _elm_lang$core$Debug$crash = _elm_lang$core$Native_Debug.crash;
-var _elm_lang$core$Debug$log = _elm_lang$core$Native_Debug.log;
 
-//import //
-
-var _elm_lang$core$Native_Platform = function() {
 
 
 // PROGRAMS
 
-function program(impl)
+
+var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 {
-	return function(flagDecoder)
-	{
-		return function(object, moduleName)
-		{
-			object['worker'] = function worker(flags)
-			{
-				if (typeof flags !== 'undefined')
-				{
-					throw new Error(
-						'The `' + moduleName + '` module does not need flags.\n'
-						+ 'Call ' + moduleName + '.worker() with no arguments and you should be all set!'
-					);
-				}
-
-				return initialize(
-					impl.init,
-					impl.update,
-					impl.subscriptions,
-					renderer
-				);
-			};
-		};
-	};
-}
-
-function programWithFlags(impl)
-{
-	return function(flagDecoder)
-	{
-		return function(object, moduleName)
-		{
-			object['worker'] = function worker(flags)
-			{
-				if (typeof flagDecoder === 'undefined')
-				{
-					throw new Error(
-						'Are you trying to sneak a Never value into Elm? Trickster!\n'
-						+ 'It looks like ' + moduleName + '.main is defined with `programWithFlags` but has type `Program Never`.\n'
-						+ 'Use `program` instead if you do not want flags.'
-					);
-				}
-
-				var result = A2(_elm_lang$core$Native_Json.run, flagDecoder, flags);
-				if (result.ctor === 'Err')
-				{
-					throw new Error(
-						moduleName + '.worker(...) was called with an unexpected argument.\n'
-						+ 'I tried to convert it to an Elm value, but ran into this problem:\n\n'
-						+ result._0
-					);
-				}
-
-				return initialize(
-					impl.init(result._0),
-					impl.update,
-					impl.subscriptions,
-					renderer
-				);
-			};
-		};
-	};
-}
-
-function renderer(enqueue, _)
-{
-	return function(_) {};
-}
-
-
-// HTML TO PROGRAM
-
-function htmlToProgram(vnode)
-{
-	var emptyBag = batch(_elm_lang$core$Native_List.Nil);
-	var noChange = _elm_lang$core$Native_Utils.Tuple2(
-		_elm_lang$core$Native_Utils.Tuple0,
-		emptyBag
+	return _Platform_initialize(
+		flagDecoder,
+		args,
+		impl.init,
+		impl.update,
+		impl.subscriptions,
+		function() { return function() {} }
 	);
+});
 
-	return _elm_lang$virtual_dom$VirtualDom$program({
-		init: noChange,
-		view: function(model) { return main; },
-		update: F2(function(msg, model) { return noChange; }),
-		subscriptions: function (model) { return emptyBag; }
-	});
-}
 
 
 // INITIALIZE A PROGRAM
 
-function initialize(init, update, subscriptions, renderer)
+
+function _Platform_initialize(flagDecoder, args, init, update, subscriptions, stepperBuilder)
 {
-	// ambient state
+	var result = A2(_Json_run, flagDecoder, _Json_wrap(args ? args['flags'] : undefined));
+	elm$core$Result$isOk(result) || _Debug_crash(2 /**/, _Json_errorToString(result.a) /**/);
 	var managers = {};
-	var updateView;
+	result = init(result.a);
+	var model = result.a;
+	var stepper = stepperBuilder(sendToApp, model);
+	var ports = _Platform_setupEffects(managers, sendToApp);
 
-	// init and update state in main process
-	var initApp = _elm_lang$core$Native_Scheduler.nativeBinding(function(callback) {
-		var model = init._0;
-		updateView = renderer(enqueue, model);
-		var cmds = init._1;
-		var subs = subscriptions(model);
-		dispatchEffects(managers, cmds, subs);
-		callback(_elm_lang$core$Native_Scheduler.succeed(model));
-	});
-
-	function onMessage(msg, model)
+	function sendToApp(msg, viewMetadata)
 	{
-		return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback) {
-			var results = A2(update, msg, model);
-			model = results._0;
-			updateView(model);
-			var cmds = results._1;
-			var subs = subscriptions(model);
-			dispatchEffects(managers, cmds, subs);
-			callback(_elm_lang$core$Native_Scheduler.succeed(model));
-		});
+		result = A2(update, msg, model);
+		stepper(model = result.a, viewMetadata);
+		_Platform_dispatchEffects(managers, result.b, subscriptions(model));
 	}
 
-	var mainProcess = spawnLoop(initApp, onMessage);
-
-	function enqueue(msg)
-	{
-		_elm_lang$core$Native_Scheduler.rawSend(mainProcess, msg);
-	}
-
-	var ports = setupEffects(managers, enqueue);
+	_Platform_dispatchEffects(managers, result.b, subscriptions(model));
 
 	return ports ? { ports: ports } : {};
 }
 
 
+
+// TRACK PRELOADS
+//
+// This is used by code in elm/browser and elm/http
+// to register any HTTP requests that are triggered by init.
+//
+
+
+var _Platform_preload;
+
+
+function _Platform_registerPreload(url)
+{
+	_Platform_preload.add(url);
+}
+
+
+
 // EFFECT MANAGERS
 
-var effectManagers = {};
 
-function setupEffects(managers, callback)
+var _Platform_effectManagers = {};
+
+
+function _Platform_setupEffects(managers, sendToApp)
 {
 	var ports;
 
 	// setup all necessary effect managers
-	for (var key in effectManagers)
+	for (var key in _Platform_effectManagers)
 	{
-		var manager = effectManagers[key];
+		var manager = _Platform_effectManagers[key];
 
-		if (manager.isForeign)
+		if (manager.a)
 		{
 			ports = ports || {};
-			ports[key] = manager.tag === 'cmd'
-				? setupOutgoingPort(key)
-				: setupIncomingPort(key, callback);
+			ports[key] = manager.a(key, sendToApp);
 		}
 
-		managers[key] = makeManager(manager, callback);
+		managers[key] = _Platform_instantiateManager(manager, sendToApp);
 	}
 
 	return ports;
 }
 
-function makeManager(info, callback)
+
+function _Platform_createManager(init, onEffects, onSelfMsg, cmdMap, subMap)
+{
+	return {
+		b: init,
+		c: onEffects,
+		d: onSelfMsg,
+		e: cmdMap,
+		f: subMap
+	};
+}
+
+
+function _Platform_instantiateManager(info, sendToApp)
 {
 	var router = {
-		main: callback,
-		self: undefined
+		g: sendToApp,
+		h: undefined
 	};
 
-	var tag = info.tag;
-	var onEffects = info.onEffects;
-	var onSelfMsg = info.onSelfMsg;
-
-	function onMessage(msg, state)
-	{
-		if (msg.ctor === 'self')
-		{
-			return A3(onSelfMsg, router, msg._0, state);
-		}
-
-		var fx = msg._0;
-		switch (tag)
-		{
-			case 'cmd':
-				return A3(onEffects, router, fx.cmds, state);
-
-			case 'sub':
-				return A3(onEffects, router, fx.subs, state);
-
-			case 'fx':
-				return A4(onEffects, router, fx.cmds, fx.subs, state);
-		}
-	}
-
-	var process = spawnLoop(info.init, onMessage);
-	router.self = process;
-	return process;
-}
-
-function sendToApp(router, msg)
-{
-	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
-	{
-		router.main(msg);
-		callback(_elm_lang$core$Native_Scheduler.succeed(_elm_lang$core$Native_Utils.Tuple0));
-	});
-}
-
-function sendToSelf(router, msg)
-{
-	return A2(_elm_lang$core$Native_Scheduler.send, router.self, {
-		ctor: 'self',
-		_0: msg
-	});
-}
-
-
-// HELPER for STATEFUL LOOPS
-
-function spawnLoop(init, onMessage)
-{
-	var andThen = _elm_lang$core$Native_Scheduler.andThen;
+	var onEffects = info.c;
+	var onSelfMsg = info.d;
+	var cmdMap = info.e;
+	var subMap = info.f;
 
 	function loop(state)
 	{
-		var handleMsg = _elm_lang$core$Native_Scheduler.receive(function(msg) {
-			return onMessage(msg, state);
-		});
-		return A2(andThen, loop, handleMsg);
+		return A2(_Scheduler_andThen, loop, _Scheduler_receive(function(msg)
+		{
+			var value = msg.a;
+
+			if (msg.$ === 0)
+			{
+				return A3(onSelfMsg, router, value, state);
+			}
+
+			return cmdMap && subMap
+				? A4(onEffects, router, value.i, value.j, state)
+				: A3(onEffects, router, cmdMap ? value.i : value.j, state);
+		}));
 	}
 
-	var task = A2(andThen, loop, init);
-
-	return _elm_lang$core$Native_Scheduler.rawSpawn(task);
+	return router.h = _Scheduler_rawSpawn(A2(_Scheduler_andThen, loop, info.b));
 }
+
+
+
+// ROUTING
+
+
+var _Platform_sendToApp = F2(function(router, msg)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		router.g(msg);
+		callback(_Scheduler_succeed(_Utils_Tuple0));
+	});
+});
+
+
+var _Platform_sendToSelf = F2(function(router, msg)
+{
+	return A2(_Scheduler_send, router.h, {
+		$: 0,
+		a: msg
+	});
+});
+
 
 
 // BAGS
 
-function leaf(home)
+
+function _Platform_leaf(home)
 {
 	return function(value)
 	{
 		return {
-			type: 'leaf',
-			home: home,
-			value: value
+			$: 1,
+			k: home,
+			l: value
 		};
 	};
 }
 
-function batch(list)
+
+function _Platform_batch(list)
 {
 	return {
-		type: 'node',
-		branches: list
+		$: 2,
+		m: list
 	};
 }
 
-function map(tagger, bag)
+
+var _Platform_map = F2(function(tagger, bag)
 {
 	return {
-		type: 'map',
-		tagger: tagger,
-		tree: bag
+		$: 3,
+		n: tagger,
+		o: bag
 	}
-}
+});
+
 
 
 // PIPE BAGS INTO EFFECT MANAGERS
 
-function dispatchEffects(managers, cmdBag, subBag)
+
+function _Platform_dispatchEffects(managers, cmdBag, subBag)
 {
 	var effectsDict = {};
-	gatherEffects(true, cmdBag, effectsDict, null);
-	gatherEffects(false, subBag, effectsDict, null);
+	_Platform_gatherEffects(true, cmdBag, effectsDict, null);
+	_Platform_gatherEffects(false, subBag, effectsDict, null);
 
 	for (var home in managers)
 	{
-		var fx = home in effectsDict
-			? effectsDict[home]
-			: {
-				cmds: _elm_lang$core$Native_List.Nil,
-				subs: _elm_lang$core$Native_List.Nil
-			};
-
-		_elm_lang$core$Native_Scheduler.rawSend(managers[home], { ctor: 'fx', _0: fx });
+		_Scheduler_rawSend(managers[home], {
+			$: 'fx',
+			a: effectsDict[home] || { i: _List_Nil, j: _List_Nil }
+		});
 	}
 }
 
-function gatherEffects(isCmd, bag, effectsDict, taggers)
+
+function _Platform_gatherEffects(isCmd, bag, effectsDict, taggers)
 {
-	switch (bag.type)
+	switch (bag.$)
 	{
-		case 'leaf':
-			var home = bag.home;
-			var effect = toEffect(isCmd, home, taggers, bag.value);
-			effectsDict[home] = insert(isCmd, effect, effectsDict[home]);
+		case 1:
+			var home = bag.k;
+			var effect = _Platform_toEffect(isCmd, home, taggers, bag.l);
+			effectsDict[home] = _Platform_insert(isCmd, effect, effectsDict[home]);
 			return;
 
-		case 'node':
-			var list = bag.branches;
-			while (list.ctor !== '[]')
+		case 2:
+			for (var list = bag.m; list.b; list = list.b) // WHILE_CONS
 			{
-				gatherEffects(isCmd, list._0, effectsDict, taggers);
-				list = list._1;
+				_Platform_gatherEffects(isCmd, list.a, effectsDict, taggers);
 			}
 			return;
 
-		case 'map':
-			gatherEffects(isCmd, bag.tree, effectsDict, {
-				tagger: bag.tagger,
-				rest: taggers
+		case 3:
+			_Platform_gatherEffects(isCmd, bag.o, effectsDict, {
+				p: bag.n,
+				q: taggers
 			});
 			return;
 	}
 }
 
-function toEffect(isCmd, home, taggers, value)
+
+function _Platform_toEffect(isCmd, home, taggers, value)
 {
 	function applyTaggers(x)
 	{
-		var temp = taggers;
-		while (temp)
+		for (var temp = taggers; temp; temp = temp.q)
 		{
-			x = temp.tagger(x);
-			temp = temp.rest;
+			x = temp.p(x);
 		}
 		return x;
 	}
 
 	var map = isCmd
-		? effectManagers[home].cmdMap
-		: effectManagers[home].subMap;
+		? _Platform_effectManagers[home].e
+		: _Platform_effectManagers[home].f;
 
 	return A2(map, applyTaggers, value)
 }
 
-function insert(isCmd, newEffect, effects)
+
+function _Platform_insert(isCmd, newEffect, effects)
 {
-	effects = effects || {
-		cmds: _elm_lang$core$Native_List.Nil,
-		subs: _elm_lang$core$Native_List.Nil
-	};
-	if (isCmd)
-	{
-		effects.cmds = _elm_lang$core$Native_List.Cons(newEffect, effects.cmds);
-		return effects;
-	}
-	effects.subs = _elm_lang$core$Native_List.Cons(newEffect, effects.subs);
+	effects = effects || { i: _List_Nil, j: _List_Nil };
+
+	isCmd
+		? (effects.i = _List_Cons(newEffect, effects.i))
+		: (effects.j = _List_Cons(newEffect, effects.j));
+
 	return effects;
 }
 
 
+
 // PORTS
 
-function checkPortName(name)
+
+function _Platform_checkPortName(name)
 {
-	if (name in effectManagers)
+	if (_Platform_effectManagers[name])
 	{
-		throw new Error('There can only be one port named `' + name + '`, but your program has multiple.');
+		_Debug_crash(3, name)
 	}
 }
+
 
 
 // OUTGOING PORTS
 
-function outgoingPort(name, converter)
+
+function _Platform_outgoingPort(name, converter)
 {
-	checkPortName(name);
-	effectManagers[name] = {
-		tag: 'cmd',
-		cmdMap: outgoingPortMap,
-		converter: converter,
-		isForeign: true
+	_Platform_checkPortName(name);
+	_Platform_effectManagers[name] = {
+		e: _Platform_outgoingPortMap,
+		r: converter,
+		a: _Platform_setupOutgoingPort
 	};
-	return leaf(name);
+	return _Platform_leaf(name);
 }
 
-var outgoingPortMap = F2(function cmdMap(tagger, value) {
-	return value;
-});
 
-function setupOutgoingPort(name)
+var _Platform_outgoingPortMap = F2(function(tagger, value) { return value; });
+
+
+function _Platform_setupOutgoingPort(name)
 {
 	var subs = [];
-	var converter = effectManagers[name].converter;
+	var converter = _Platform_effectManagers[name].r;
 
 	// CREATE MANAGER
 
-	var init = _elm_lang$core$Native_Scheduler.succeed(null);
+	var init = _Process_sleep(0);
 
-	function onEffects(router, cmdList, state)
+	_Platform_effectManagers[name].b = init;
+	_Platform_effectManagers[name].c = F3(function(router, cmdList, state)
 	{
-		while (cmdList.ctor !== '[]')
+		for ( ; cmdList.b; cmdList = cmdList.b) // WHILE_CONS
 		{
 			// grab a separate reference to subs in case unsubscribe is called
 			var currentSubs = subs;
-			var value = converter(cmdList._0);
+			var value = _Json_unwrap(converter(cmdList.a));
 			for (var i = 0; i < currentSubs.length; i++)
 			{
 				currentSubs[i](value);
 			}
-			cmdList = cmdList._1;
 		}
 		return init;
-	}
-
-	effectManagers[name].init = init;
-	effectManagers[name].onEffects = F3(onEffects);
+	});
 
 	// PUBLIC API
 
@@ -3656,21 +2224,23 @@ function setupOutgoingPort(name)
 }
 
 
+
 // INCOMING PORTS
 
-function incomingPort(name, converter)
+
+function _Platform_incomingPort(name, converter)
 {
-	checkPortName(name);
-	effectManagers[name] = {
-		tag: 'sub',
-		subMap: incomingPortMap,
-		converter: converter,
-		isForeign: true
+	_Platform_checkPortName(name);
+	_Platform_effectManagers[name] = {
+		f: _Platform_incomingPortMap,
+		r: converter,
+		a: _Platform_setupIncomingPort
 	};
-	return leaf(name);
+	return _Platform_leaf(name);
 }
 
-var incomingPortMap = F2(function subMap(tagger, finalTagger)
+
+var _Platform_incomingPortMap = F2(function(tagger, finalTagger)
 {
 	return function(value)
 	{
@@ -3678,2857 +2248,583 @@ var incomingPortMap = F2(function subMap(tagger, finalTagger)
 	};
 });
 
-function setupIncomingPort(name, callback)
+
+function _Platform_setupIncomingPort(name, sendToApp)
 {
-	var sentBeforeInit = [];
-	var subs = _elm_lang$core$Native_List.Nil;
-	var converter = effectManagers[name].converter;
-	var currentOnEffects = preInitOnEffects;
-	var currentSend = preInitSend;
+	var subs = _List_Nil;
+	var converter = _Platform_effectManagers[name].r;
 
 	// CREATE MANAGER
 
-	var init = _elm_lang$core$Native_Scheduler.succeed(null);
+	var init = _Scheduler_succeed(null);
 
-	function preInitOnEffects(router, subList, state)
-	{
-		var postInitResult = postInitOnEffects(router, subList, state);
-
-		for(var i = 0; i < sentBeforeInit.length; i++)
-		{
-			postInitSend(sentBeforeInit[i]);
-		}
-
-		sentBeforeInit = null; // to release objects held in queue
-		currentSend = postInitSend;
-		currentOnEffects = postInitOnEffects;
-		return postInitResult;
-	}
-
-	function postInitOnEffects(router, subList, state)
+	_Platform_effectManagers[name].b = init;
+	_Platform_effectManagers[name].c = F3(function(router, subList, state)
 	{
 		subs = subList;
 		return init;
-	}
-
-	function onEffects(router, subList, state)
-	{
-		return currentOnEffects(router, subList, state);
-	}
-
-	effectManagers[name].init = init;
-	effectManagers[name].onEffects = F3(onEffects);
+	});
 
 	// PUBLIC API
 
-	function preInitSend(value)
-	{
-		sentBeforeInit.push(value);
-	}
-
-	function postInitSend(value)
-	{
-		var temp = subs;
-		while (temp.ctor !== '[]')
-		{
-			callback(temp._0(value));
-			temp = temp._1;
-		}
-	}
-
 	function send(incomingValue)
 	{
-		var result = A2(_elm_lang$core$Json_Decode$decodeValue, converter, incomingValue);
-		if (result.ctor === 'Err')
-		{
-			throw new Error('Trying to send an unexpected type of value through port `' + name + '`:\n' + result._0);
-		}
+		var result = A2(_Json_run, converter, _Json_wrap(incomingValue));
 
-		currentSend(result._0);
+		elm$core$Result$isOk(result) || _Debug_crash(4, name, result.a);
+
+		var value = result.a;
+		for (var temp = subs; temp.b; temp = temp.b) // WHILE_CONS
+		{
+			sendToApp(temp.a(value));
+		}
 	}
 
 	return { send: send };
 }
 
-return {
-	// routers
-	sendToApp: F2(sendToApp),
-	sendToSelf: F2(sendToSelf),
-
-	// global setup
-	effectManagers: effectManagers,
-	outgoingPort: outgoingPort,
-	incomingPort: incomingPort,
-
-	htmlToProgram: htmlToProgram,
-	program: program,
-	programWithFlags: programWithFlags,
-	initialize: initialize,
-
-	// effect bags
-	leaf: leaf,
-	batch: batch,
-	map: F2(map)
-};
-
-}();
-
-//import Native.Utils //
-
-var _elm_lang$core$Native_Scheduler = function() {
-
-var MAX_STEPS = 10000;
 
 
-// TASKS
+// EXPORT ELM MODULES
+//
+// Have DEBUG and PROD versions so that we can (1) give nicer errors in
+// debug mode and (2) not pay for the bits needed for that in prod mode.
+//
 
-function succeed(value)
+
+function _Platform_export_UNUSED(exports)
 {
-	return {
-		ctor: '_Task_succeed',
-		value: value
-	};
-}
-
-function fail(error)
-{
-	return {
-		ctor: '_Task_fail',
-		value: error
-	};
-}
-
-function nativeBinding(callback)
-{
-	return {
-		ctor: '_Task_nativeBinding',
-		callback: callback,
-		cancel: null
-	};
-}
-
-function andThen(callback, task)
-{
-	return {
-		ctor: '_Task_andThen',
-		callback: callback,
-		task: task
-	};
-}
-
-function onError(callback, task)
-{
-	return {
-		ctor: '_Task_onError',
-		callback: callback,
-		task: task
-	};
-}
-
-function receive(callback)
-{
-	return {
-		ctor: '_Task_receive',
-		callback: callback
-	};
+	scope['Elm']
+		? _Platform_mergeExportsProd(scope['Elm'], exports)
+		: scope['Elm'] = exports;
 }
 
 
-// PROCESSES
-
-function rawSpawn(task)
+function _Platform_mergeExportsProd(obj, exports)
 {
-	var process = {
-		ctor: '_Process',
-		id: _elm_lang$core$Native_Utils.guid(),
-		root: task,
-		stack: null,
-		mailbox: []
-	};
-
-	enqueue(process);
-
-	return process;
-}
-
-function spawn(task)
-{
-	return nativeBinding(function(callback) {
-		var process = rawSpawn(task);
-		callback(succeed(process));
-	});
-}
-
-function rawSend(process, msg)
-{
-	process.mailbox.push(msg);
-	enqueue(process);
-}
-
-function send(process, msg)
-{
-	return nativeBinding(function(callback) {
-		rawSend(process, msg);
-		callback(succeed(_elm_lang$core$Native_Utils.Tuple0));
-	});
-}
-
-function kill(process)
-{
-	return nativeBinding(function(callback) {
-		var root = process.root;
-		if (root.ctor === '_Task_nativeBinding' && root.cancel)
-		{
-			root.cancel();
-		}
-
-		process.root = null;
-
-		callback(succeed(_elm_lang$core$Native_Utils.Tuple0));
-	});
-}
-
-function sleep(time)
-{
-	return nativeBinding(function(callback) {
-		var id = setTimeout(function() {
-			callback(succeed(_elm_lang$core$Native_Utils.Tuple0));
-		}, time);
-
-		return function() { clearTimeout(id); };
-	});
-}
-
-
-// STEP PROCESSES
-
-function step(numSteps, process)
-{
-	while (numSteps < MAX_STEPS)
+	for (var name in exports)
 	{
-		var ctor = process.root.ctor;
-
-		if (ctor === '_Task_succeed')
-		{
-			while (process.stack && process.stack.ctor === '_Task_onError')
-			{
-				process.stack = process.stack.rest;
-			}
-			if (process.stack === null)
-			{
-				break;
-			}
-			process.root = process.stack.callback(process.root.value);
-			process.stack = process.stack.rest;
-			++numSteps;
-			continue;
-		}
-
-		if (ctor === '_Task_fail')
-		{
-			while (process.stack && process.stack.ctor === '_Task_andThen')
-			{
-				process.stack = process.stack.rest;
-			}
-			if (process.stack === null)
-			{
-				break;
-			}
-			process.root = process.stack.callback(process.root.value);
-			process.stack = process.stack.rest;
-			++numSteps;
-			continue;
-		}
-
-		if (ctor === '_Task_andThen')
-		{
-			process.stack = {
-				ctor: '_Task_andThen',
-				callback: process.root.callback,
-				rest: process.stack
-			};
-			process.root = process.root.task;
-			++numSteps;
-			continue;
-		}
-
-		if (ctor === '_Task_onError')
-		{
-			process.stack = {
-				ctor: '_Task_onError',
-				callback: process.root.callback,
-				rest: process.stack
-			};
-			process.root = process.root.task;
-			++numSteps;
-			continue;
-		}
-
-		if (ctor === '_Task_nativeBinding')
-		{
-			process.root.cancel = process.root.callback(function(newRoot) {
-				process.root = newRoot;
-				enqueue(process);
-			});
-
-			break;
-		}
-
-		if (ctor === '_Task_receive')
-		{
-			var mailbox = process.mailbox;
-			if (mailbox.length === 0)
-			{
-				break;
-			}
-
-			process.root = process.root.callback(mailbox.shift());
-			++numSteps;
-			continue;
-		}
-
-		throw new Error(ctor);
-	}
-
-	if (numSteps < MAX_STEPS)
-	{
-		return numSteps + 1;
-	}
-	enqueue(process);
-
-	return numSteps;
-}
-
-
-// WORK QUEUE
-
-var working = false;
-var workQueue = [];
-
-function enqueue(process)
-{
-	workQueue.push(process);
-
-	if (!working)
-	{
-		setTimeout(work, 0);
-		working = true;
+		(name in obj)
+			? (name == 'init')
+				? _Debug_crash(6)
+				: _Platform_mergeExportsProd(obj[name], exports[name])
+			: (obj[name] = exports[name]);
 	}
 }
 
-function work()
+
+function _Platform_export(exports)
 {
-	var numSteps = 0;
-	var process;
-	while (numSteps < MAX_STEPS && (process = workQueue.shift()))
-	{
-		if (process.root)
-		{
-			numSteps = step(numSteps, process);
-		}
-	}
-	if (!process)
-	{
-		working = false;
-		return;
-	}
-	setTimeout(work, 0);
+	scope['Elm']
+		? _Platform_mergeExportsDebug('Elm', scope['Elm'], exports)
+		: scope['Elm'] = exports;
 }
 
 
-return {
-	succeed: succeed,
-	fail: fail,
-	nativeBinding: nativeBinding,
-	andThen: F2(andThen),
-	onError: F2(onError),
-	receive: receive,
+function _Platform_mergeExportsDebug(moduleName, obj, exports)
+{
+	for (var name in exports)
+	{
+		(name in obj)
+			? (name == 'init')
+				? _Debug_crash(6, moduleName)
+				: _Platform_mergeExportsDebug(moduleName + '.' + name, obj[name], exports[name])
+			: (obj[name] = exports[name]);
+	}
+}
 
-	spawn: spawn,
-	kill: kill,
-	sleep: sleep,
-	send: F2(send),
 
-	rawSpawn: rawSpawn,
-	rawSend: rawSend
-};
 
-}();
-var _elm_lang$core$Platform_Cmd$batch = _elm_lang$core$Native_Platform.batch;
-var _elm_lang$core$Platform_Cmd$none = _elm_lang$core$Platform_Cmd$batch(
-	{ctor: '[]'});
-var _elm_lang$core$Platform_Cmd_ops = _elm_lang$core$Platform_Cmd_ops || {};
-_elm_lang$core$Platform_Cmd_ops['!'] = F2(
-	function (model, commands) {
+
+// HELPERS
+
+
+var _VirtualDom_divertHrefToApp;
+
+var _VirtualDom_doc = typeof document !== 'undefined' ? document : {};
+
+
+function _VirtualDom_appendChild(parent, child)
+{
+	parent.appendChild(child);
+}
+
+var _VirtualDom_init = F4(function(virtualNode, flagDecoder, debugMetadata, args)
+{
+	// NOTE: this function needs _Platform_export available to work
+
+	/**_UNUSED/
+	var node = args['node'];
+	//*/
+	/**/
+	var node = args && args['node'] ? args['node'] : _Debug_crash(0);
+	//*/
+
+	node.parentNode.replaceChild(
+		_VirtualDom_render(virtualNode, function() {}),
+		node
+	);
+
+	return {};
+});
+
+
+
+// TEXT
+
+
+function _VirtualDom_text(string)
+{
+	return {
+		$: 0,
+		a: string
+	};
+}
+
+
+
+// NODE
+
+
+var _VirtualDom_nodeNS = F2(function(namespace, tag)
+{
+	return F2(function(factList, kidList)
+	{
+		for (var kids = [], descendantsCount = 0; kidList.b; kidList = kidList.b) // WHILE_CONS
+		{
+			var kid = kidList.a;
+			descendantsCount += (kid.b || 0);
+			kids.push(kid);
+		}
+		descendantsCount += kids.length;
+
 		return {
-			ctor: '_Tuple2',
-			_0: model,
-			_1: _elm_lang$core$Platform_Cmd$batch(commands)
+			$: 1,
+			c: tag,
+			d: _VirtualDom_organizeFacts(factList),
+			e: kids,
+			f: namespace,
+			b: descendantsCount
 		};
 	});
-var _elm_lang$core$Platform_Cmd$map = _elm_lang$core$Native_Platform.map;
-var _elm_lang$core$Platform_Cmd$Cmd = {ctor: 'Cmd'};
-
-var _elm_lang$core$Platform_Sub$batch = _elm_lang$core$Native_Platform.batch;
-var _elm_lang$core$Platform_Sub$none = _elm_lang$core$Platform_Sub$batch(
-	{ctor: '[]'});
-var _elm_lang$core$Platform_Sub$map = _elm_lang$core$Native_Platform.map;
-var _elm_lang$core$Platform_Sub$Sub = {ctor: 'Sub'};
-
-var _elm_lang$core$Platform$hack = _elm_lang$core$Native_Scheduler.succeed;
-var _elm_lang$core$Platform$sendToSelf = _elm_lang$core$Native_Platform.sendToSelf;
-var _elm_lang$core$Platform$sendToApp = _elm_lang$core$Native_Platform.sendToApp;
-var _elm_lang$core$Platform$programWithFlags = _elm_lang$core$Native_Platform.programWithFlags;
-var _elm_lang$core$Platform$program = _elm_lang$core$Native_Platform.program;
-var _elm_lang$core$Platform$Program = {ctor: 'Program'};
-var _elm_lang$core$Platform$Task = {ctor: 'Task'};
-var _elm_lang$core$Platform$ProcessId = {ctor: 'ProcessId'};
-var _elm_lang$core$Platform$Router = {ctor: 'Router'};
-
-//import Native.List //
-
-var _elm_lang$core$Native_Array = function() {
-
-// A RRB-Tree has two distinct data types.
-// Leaf -> "height"  is always 0
-//         "table"   is an array of elements
-// Node -> "height"  is always greater than 0
-//         "table"   is an array of child nodes
-//         "lengths" is an array of accumulated lengths of the child nodes
-
-// M is the maximal table size. 32 seems fast. E is the allowed increase
-// of search steps when concatting to find an index. Lower values will
-// decrease balancing, but will increase search steps.
-var M = 32;
-var E = 2;
-
-// An empty array.
-var empty = {
-	ctor: '_Array',
-	height: 0,
-	table: []
-};
+});
 
 
-function get(i, array)
+var _VirtualDom_node = _VirtualDom_nodeNS(undefined);
+
+
+
+// KEYED NODE
+
+
+var _VirtualDom_keyedNodeNS = F2(function(namespace, tag)
 {
-	if (i < 0 || i >= length(array))
+	return F2(function(factList, kidList)
 	{
-		throw new Error(
-			'Index ' + i + ' is out of range. Check the length of ' +
-			'your array first or use getMaybe or getWithDefault.');
-	}
-	return unsafeGet(i, array);
-}
-
-
-function unsafeGet(i, array)
-{
-	for (var x = array.height; x > 0; x--)
-	{
-		var slot = i >> (x * 5);
-		while (array.lengths[slot] <= i)
+		for (var kids = [], descendantsCount = 0; kidList.b; kidList = kidList.b) // WHILE_CONS
 		{
-			slot++;
+			var kid = kidList.a;
+			descendantsCount += (kid.b.b || 0);
+			kids.push(kid);
 		}
-		if (slot > 0)
-		{
-			i -= array.lengths[slot - 1];
-		}
-		array = array.table[slot];
-	}
-	return array.table[i];
-}
+		descendantsCount += kids.length;
 
-
-// Sets the value at the index i. Only the nodes leading to i will get
-// copied and updated.
-function set(i, item, array)
-{
-	if (i < 0 || length(array) <= i)
-	{
-		return array;
-	}
-	return unsafeSet(i, item, array);
-}
-
-
-function unsafeSet(i, item, array)
-{
-	array = nodeCopy(array);
-
-	if (array.height === 0)
-	{
-		array.table[i] = item;
-	}
-	else
-	{
-		var slot = getSlot(i, array);
-		if (slot > 0)
-		{
-			i -= array.lengths[slot - 1];
-		}
-		array.table[slot] = unsafeSet(i, item, array.table[slot]);
-	}
-	return array;
-}
-
-
-function initialize(len, f)
-{
-	if (len <= 0)
-	{
-		return empty;
-	}
-	var h = Math.floor( Math.log(len) / Math.log(M) );
-	return initialize_(f, h, 0, len);
-}
-
-function initialize_(f, h, from, to)
-{
-	if (h === 0)
-	{
-		var table = new Array((to - from) % (M + 1));
-		for (var i = 0; i < table.length; i++)
-		{
-		  table[i] = f(from + i);
-		}
 		return {
-			ctor: '_Array',
-			height: 0,
-			table: table
+			$: 2,
+			c: tag,
+			d: _VirtualDom_organizeFacts(factList),
+			e: kids,
+			f: namespace,
+			b: descendantsCount
 		};
-	}
+	});
+});
 
-	var step = Math.pow(M, h);
-	var table = new Array(Math.ceil((to - from) / step));
-	var lengths = new Array(table.length);
-	for (var i = 0; i < table.length; i++)
-	{
-		table[i] = initialize_(f, h - 1, from + (i * step), Math.min(from + ((i + 1) * step), to));
-		lengths[i] = length(table[i]) + (i > 0 ? lengths[i-1] : 0);
-	}
-	return {
-		ctor: '_Array',
-		height: h,
-		table: table,
-		lengths: lengths
-	};
-}
 
-function fromList(list)
-{
-	if (list.ctor === '[]')
-	{
-		return empty;
-	}
+var _VirtualDom_keyedNode = _VirtualDom_keyedNodeNS(undefined);
 
-	// Allocate M sized blocks (table) and write list elements to it.
-	var table = new Array(M);
-	var nodes = [];
-	var i = 0;
 
-	while (list.ctor !== '[]')
-	{
-		table[i] = list._0;
-		list = list._1;
-		i++;
 
-		// table is full, so we can push a leaf containing it into the
-		// next node.
-		if (i === M)
-		{
-			var leaf = {
-				ctor: '_Array',
-				height: 0,
-				table: table
-			};
-			fromListPush(leaf, nodes);
-			table = new Array(M);
-			i = 0;
-		}
-	}
+// CUSTOM
 
-	// Maybe there is something left on the table.
-	if (i > 0)
-	{
-		var leaf = {
-			ctor: '_Array',
-			height: 0,
-			table: table.splice(0, i)
-		};
-		fromListPush(leaf, nodes);
-	}
 
-	// Go through all of the nodes and eventually push them into higher nodes.
-	for (var h = 0; h < nodes.length - 1; h++)
-	{
-		if (nodes[h].table.length > 0)
-		{
-			fromListPush(nodes[h], nodes);
-		}
-	}
-
-	var head = nodes[nodes.length - 1];
-	if (head.height > 0 && head.table.length === 1)
-	{
-		return head.table[0];
-	}
-	else
-	{
-		return head;
-	}
-}
-
-// Push a node into a higher node as a child.
-function fromListPush(toPush, nodes)
-{
-	var h = toPush.height;
-
-	// Maybe the node on this height does not exist.
-	if (nodes.length === h)
-	{
-		var node = {
-			ctor: '_Array',
-			height: h + 1,
-			table: [],
-			lengths: []
-		};
-		nodes.push(node);
-	}
-
-	nodes[h].table.push(toPush);
-	var len = length(toPush);
-	if (nodes[h].lengths.length > 0)
-	{
-		len += nodes[h].lengths[nodes[h].lengths.length - 1];
-	}
-	nodes[h].lengths.push(len);
-
-	if (nodes[h].table.length === M)
-	{
-		fromListPush(nodes[h], nodes);
-		nodes[h] = {
-			ctor: '_Array',
-			height: h + 1,
-			table: [],
-			lengths: []
-		};
-	}
-}
-
-// Pushes an item via push_ to the bottom right of a tree.
-function push(item, a)
-{
-	var pushed = push_(item, a);
-	if (pushed !== null)
-	{
-		return pushed;
-	}
-
-	var newTree = create(item, a.height);
-	return siblise(a, newTree);
-}
-
-// Recursively tries to push an item to the bottom-right most
-// tree possible. If there is no space left for the item,
-// null will be returned.
-function push_(item, a)
-{
-	// Handle resursion stop at leaf level.
-	if (a.height === 0)
-	{
-		if (a.table.length < M)
-		{
-			var newA = {
-				ctor: '_Array',
-				height: 0,
-				table: a.table.slice()
-			};
-			newA.table.push(item);
-			return newA;
-		}
-		else
-		{
-		  return null;
-		}
-	}
-
-	// Recursively push
-	var pushed = push_(item, botRight(a));
-
-	// There was space in the bottom right tree, so the slot will
-	// be updated.
-	if (pushed !== null)
-	{
-		var newA = nodeCopy(a);
-		newA.table[newA.table.length - 1] = pushed;
-		newA.lengths[newA.lengths.length - 1]++;
-		return newA;
-	}
-
-	// When there was no space left, check if there is space left
-	// for a new slot with a tree which contains only the item
-	// at the bottom.
-	if (a.table.length < M)
-	{
-		var newSlot = create(item, a.height - 1);
-		var newA = nodeCopy(a);
-		newA.table.push(newSlot);
-		newA.lengths.push(newA.lengths[newA.lengths.length - 1] + length(newSlot));
-		return newA;
-	}
-	else
-	{
-		return null;
-	}
-}
-
-// Converts an array into a list of elements.
-function toList(a)
-{
-	return toList_(_elm_lang$core$Native_List.Nil, a);
-}
-
-function toList_(list, a)
-{
-	for (var i = a.table.length - 1; i >= 0; i--)
-	{
-		list =
-			a.height === 0
-				? _elm_lang$core$Native_List.Cons(a.table[i], list)
-				: toList_(list, a.table[i]);
-	}
-	return list;
-}
-
-// Maps a function over the elements of an array.
-function map(f, a)
-{
-	var newA = {
-		ctor: '_Array',
-		height: a.height,
-		table: new Array(a.table.length)
-	};
-	if (a.height > 0)
-	{
-		newA.lengths = a.lengths;
-	}
-	for (var i = 0; i < a.table.length; i++)
-	{
-		newA.table[i] =
-			a.height === 0
-				? f(a.table[i])
-				: map(f, a.table[i]);
-	}
-	return newA;
-}
-
-// Maps a function over the elements with their index as first argument.
-function indexedMap(f, a)
-{
-	return indexedMap_(f, a, 0);
-}
-
-function indexedMap_(f, a, from)
-{
-	var newA = {
-		ctor: '_Array',
-		height: a.height,
-		table: new Array(a.table.length)
-	};
-	if (a.height > 0)
-	{
-		newA.lengths = a.lengths;
-	}
-	for (var i = 0; i < a.table.length; i++)
-	{
-		newA.table[i] =
-			a.height === 0
-				? A2(f, from + i, a.table[i])
-				: indexedMap_(f, a.table[i], i == 0 ? from : from + a.lengths[i - 1]);
-	}
-	return newA;
-}
-
-function foldl(f, b, a)
-{
-	if (a.height === 0)
-	{
-		for (var i = 0; i < a.table.length; i++)
-		{
-			b = A2(f, a.table[i], b);
-		}
-	}
-	else
-	{
-		for (var i = 0; i < a.table.length; i++)
-		{
-			b = foldl(f, b, a.table[i]);
-		}
-	}
-	return b;
-}
-
-function foldr(f, b, a)
-{
-	if (a.height === 0)
-	{
-		for (var i = a.table.length; i--; )
-		{
-			b = A2(f, a.table[i], b);
-		}
-	}
-	else
-	{
-		for (var i = a.table.length; i--; )
-		{
-			b = foldr(f, b, a.table[i]);
-		}
-	}
-	return b;
-}
-
-// TODO: currently, it slices the right, then the left. This can be
-// optimized.
-function slice(from, to, a)
-{
-	if (from < 0)
-	{
-		from += length(a);
-	}
-	if (to < 0)
-	{
-		to += length(a);
-	}
-	return sliceLeft(from, sliceRight(to, a));
-}
-
-function sliceRight(to, a)
-{
-	if (to === length(a))
-	{
-		return a;
-	}
-
-	// Handle leaf level.
-	if (a.height === 0)
-	{
-		var newA = { ctor:'_Array', height:0 };
-		newA.table = a.table.slice(0, to);
-		return newA;
-	}
-
-	// Slice the right recursively.
-	var right = getSlot(to, a);
-	var sliced = sliceRight(to - (right > 0 ? a.lengths[right - 1] : 0), a.table[right]);
-
-	// Maybe the a node is not even needed, as sliced contains the whole slice.
-	if (right === 0)
-	{
-		return sliced;
-	}
-
-	// Create new node.
-	var newA = {
-		ctor: '_Array',
-		height: a.height,
-		table: a.table.slice(0, right),
-		lengths: a.lengths.slice(0, right)
-	};
-	if (sliced.table.length > 0)
-	{
-		newA.table[right] = sliced;
-		newA.lengths[right] = length(sliced) + (right > 0 ? newA.lengths[right - 1] : 0);
-	}
-	return newA;
-}
-
-function sliceLeft(from, a)
-{
-	if (from === 0)
-	{
-		return a;
-	}
-
-	// Handle leaf level.
-	if (a.height === 0)
-	{
-		var newA = { ctor:'_Array', height:0 };
-		newA.table = a.table.slice(from, a.table.length + 1);
-		return newA;
-	}
-
-	// Slice the left recursively.
-	var left = getSlot(from, a);
-	var sliced = sliceLeft(from - (left > 0 ? a.lengths[left - 1] : 0), a.table[left]);
-
-	// Maybe the a node is not even needed, as sliced contains the whole slice.
-	if (left === a.table.length - 1)
-	{
-		return sliced;
-	}
-
-	// Create new node.
-	var newA = {
-		ctor: '_Array',
-		height: a.height,
-		table: a.table.slice(left, a.table.length + 1),
-		lengths: new Array(a.table.length - left)
-	};
-	newA.table[0] = sliced;
-	var len = 0;
-	for (var i = 0; i < newA.table.length; i++)
-	{
-		len += length(newA.table[i]);
-		newA.lengths[i] = len;
-	}
-
-	return newA;
-}
-
-// Appends two trees.
-function append(a,b)
-{
-	if (a.table.length === 0)
-	{
-		return b;
-	}
-	if (b.table.length === 0)
-	{
-		return a;
-	}
-
-	var c = append_(a, b);
-
-	// Check if both nodes can be crunshed together.
-	if (c[0].table.length + c[1].table.length <= M)
-	{
-		if (c[0].table.length === 0)
-		{
-			return c[1];
-		}
-		if (c[1].table.length === 0)
-		{
-			return c[0];
-		}
-
-		// Adjust .table and .lengths
-		c[0].table = c[0].table.concat(c[1].table);
-		if (c[0].height > 0)
-		{
-			var len = length(c[0]);
-			for (var i = 0; i < c[1].lengths.length; i++)
-			{
-				c[1].lengths[i] += len;
-			}
-			c[0].lengths = c[0].lengths.concat(c[1].lengths);
-		}
-
-		return c[0];
-	}
-
-	if (c[0].height > 0)
-	{
-		var toRemove = calcToRemove(a, b);
-		if (toRemove > E)
-		{
-			c = shuffle(c[0], c[1], toRemove);
-		}
-	}
-
-	return siblise(c[0], c[1]);
-}
-
-// Returns an array of two nodes; right and left. One node _may_ be empty.
-function append_(a, b)
-{
-	if (a.height === 0 && b.height === 0)
-	{
-		return [a, b];
-	}
-
-	if (a.height !== 1 || b.height !== 1)
-	{
-		if (a.height === b.height)
-		{
-			a = nodeCopy(a);
-			b = nodeCopy(b);
-			var appended = append_(botRight(a), botLeft(b));
-
-			insertRight(a, appended[1]);
-			insertLeft(b, appended[0]);
-		}
-		else if (a.height > b.height)
-		{
-			a = nodeCopy(a);
-			var appended = append_(botRight(a), b);
-
-			insertRight(a, appended[0]);
-			b = parentise(appended[1], appended[1].height + 1);
-		}
-		else
-		{
-			b = nodeCopy(b);
-			var appended = append_(a, botLeft(b));
-
-			var left = appended[0].table.length === 0 ? 0 : 1;
-			var right = left === 0 ? 1 : 0;
-			insertLeft(b, appended[left]);
-			a = parentise(appended[right], appended[right].height + 1);
-		}
-	}
-
-	// Check if balancing is needed and return based on that.
-	if (a.table.length === 0 || b.table.length === 0)
-	{
-		return [a, b];
-	}
-
-	var toRemove = calcToRemove(a, b);
-	if (toRemove <= E)
-	{
-		return [a, b];
-	}
-	return shuffle(a, b, toRemove);
-}
-
-// Helperfunctions for append_. Replaces a child node at the side of the parent.
-function insertRight(parent, node)
-{
-	var index = parent.table.length - 1;
-	parent.table[index] = node;
-	parent.lengths[index] = length(node);
-	parent.lengths[index] += index > 0 ? parent.lengths[index - 1] : 0;
-}
-
-function insertLeft(parent, node)
-{
-	if (node.table.length > 0)
-	{
-		parent.table[0] = node;
-		parent.lengths[0] = length(node);
-
-		var len = length(parent.table[0]);
-		for (var i = 1; i < parent.lengths.length; i++)
-		{
-			len += length(parent.table[i]);
-			parent.lengths[i] = len;
-		}
-	}
-	else
-	{
-		parent.table.shift();
-		for (var i = 1; i < parent.lengths.length; i++)
-		{
-			parent.lengths[i] = parent.lengths[i] - parent.lengths[0];
-		}
-		parent.lengths.shift();
-	}
-}
-
-// Returns the extra search steps for E. Refer to the paper.
-function calcToRemove(a, b)
-{
-	var subLengths = 0;
-	for (var i = 0; i < a.table.length; i++)
-	{
-		subLengths += a.table[i].table.length;
-	}
-	for (var i = 0; i < b.table.length; i++)
-	{
-		subLengths += b.table[i].table.length;
-	}
-
-	var toRemove = a.table.length + b.table.length;
-	return toRemove - (Math.floor((subLengths - 1) / M) + 1);
-}
-
-// get2, set2 and saveSlot are helpers for accessing elements over two arrays.
-function get2(a, b, index)
-{
-	return index < a.length
-		? a[index]
-		: b[index - a.length];
-}
-
-function set2(a, b, index, value)
-{
-	if (index < a.length)
-	{
-		a[index] = value;
-	}
-	else
-	{
-		b[index - a.length] = value;
-	}
-}
-
-function saveSlot(a, b, index, slot)
-{
-	set2(a.table, b.table, index, slot);
-
-	var l = (index === 0 || index === a.lengths.length)
-		? 0
-		: get2(a.lengths, a.lengths, index - 1);
-
-	set2(a.lengths, b.lengths, index, l + length(slot));
-}
-
-// Creates a node or leaf with a given length at their arrays for perfomance.
-// Is only used by shuffle.
-function createNode(h, length)
-{
-	if (length < 0)
-	{
-		length = 0;
-	}
-	var a = {
-		ctor: '_Array',
-		height: h,
-		table: new Array(length)
-	};
-	if (h > 0)
-	{
-		a.lengths = new Array(length);
-	}
-	return a;
-}
-
-// Returns an array of two balanced nodes.
-function shuffle(a, b, toRemove)
-{
-	var newA = createNode(a.height, Math.min(M, a.table.length + b.table.length - toRemove));
-	var newB = createNode(a.height, newA.table.length - (a.table.length + b.table.length - toRemove));
-
-	// Skip the slots with size M. More precise: copy the slot references
-	// to the new node
-	var read = 0;
-	while (get2(a.table, b.table, read).table.length % M === 0)
-	{
-		set2(newA.table, newB.table, read, get2(a.table, b.table, read));
-		set2(newA.lengths, newB.lengths, read, get2(a.lengths, b.lengths, read));
-		read++;
-	}
-
-	// Pulling items from left to right, caching in a slot before writing
-	// it into the new nodes.
-	var write = read;
-	var slot = new createNode(a.height - 1, 0);
-	var from = 0;
-
-	// If the current slot is still containing data, then there will be at
-	// least one more write, so we do not break this loop yet.
-	while (read - write - (slot.table.length > 0 ? 1 : 0) < toRemove)
-	{
-		// Find out the max possible items for copying.
-		var source = get2(a.table, b.table, read);
-		var to = Math.min(M - slot.table.length, source.table.length);
-
-		// Copy and adjust size table.
-		slot.table = slot.table.concat(source.table.slice(from, to));
-		if (slot.height > 0)
-		{
-			var len = slot.lengths.length;
-			for (var i = len; i < len + to - from; i++)
-			{
-				slot.lengths[i] = length(slot.table[i]);
-				slot.lengths[i] += (i > 0 ? slot.lengths[i - 1] : 0);
-			}
-		}
-
-		from += to;
-
-		// Only proceed to next slots[i] if the current one was
-		// fully copied.
-		if (source.table.length <= to)
-		{
-			read++; from = 0;
-		}
-
-		// Only create a new slot if the current one is filled up.
-		if (slot.table.length === M)
-		{
-			saveSlot(newA, newB, write, slot);
-			slot = createNode(a.height - 1, 0);
-			write++;
-		}
-	}
-
-	// Cleanup after the loop. Copy the last slot into the new nodes.
-	if (slot.table.length > 0)
-	{
-		saveSlot(newA, newB, write, slot);
-		write++;
-	}
-
-	// Shift the untouched slots to the left
-	while (read < a.table.length + b.table.length )
-	{
-		saveSlot(newA, newB, write, get2(a.table, b.table, read));
-		read++;
-		write++;
-	}
-
-	return [newA, newB];
-}
-
-// Navigation functions
-function botRight(a)
-{
-	return a.table[a.table.length - 1];
-}
-function botLeft(a)
-{
-	return a.table[0];
-}
-
-// Copies a node for updating. Note that you should not use this if
-// only updating only one of "table" or "lengths" for performance reasons.
-function nodeCopy(a)
-{
-	var newA = {
-		ctor: '_Array',
-		height: a.height,
-		table: a.table.slice()
-	};
-	if (a.height > 0)
-	{
-		newA.lengths = a.lengths.slice();
-	}
-	return newA;
-}
-
-// Returns how many items are in the tree.
-function length(array)
-{
-	if (array.height === 0)
-	{
-		return array.table.length;
-	}
-	else
-	{
-		return array.lengths[array.lengths.length - 1];
-	}
-}
-
-// Calculates in which slot of "table" the item probably is, then
-// find the exact slot via forward searching in  "lengths". Returns the index.
-function getSlot(i, a)
-{
-	var slot = i >> (5 * a.height);
-	while (a.lengths[slot] <= i)
-	{
-		slot++;
-	}
-	return slot;
-}
-
-// Recursively creates a tree with a given height containing
-// only the given item.
-function create(item, h)
-{
-	if (h === 0)
-	{
-		return {
-			ctor: '_Array',
-			height: 0,
-			table: [item]
-		};
-	}
-	return {
-		ctor: '_Array',
-		height: h,
-		table: [create(item, h - 1)],
-		lengths: [1]
-	};
-}
-
-// Recursively creates a tree that contains the given tree.
-function parentise(tree, h)
-{
-	if (h === tree.height)
-	{
-		return tree;
-	}
-
-	return {
-		ctor: '_Array',
-		height: h,
-		table: [parentise(tree, h - 1)],
-		lengths: [length(tree)]
-	};
-}
-
-// Emphasizes blood brotherhood beneath two trees.
-function siblise(a, b)
+function _VirtualDom_custom(factList, model, render, diff)
 {
 	return {
-		ctor: '_Array',
-		height: a.height + 1,
-		table: [a, b],
-		lengths: [length(a), length(a) + length(b)]
+		$: 3,
+		d: _VirtualDom_organizeFacts(factList),
+		g: model,
+		h: render,
+		i: diff
 	};
 }
 
-function toJSArray(a)
-{
-	var jsArray = new Array(length(a));
-	toJSArray_(jsArray, 0, a);
-	return jsArray;
-}
-
-function toJSArray_(jsArray, i, a)
-{
-	for (var t = 0; t < a.table.length; t++)
-	{
-		if (a.height === 0)
-		{
-			jsArray[i + t] = a.table[t];
-		}
-		else
-		{
-			var inc = t === 0 ? 0 : a.lengths[t - 1];
-			toJSArray_(jsArray, i + inc, a.table[t]);
-		}
-	}
-}
-
-function fromJSArray(jsArray)
-{
-	if (jsArray.length === 0)
-	{
-		return empty;
-	}
-	var h = Math.floor(Math.log(jsArray.length) / Math.log(M));
-	return fromJSArray_(jsArray, h, 0, jsArray.length);
-}
-
-function fromJSArray_(jsArray, h, from, to)
-{
-	if (h === 0)
-	{
-		return {
-			ctor: '_Array',
-			height: 0,
-			table: jsArray.slice(from, to)
-		};
-	}
-
-	var step = Math.pow(M, h);
-	var table = new Array(Math.ceil((to - from) / step));
-	var lengths = new Array(table.length);
-	for (var i = 0; i < table.length; i++)
-	{
-		table[i] = fromJSArray_(jsArray, h - 1, from + (i * step), Math.min(from + ((i + 1) * step), to));
-		lengths[i] = length(table[i]) + (i > 0 ? lengths[i - 1] : 0);
-	}
-	return {
-		ctor: '_Array',
-		height: h,
-		table: table,
-		lengths: lengths
-	};
-}
-
-return {
-	empty: empty,
-	fromList: fromList,
-	toList: toList,
-	initialize: F2(initialize),
-	append: F2(append),
-	push: F2(push),
-	slice: F3(slice),
-	get: F2(get),
-	set: F3(set),
-	map: F2(map),
-	indexedMap: F2(indexedMap),
-	foldl: F3(foldl),
-	foldr: F3(foldr),
-	length: length,
-
-	toJSArray: toJSArray,
-	fromJSArray: fromJSArray
-};
-
-}();
-var _elm_lang$core$Array$append = _elm_lang$core$Native_Array.append;
-var _elm_lang$core$Array$length = _elm_lang$core$Native_Array.length;
-var _elm_lang$core$Array$isEmpty = function (array) {
-	return _elm_lang$core$Native_Utils.eq(
-		_elm_lang$core$Array$length(array),
-		0);
-};
-var _elm_lang$core$Array$slice = _elm_lang$core$Native_Array.slice;
-var _elm_lang$core$Array$set = _elm_lang$core$Native_Array.set;
-var _elm_lang$core$Array$get = F2(
-	function (i, array) {
-		return ((_elm_lang$core$Native_Utils.cmp(0, i) < 1) && (_elm_lang$core$Native_Utils.cmp(
-			i,
-			_elm_lang$core$Native_Array.length(array)) < 0)) ? _elm_lang$core$Maybe$Just(
-			A2(_elm_lang$core$Native_Array.get, i, array)) : _elm_lang$core$Maybe$Nothing;
-	});
-var _elm_lang$core$Array$push = _elm_lang$core$Native_Array.push;
-var _elm_lang$core$Array$empty = _elm_lang$core$Native_Array.empty;
-var _elm_lang$core$Array$filter = F2(
-	function (isOkay, arr) {
-		var update = F2(
-			function (x, xs) {
-				return isOkay(x) ? A2(_elm_lang$core$Native_Array.push, x, xs) : xs;
-			});
-		return A3(_elm_lang$core$Native_Array.foldl, update, _elm_lang$core$Native_Array.empty, arr);
-	});
-var _elm_lang$core$Array$foldr = _elm_lang$core$Native_Array.foldr;
-var _elm_lang$core$Array$foldl = _elm_lang$core$Native_Array.foldl;
-var _elm_lang$core$Array$indexedMap = _elm_lang$core$Native_Array.indexedMap;
-var _elm_lang$core$Array$map = _elm_lang$core$Native_Array.map;
-var _elm_lang$core$Array$toIndexedList = function (array) {
-	return A3(
-		_elm_lang$core$List$map2,
-		F2(
-			function (v0, v1) {
-				return {ctor: '_Tuple2', _0: v0, _1: v1};
-			}),
-		A2(
-			_elm_lang$core$List$range,
-			0,
-			_elm_lang$core$Native_Array.length(array) - 1),
-		_elm_lang$core$Native_Array.toList(array));
-};
-var _elm_lang$core$Array$toList = _elm_lang$core$Native_Array.toList;
-var _elm_lang$core$Array$fromList = _elm_lang$core$Native_Array.fromList;
-var _elm_lang$core$Array$initialize = _elm_lang$core$Native_Array.initialize;
-var _elm_lang$core$Array$repeat = F2(
-	function (n, e) {
-		return A2(
-			_elm_lang$core$Array$initialize,
-			n,
-			_elm_lang$core$Basics$always(e));
-	});
-var _elm_lang$core$Array$Array = {ctor: 'Array'};
-
-var _elm_community$maybe_extra$Maybe_Extra$foldrValues = F2(
-	function (item, list) {
-		var _p0 = item;
-		if (_p0.ctor === 'Nothing') {
-			return list;
-		} else {
-			return {ctor: '::', _0: _p0._0, _1: list};
-		}
-	});
-var _elm_community$maybe_extra$Maybe_Extra$values = A2(
-	_elm_lang$core$List$foldr,
-	_elm_community$maybe_extra$Maybe_Extra$foldrValues,
-	{ctor: '[]'});
-var _elm_community$maybe_extra$Maybe_Extra$filter = F2(
-	function (f, m) {
-		var _p1 = A2(_elm_lang$core$Maybe$map, f, m);
-		if ((_p1.ctor === 'Just') && (_p1._0 === true)) {
-			return m;
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	});
-var _elm_community$maybe_extra$Maybe_Extra$traverseArray = function (f) {
-	var step = F2(
-		function (e, acc) {
-			var _p2 = f(e);
-			if (_p2.ctor === 'Nothing') {
-				return _elm_lang$core$Maybe$Nothing;
-			} else {
-				return A2(
-					_elm_lang$core$Maybe$map,
-					_elm_lang$core$Array$push(_p2._0),
-					acc);
-			}
-		});
-	return A2(
-		_elm_lang$core$Array$foldl,
-		step,
-		_elm_lang$core$Maybe$Just(_elm_lang$core$Array$empty));
-};
-var _elm_community$maybe_extra$Maybe_Extra$combineArray = _elm_community$maybe_extra$Maybe_Extra$traverseArray(_elm_lang$core$Basics$identity);
-var _elm_community$maybe_extra$Maybe_Extra$traverse = function (f) {
-	var step = F2(
-		function (e, acc) {
-			var _p3 = f(e);
-			if (_p3.ctor === 'Nothing') {
-				return _elm_lang$core$Maybe$Nothing;
-			} else {
-				return A2(
-					_elm_lang$core$Maybe$map,
-					F2(
-						function (x, y) {
-							return {ctor: '::', _0: x, _1: y};
-						})(_p3._0),
-					acc);
-			}
-		});
-	return A2(
-		_elm_lang$core$List$foldr,
-		step,
-		_elm_lang$core$Maybe$Just(
-			{ctor: '[]'}));
-};
-var _elm_community$maybe_extra$Maybe_Extra$combine = _elm_community$maybe_extra$Maybe_Extra$traverse(_elm_lang$core$Basics$identity);
-var _elm_community$maybe_extra$Maybe_Extra$toArray = function (m) {
-	var _p4 = m;
-	if (_p4.ctor === 'Nothing') {
-		return _elm_lang$core$Array$empty;
-	} else {
-		return A2(_elm_lang$core$Array$repeat, 1, _p4._0);
-	}
-};
-var _elm_community$maybe_extra$Maybe_Extra$toList = function (m) {
-	var _p5 = m;
-	if (_p5.ctor === 'Nothing') {
-		return {ctor: '[]'};
-	} else {
-		return {
-			ctor: '::',
-			_0: _p5._0,
-			_1: {ctor: '[]'}
-		};
-	}
-};
-var _elm_community$maybe_extra$Maybe_Extra$orElse = F2(
-	function (ma, mb) {
-		var _p6 = mb;
-		if (_p6.ctor === 'Nothing') {
-			return ma;
-		} else {
-			return mb;
-		}
-	});
-var _elm_community$maybe_extra$Maybe_Extra$orElseLazy = F2(
-	function (fma, mb) {
-		var _p7 = mb;
-		if (_p7.ctor === 'Nothing') {
-			return fma(
-				{ctor: '_Tuple0'});
-		} else {
-			return mb;
-		}
-	});
-var _elm_community$maybe_extra$Maybe_Extra$orLazy = F2(
-	function (ma, fmb) {
-		var _p8 = ma;
-		if (_p8.ctor === 'Nothing') {
-			return fmb(
-				{ctor: '_Tuple0'});
-		} else {
-			return ma;
-		}
-	});
-var _elm_community$maybe_extra$Maybe_Extra$or = F2(
-	function (ma, mb) {
-		var _p9 = ma;
-		if (_p9.ctor === 'Nothing') {
-			return mb;
-		} else {
-			return ma;
-		}
-	});
-var _elm_community$maybe_extra$Maybe_Extra$prev = _elm_lang$core$Maybe$map2(_elm_lang$core$Basics$always);
-var _elm_community$maybe_extra$Maybe_Extra$next = _elm_lang$core$Maybe$map2(
-	_elm_lang$core$Basics$flip(_elm_lang$core$Basics$always));
-var _elm_community$maybe_extra$Maybe_Extra$andMap = _elm_lang$core$Maybe$map2(
-	F2(
-		function (x, y) {
-			return y(x);
-		}));
-var _elm_community$maybe_extra$Maybe_Extra$unpack = F3(
-	function (d, f, m) {
-		var _p10 = m;
-		if (_p10.ctor === 'Nothing') {
-			return d(
-				{ctor: '_Tuple0'});
-		} else {
-			return f(_p10._0);
-		}
-	});
-var _elm_community$maybe_extra$Maybe_Extra$unwrap = F3(
-	function (d, f, m) {
-		var _p11 = m;
-		if (_p11.ctor === 'Nothing') {
-			return d;
-		} else {
-			return f(_p11._0);
-		}
-	});
-var _elm_community$maybe_extra$Maybe_Extra$isJust = function (m) {
-	var _p12 = m;
-	if (_p12.ctor === 'Nothing') {
-		return false;
-	} else {
-		return true;
-	}
-};
-var _elm_community$maybe_extra$Maybe_Extra$isNothing = function (m) {
-	var _p13 = m;
-	if (_p13.ctor === 'Nothing') {
-		return true;
-	} else {
-		return false;
-	}
-};
-var _elm_community$maybe_extra$Maybe_Extra$join = function (mx) {
-	var _p14 = mx;
-	if (_p14.ctor === 'Just') {
-		return _p14._0;
-	} else {
-		return _elm_lang$core$Maybe$Nothing;
-	}
-};
-var _elm_community$maybe_extra$Maybe_Extra_ops = _elm_community$maybe_extra$Maybe_Extra_ops || {};
-_elm_community$maybe_extra$Maybe_Extra_ops['?'] = F2(
-	function (mx, x) {
-		return A2(_elm_lang$core$Maybe$withDefault, x, mx);
-	});
-
-var _elm_lang$core$Native_Bitwise = function() {
-
-return {
-	and: F2(function and(a, b) { return a & b; }),
-	or: F2(function or(a, b) { return a | b; }),
-	xor: F2(function xor(a, b) { return a ^ b; }),
-	complement: function complement(a) { return ~a; },
-	shiftLeftBy: F2(function(offset, a) { return a << offset; }),
-	shiftRightBy: F2(function(offset, a) { return a >> offset; }),
-	shiftRightZfBy: F2(function(offset, a) { return a >>> offset; })
-};
-
-}();
-
-var _elm_lang$core$Bitwise$shiftRightZfBy = _elm_lang$core$Native_Bitwise.shiftRightZfBy;
-var _elm_lang$core$Bitwise$shiftRightBy = _elm_lang$core$Native_Bitwise.shiftRightBy;
-var _elm_lang$core$Bitwise$shiftLeftBy = _elm_lang$core$Native_Bitwise.shiftLeftBy;
-var _elm_lang$core$Bitwise$complement = _elm_lang$core$Native_Bitwise.complement;
-var _elm_lang$core$Bitwise$xor = _elm_lang$core$Native_Bitwise.xor;
-var _elm_lang$core$Bitwise$or = _elm_lang$core$Native_Bitwise.or;
-var _elm_lang$core$Bitwise$and = _elm_lang$core$Native_Bitwise.and;
-
-var _elm_lang$core$Color$fmod = F2(
-	function (f, n) {
-		var integer = _elm_lang$core$Basics$floor(f);
-		return (_elm_lang$core$Basics$toFloat(
-			A2(_elm_lang$core$Basics_ops['%'], integer, n)) + f) - _elm_lang$core$Basics$toFloat(integer);
-	});
-var _elm_lang$core$Color$rgbToHsl = F3(
-	function (red, green, blue) {
-		var b = _elm_lang$core$Basics$toFloat(blue) / 255;
-		var g = _elm_lang$core$Basics$toFloat(green) / 255;
-		var r = _elm_lang$core$Basics$toFloat(red) / 255;
-		var cMax = A2(
-			_elm_lang$core$Basics$max,
-			A2(_elm_lang$core$Basics$max, r, g),
-			b);
-		var cMin = A2(
-			_elm_lang$core$Basics$min,
-			A2(_elm_lang$core$Basics$min, r, g),
-			b);
-		var c = cMax - cMin;
-		var lightness = (cMax + cMin) / 2;
-		var saturation = _elm_lang$core$Native_Utils.eq(lightness, 0) ? 0 : (c / (1 - _elm_lang$core$Basics$abs((2 * lightness) - 1)));
-		var hue = _elm_lang$core$Basics$degrees(60) * (_elm_lang$core$Native_Utils.eq(cMax, r) ? A2(_elm_lang$core$Color$fmod, (g - b) / c, 6) : (_elm_lang$core$Native_Utils.eq(cMax, g) ? (((b - r) / c) + 2) : (((r - g) / c) + 4)));
-		return {ctor: '_Tuple3', _0: hue, _1: saturation, _2: lightness};
-	});
-var _elm_lang$core$Color$hslToRgb = F3(
-	function (hue, saturation, lightness) {
-		var normHue = hue / _elm_lang$core$Basics$degrees(60);
-		var chroma = (1 - _elm_lang$core$Basics$abs((2 * lightness) - 1)) * saturation;
-		var x = chroma * (1 - _elm_lang$core$Basics$abs(
-			A2(_elm_lang$core$Color$fmod, normHue, 2) - 1));
-		var _p0 = (_elm_lang$core$Native_Utils.cmp(normHue, 0) < 0) ? {ctor: '_Tuple3', _0: 0, _1: 0, _2: 0} : ((_elm_lang$core$Native_Utils.cmp(normHue, 1) < 0) ? {ctor: '_Tuple3', _0: chroma, _1: x, _2: 0} : ((_elm_lang$core$Native_Utils.cmp(normHue, 2) < 0) ? {ctor: '_Tuple3', _0: x, _1: chroma, _2: 0} : ((_elm_lang$core$Native_Utils.cmp(normHue, 3) < 0) ? {ctor: '_Tuple3', _0: 0, _1: chroma, _2: x} : ((_elm_lang$core$Native_Utils.cmp(normHue, 4) < 0) ? {ctor: '_Tuple3', _0: 0, _1: x, _2: chroma} : ((_elm_lang$core$Native_Utils.cmp(normHue, 5) < 0) ? {ctor: '_Tuple3', _0: x, _1: 0, _2: chroma} : ((_elm_lang$core$Native_Utils.cmp(normHue, 6) < 0) ? {ctor: '_Tuple3', _0: chroma, _1: 0, _2: x} : {ctor: '_Tuple3', _0: 0, _1: 0, _2: 0}))))));
-		var r = _p0._0;
-		var g = _p0._1;
-		var b = _p0._2;
-		var m = lightness - (chroma / 2);
-		return {ctor: '_Tuple3', _0: r + m, _1: g + m, _2: b + m};
-	});
-var _elm_lang$core$Color$toRgb = function (color) {
-	var _p1 = color;
-	if (_p1.ctor === 'RGBA') {
-		return {red: _p1._0, green: _p1._1, blue: _p1._2, alpha: _p1._3};
-	} else {
-		var _p2 = A3(_elm_lang$core$Color$hslToRgb, _p1._0, _p1._1, _p1._2);
-		var r = _p2._0;
-		var g = _p2._1;
-		var b = _p2._2;
-		return {
-			red: _elm_lang$core$Basics$round(255 * r),
-			green: _elm_lang$core$Basics$round(255 * g),
-			blue: _elm_lang$core$Basics$round(255 * b),
-			alpha: _p1._3
-		};
-	}
-};
-var _elm_lang$core$Color$toHsl = function (color) {
-	var _p3 = color;
-	if (_p3.ctor === 'HSLA') {
-		return {hue: _p3._0, saturation: _p3._1, lightness: _p3._2, alpha: _p3._3};
-	} else {
-		var _p4 = A3(_elm_lang$core$Color$rgbToHsl, _p3._0, _p3._1, _p3._2);
-		var h = _p4._0;
-		var s = _p4._1;
-		var l = _p4._2;
-		return {hue: h, saturation: s, lightness: l, alpha: _p3._3};
-	}
-};
-var _elm_lang$core$Color$HSLA = F4(
-	function (a, b, c, d) {
-		return {ctor: 'HSLA', _0: a, _1: b, _2: c, _3: d};
-	});
-var _elm_lang$core$Color$hsla = F4(
-	function (hue, saturation, lightness, alpha) {
-		return A4(
-			_elm_lang$core$Color$HSLA,
-			hue - _elm_lang$core$Basics$turns(
-				_elm_lang$core$Basics$toFloat(
-					_elm_lang$core$Basics$floor(hue / (2 * _elm_lang$core$Basics$pi)))),
-			saturation,
-			lightness,
-			alpha);
-	});
-var _elm_lang$core$Color$hsl = F3(
-	function (hue, saturation, lightness) {
-		return A4(_elm_lang$core$Color$hsla, hue, saturation, lightness, 1);
-	});
-var _elm_lang$core$Color$complement = function (color) {
-	var _p5 = color;
-	if (_p5.ctor === 'HSLA') {
-		return A4(
-			_elm_lang$core$Color$hsla,
-			_p5._0 + _elm_lang$core$Basics$degrees(180),
-			_p5._1,
-			_p5._2,
-			_p5._3);
-	} else {
-		var _p6 = A3(_elm_lang$core$Color$rgbToHsl, _p5._0, _p5._1, _p5._2);
-		var h = _p6._0;
-		var s = _p6._1;
-		var l = _p6._2;
-		return A4(
-			_elm_lang$core$Color$hsla,
-			h + _elm_lang$core$Basics$degrees(180),
-			s,
-			l,
-			_p5._3);
-	}
-};
-var _elm_lang$core$Color$grayscale = function (p) {
-	return A4(_elm_lang$core$Color$HSLA, 0, 0, 1 - p, 1);
-};
-var _elm_lang$core$Color$greyscale = function (p) {
-	return A4(_elm_lang$core$Color$HSLA, 0, 0, 1 - p, 1);
-};
-var _elm_lang$core$Color$RGBA = F4(
-	function (a, b, c, d) {
-		return {ctor: 'RGBA', _0: a, _1: b, _2: c, _3: d};
-	});
-var _elm_lang$core$Color$rgba = _elm_lang$core$Color$RGBA;
-var _elm_lang$core$Color$rgb = F3(
-	function (r, g, b) {
-		return A4(_elm_lang$core$Color$RGBA, r, g, b, 1);
-	});
-var _elm_lang$core$Color$lightRed = A4(_elm_lang$core$Color$RGBA, 239, 41, 41, 1);
-var _elm_lang$core$Color$red = A4(_elm_lang$core$Color$RGBA, 204, 0, 0, 1);
-var _elm_lang$core$Color$darkRed = A4(_elm_lang$core$Color$RGBA, 164, 0, 0, 1);
-var _elm_lang$core$Color$lightOrange = A4(_elm_lang$core$Color$RGBA, 252, 175, 62, 1);
-var _elm_lang$core$Color$orange = A4(_elm_lang$core$Color$RGBA, 245, 121, 0, 1);
-var _elm_lang$core$Color$darkOrange = A4(_elm_lang$core$Color$RGBA, 206, 92, 0, 1);
-var _elm_lang$core$Color$lightYellow = A4(_elm_lang$core$Color$RGBA, 255, 233, 79, 1);
-var _elm_lang$core$Color$yellow = A4(_elm_lang$core$Color$RGBA, 237, 212, 0, 1);
-var _elm_lang$core$Color$darkYellow = A4(_elm_lang$core$Color$RGBA, 196, 160, 0, 1);
-var _elm_lang$core$Color$lightGreen = A4(_elm_lang$core$Color$RGBA, 138, 226, 52, 1);
-var _elm_lang$core$Color$green = A4(_elm_lang$core$Color$RGBA, 115, 210, 22, 1);
-var _elm_lang$core$Color$darkGreen = A4(_elm_lang$core$Color$RGBA, 78, 154, 6, 1);
-var _elm_lang$core$Color$lightBlue = A4(_elm_lang$core$Color$RGBA, 114, 159, 207, 1);
-var _elm_lang$core$Color$blue = A4(_elm_lang$core$Color$RGBA, 52, 101, 164, 1);
-var _elm_lang$core$Color$darkBlue = A4(_elm_lang$core$Color$RGBA, 32, 74, 135, 1);
-var _elm_lang$core$Color$lightPurple = A4(_elm_lang$core$Color$RGBA, 173, 127, 168, 1);
-var _elm_lang$core$Color$purple = A4(_elm_lang$core$Color$RGBA, 117, 80, 123, 1);
-var _elm_lang$core$Color$darkPurple = A4(_elm_lang$core$Color$RGBA, 92, 53, 102, 1);
-var _elm_lang$core$Color$lightBrown = A4(_elm_lang$core$Color$RGBA, 233, 185, 110, 1);
-var _elm_lang$core$Color$brown = A4(_elm_lang$core$Color$RGBA, 193, 125, 17, 1);
-var _elm_lang$core$Color$darkBrown = A4(_elm_lang$core$Color$RGBA, 143, 89, 2, 1);
-var _elm_lang$core$Color$black = A4(_elm_lang$core$Color$RGBA, 0, 0, 0, 1);
-var _elm_lang$core$Color$white = A4(_elm_lang$core$Color$RGBA, 255, 255, 255, 1);
-var _elm_lang$core$Color$lightGrey = A4(_elm_lang$core$Color$RGBA, 238, 238, 236, 1);
-var _elm_lang$core$Color$grey = A4(_elm_lang$core$Color$RGBA, 211, 215, 207, 1);
-var _elm_lang$core$Color$darkGrey = A4(_elm_lang$core$Color$RGBA, 186, 189, 182, 1);
-var _elm_lang$core$Color$lightGray = A4(_elm_lang$core$Color$RGBA, 238, 238, 236, 1);
-var _elm_lang$core$Color$gray = A4(_elm_lang$core$Color$RGBA, 211, 215, 207, 1);
-var _elm_lang$core$Color$darkGray = A4(_elm_lang$core$Color$RGBA, 186, 189, 182, 1);
-var _elm_lang$core$Color$lightCharcoal = A4(_elm_lang$core$Color$RGBA, 136, 138, 133, 1);
-var _elm_lang$core$Color$charcoal = A4(_elm_lang$core$Color$RGBA, 85, 87, 83, 1);
-var _elm_lang$core$Color$darkCharcoal = A4(_elm_lang$core$Color$RGBA, 46, 52, 54, 1);
-var _elm_lang$core$Color$Radial = F5(
-	function (a, b, c, d, e) {
-		return {ctor: 'Radial', _0: a, _1: b, _2: c, _3: d, _4: e};
-	});
-var _elm_lang$core$Color$radial = _elm_lang$core$Color$Radial;
-var _elm_lang$core$Color$Linear = F3(
-	function (a, b, c) {
-		return {ctor: 'Linear', _0: a, _1: b, _2: c};
-	});
-var _elm_lang$core$Color$linear = _elm_lang$core$Color$Linear;
-
-//import Maybe, Native.Array, Native.List, Native.Utils, Result //
-
-var _elm_lang$core$Native_Json = function() {
 
 
-// CORE DECODERS
+// MAP
 
-function succeed(msg)
+
+var _VirtualDom_map = F2(function(tagger, node)
 {
 	return {
-		ctor: '<decoder>',
-		tag: 'succeed',
-		msg: msg
+		$: 4,
+		j: tagger,
+		k: node,
+		b: 1 + (node.b || 0)
 	};
-}
+});
 
-function fail(msg)
+
+
+// LAZY
+
+
+function _VirtualDom_thunk(refs, thunk)
 {
 	return {
-		ctor: '<decoder>',
-		tag: 'fail',
-		msg: msg
+		$: 5,
+		l: refs,
+		m: thunk,
+		k: undefined
 	};
 }
 
-function decodePrimitive(tag)
+var _VirtualDom_lazy = F2(function(func, a)
 {
-	return {
-		ctor: '<decoder>',
-		tag: tag
-	};
-}
-
-function decodeContainer(tag, decoder)
-{
-	return {
-		ctor: '<decoder>',
-		tag: tag,
-		decoder: decoder
-	};
-}
-
-function decodeNull(value)
-{
-	return {
-		ctor: '<decoder>',
-		tag: 'null',
-		value: value
-	};
-}
-
-function decodeField(field, decoder)
-{
-	return {
-		ctor: '<decoder>',
-		tag: 'field',
-		field: field,
-		decoder: decoder
-	};
-}
-
-function decodeIndex(index, decoder)
-{
-	return {
-		ctor: '<decoder>',
-		tag: 'index',
-		index: index,
-		decoder: decoder
-	};
-}
-
-function decodeKeyValuePairs(decoder)
-{
-	return {
-		ctor: '<decoder>',
-		tag: 'key-value',
-		decoder: decoder
-	};
-}
-
-function mapMany(f, decoders)
-{
-	return {
-		ctor: '<decoder>',
-		tag: 'map-many',
-		func: f,
-		decoders: decoders
-	};
-}
-
-function andThen(callback, decoder)
-{
-	return {
-		ctor: '<decoder>',
-		tag: 'andThen',
-		decoder: decoder,
-		callback: callback
-	};
-}
-
-function oneOf(decoders)
-{
-	return {
-		ctor: '<decoder>',
-		tag: 'oneOf',
-		decoders: decoders
-	};
-}
-
-
-// DECODING OBJECTS
-
-function map1(f, d1)
-{
-	return mapMany(f, [d1]);
-}
-
-function map2(f, d1, d2)
-{
-	return mapMany(f, [d1, d2]);
-}
-
-function map3(f, d1, d2, d3)
-{
-	return mapMany(f, [d1, d2, d3]);
-}
-
-function map4(f, d1, d2, d3, d4)
-{
-	return mapMany(f, [d1, d2, d3, d4]);
-}
-
-function map5(f, d1, d2, d3, d4, d5)
-{
-	return mapMany(f, [d1, d2, d3, d4, d5]);
-}
-
-function map6(f, d1, d2, d3, d4, d5, d6)
-{
-	return mapMany(f, [d1, d2, d3, d4, d5, d6]);
-}
-
-function map7(f, d1, d2, d3, d4, d5, d6, d7)
-{
-	return mapMany(f, [d1, d2, d3, d4, d5, d6, d7]);
-}
-
-function map8(f, d1, d2, d3, d4, d5, d6, d7, d8)
-{
-	return mapMany(f, [d1, d2, d3, d4, d5, d6, d7, d8]);
-}
-
-
-// DECODE HELPERS
-
-function ok(value)
-{
-	return { tag: 'ok', value: value };
-}
-
-function badPrimitive(type, value)
-{
-	return { tag: 'primitive', type: type, value: value };
-}
-
-function badIndex(index, nestedProblems)
-{
-	return { tag: 'index', index: index, rest: nestedProblems };
-}
-
-function badField(field, nestedProblems)
-{
-	return { tag: 'field', field: field, rest: nestedProblems };
-}
-
-function badIndex(index, nestedProblems)
-{
-	return { tag: 'index', index: index, rest: nestedProblems };
-}
-
-function badOneOf(problems)
-{
-	return { tag: 'oneOf', problems: problems };
-}
-
-function bad(msg)
-{
-	return { tag: 'fail', msg: msg };
-}
-
-function badToString(problem)
-{
-	var context = '_';
-	while (problem)
-	{
-		switch (problem.tag)
-		{
-			case 'primitive':
-				return 'Expecting ' + problem.type
-					+ (context === '_' ? '' : ' at ' + context)
-					+ ' but instead got: ' + jsToString(problem.value);
-
-			case 'index':
-				context += '[' + problem.index + ']';
-				problem = problem.rest;
-				break;
-
-			case 'field':
-				context += '.' + problem.field;
-				problem = problem.rest;
-				break;
-
-			case 'oneOf':
-				var problems = problem.problems;
-				for (var i = 0; i < problems.length; i++)
-				{
-					problems[i] = badToString(problems[i]);
-				}
-				return 'I ran into the following problems'
-					+ (context === '_' ? '' : ' at ' + context)
-					+ ':\n\n' + problems.join('\n');
-
-			case 'fail':
-				return 'I ran into a `fail` decoder'
-					+ (context === '_' ? '' : ' at ' + context)
-					+ ': ' + problem.msg;
-		}
-	}
-}
-
-function jsToString(value)
-{
-	return value === undefined
-		? 'undefined'
-		: JSON.stringify(value);
-}
-
-
-// DECODE
-
-function runOnString(decoder, string)
-{
-	var json;
-	try
-	{
-		json = JSON.parse(string);
-	}
-	catch (e)
-	{
-		return _elm_lang$core$Result$Err('Given an invalid JSON: ' + e.message);
-	}
-	return run(decoder, json);
-}
-
-function run(decoder, value)
-{
-	var result = runHelp(decoder, value);
-	return (result.tag === 'ok')
-		? _elm_lang$core$Result$Ok(result.value)
-		: _elm_lang$core$Result$Err(badToString(result));
-}
-
-function runHelp(decoder, value)
-{
-	switch (decoder.tag)
-	{
-		case 'bool':
-			return (typeof value === 'boolean')
-				? ok(value)
-				: badPrimitive('a Bool', value);
-
-		case 'int':
-			if (typeof value !== 'number') {
-				return badPrimitive('an Int', value);
-			}
-
-			if (-2147483647 < value && value < 2147483647 && (value | 0) === value) {
-				return ok(value);
-			}
-
-			if (isFinite(value) && !(value % 1)) {
-				return ok(value);
-			}
-
-			return badPrimitive('an Int', value);
-
-		case 'float':
-			return (typeof value === 'number')
-				? ok(value)
-				: badPrimitive('a Float', value);
-
-		case 'string':
-			return (typeof value === 'string')
-				? ok(value)
-				: (value instanceof String)
-					? ok(value + '')
-					: badPrimitive('a String', value);
-
-		case 'null':
-			return (value === null)
-				? ok(decoder.value)
-				: badPrimitive('null', value);
-
-		case 'value':
-			return ok(value);
-
-		case 'list':
-			if (!(value instanceof Array))
-			{
-				return badPrimitive('a List', value);
-			}
-
-			var list = _elm_lang$core$Native_List.Nil;
-			for (var i = value.length; i--; )
-			{
-				var result = runHelp(decoder.decoder, value[i]);
-				if (result.tag !== 'ok')
-				{
-					return badIndex(i, result)
-				}
-				list = _elm_lang$core$Native_List.Cons(result.value, list);
-			}
-			return ok(list);
-
-		case 'array':
-			if (!(value instanceof Array))
-			{
-				return badPrimitive('an Array', value);
-			}
-
-			var len = value.length;
-			var array = new Array(len);
-			for (var i = len; i--; )
-			{
-				var result = runHelp(decoder.decoder, value[i]);
-				if (result.tag !== 'ok')
-				{
-					return badIndex(i, result);
-				}
-				array[i] = result.value;
-			}
-			return ok(_elm_lang$core$Native_Array.fromJSArray(array));
-
-		case 'maybe':
-			var result = runHelp(decoder.decoder, value);
-			return (result.tag === 'ok')
-				? ok(_elm_lang$core$Maybe$Just(result.value))
-				: ok(_elm_lang$core$Maybe$Nothing);
-
-		case 'field':
-			var field = decoder.field;
-			if (typeof value !== 'object' || value === null || !(field in value))
-			{
-				return badPrimitive('an object with a field named `' + field + '`', value);
-			}
-
-			var result = runHelp(decoder.decoder, value[field]);
-			return (result.tag === 'ok') ? result : badField(field, result);
-
-		case 'index':
-			var index = decoder.index;
-			if (!(value instanceof Array))
-			{
-				return badPrimitive('an array', value);
-			}
-			if (index >= value.length)
-			{
-				return badPrimitive('a longer array. Need index ' + index + ' but there are only ' + value.length + ' entries', value);
-			}
-
-			var result = runHelp(decoder.decoder, value[index]);
-			return (result.tag === 'ok') ? result : badIndex(index, result);
-
-		case 'key-value':
-			if (typeof value !== 'object' || value === null || value instanceof Array)
-			{
-				return badPrimitive('an object', value);
-			}
-
-			var keyValuePairs = _elm_lang$core$Native_List.Nil;
-			for (var key in value)
-			{
-				var result = runHelp(decoder.decoder, value[key]);
-				if (result.tag !== 'ok')
-				{
-					return badField(key, result);
-				}
-				var pair = _elm_lang$core$Native_Utils.Tuple2(key, result.value);
-				keyValuePairs = _elm_lang$core$Native_List.Cons(pair, keyValuePairs);
-			}
-			return ok(keyValuePairs);
-
-		case 'map-many':
-			var answer = decoder.func;
-			var decoders = decoder.decoders;
-			for (var i = 0; i < decoders.length; i++)
-			{
-				var result = runHelp(decoders[i], value);
-				if (result.tag !== 'ok')
-				{
-					return result;
-				}
-				answer = answer(result.value);
-			}
-			return ok(answer);
-
-		case 'andThen':
-			var result = runHelp(decoder.decoder, value);
-			return (result.tag !== 'ok')
-				? result
-				: runHelp(decoder.callback(result.value), value);
-
-		case 'oneOf':
-			var errors = [];
-			var temp = decoder.decoders;
-			while (temp.ctor !== '[]')
-			{
-				var result = runHelp(temp._0, value);
-
-				if (result.tag === 'ok')
-				{
-					return result;
-				}
-
-				errors.push(result);
-
-				temp = temp._1;
-			}
-			return badOneOf(errors);
-
-		case 'fail':
-			return bad(decoder.msg);
-
-		case 'succeed':
-			return ok(decoder.msg);
-	}
-}
-
-
-// EQUALITY
-
-function equality(a, b)
-{
-	if (a === b)
-	{
-		return true;
-	}
-
-	if (a.tag !== b.tag)
-	{
-		return false;
-	}
-
-	switch (a.tag)
-	{
-		case 'succeed':
-		case 'fail':
-			return a.msg === b.msg;
-
-		case 'bool':
-		case 'int':
-		case 'float':
-		case 'string':
-		case 'value':
-			return true;
-
-		case 'null':
-			return a.value === b.value;
-
-		case 'list':
-		case 'array':
-		case 'maybe':
-		case 'key-value':
-			return equality(a.decoder, b.decoder);
-
-		case 'field':
-			return a.field === b.field && equality(a.decoder, b.decoder);
-
-		case 'index':
-			return a.index === b.index && equality(a.decoder, b.decoder);
-
-		case 'map-many':
-			if (a.func !== b.func)
-			{
-				return false;
-			}
-			return listEquality(a.decoders, b.decoders);
-
-		case 'andThen':
-			return a.callback === b.callback && equality(a.decoder, b.decoder);
-
-		case 'oneOf':
-			return listEquality(a.decoders, b.decoders);
-	}
-}
-
-function listEquality(aDecoders, bDecoders)
-{
-	var len = aDecoders.length;
-	if (len !== bDecoders.length)
-	{
-		return false;
-	}
-	for (var i = 0; i < len; i++)
-	{
-		if (!equality(aDecoders[i], bDecoders[i]))
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-
-// ENCODE
-
-function encode(indentLevel, value)
-{
-	return JSON.stringify(value, null, indentLevel);
-}
-
-function identity(value)
-{
-	return value;
-}
-
-function encodeObject(keyValuePairs)
-{
-	var obj = {};
-	while (keyValuePairs.ctor !== '[]')
-	{
-		var pair = keyValuePairs._0;
-		obj[pair._0] = pair._1;
-		keyValuePairs = keyValuePairs._1;
-	}
-	return obj;
-}
-
-return {
-	encode: F2(encode),
-	runOnString: F2(runOnString),
-	run: F2(run),
-
-	decodeNull: decodeNull,
-	decodePrimitive: decodePrimitive,
-	decodeContainer: F2(decodeContainer),
-
-	decodeField: F2(decodeField),
-	decodeIndex: F2(decodeIndex),
-
-	map1: F2(map1),
-	map2: F3(map2),
-	map3: F4(map3),
-	map4: F5(map4),
-	map5: F6(map5),
-	map6: F7(map6),
-	map7: F8(map7),
-	map8: F9(map8),
-	decodeKeyValuePairs: decodeKeyValuePairs,
-
-	andThen: F2(andThen),
-	fail: fail,
-	succeed: succeed,
-	oneOf: oneOf,
-
-	identity: identity,
-	encodeNull: null,
-	encodeArray: _elm_lang$core$Native_Array.toJSArray,
-	encodeList: _elm_lang$core$Native_List.toArray,
-	encodeObject: encodeObject,
-
-	equality: equality
-};
-
-}();
-
-var _elm_lang$core$Json_Encode$list = _elm_lang$core$Native_Json.encodeList;
-var _elm_lang$core$Json_Encode$array = _elm_lang$core$Native_Json.encodeArray;
-var _elm_lang$core$Json_Encode$object = _elm_lang$core$Native_Json.encodeObject;
-var _elm_lang$core$Json_Encode$null = _elm_lang$core$Native_Json.encodeNull;
-var _elm_lang$core$Json_Encode$bool = _elm_lang$core$Native_Json.identity;
-var _elm_lang$core$Json_Encode$float = _elm_lang$core$Native_Json.identity;
-var _elm_lang$core$Json_Encode$int = _elm_lang$core$Native_Json.identity;
-var _elm_lang$core$Json_Encode$string = _elm_lang$core$Native_Json.identity;
-var _elm_lang$core$Json_Encode$encode = _elm_lang$core$Native_Json.encode;
-var _elm_lang$core$Json_Encode$Value = {ctor: 'Value'};
-
-var _elm_lang$core$Json_Decode$null = _elm_lang$core$Native_Json.decodeNull;
-var _elm_lang$core$Json_Decode$value = _elm_lang$core$Native_Json.decodePrimitive('value');
-var _elm_lang$core$Json_Decode$andThen = _elm_lang$core$Native_Json.andThen;
-var _elm_lang$core$Json_Decode$fail = _elm_lang$core$Native_Json.fail;
-var _elm_lang$core$Json_Decode$succeed = _elm_lang$core$Native_Json.succeed;
-var _elm_lang$core$Json_Decode$lazy = function (thunk) {
-	return A2(
-		_elm_lang$core$Json_Decode$andThen,
-		thunk,
-		_elm_lang$core$Json_Decode$succeed(
-			{ctor: '_Tuple0'}));
-};
-var _elm_lang$core$Json_Decode$decodeValue = _elm_lang$core$Native_Json.run;
-var _elm_lang$core$Json_Decode$decodeString = _elm_lang$core$Native_Json.runOnString;
-var _elm_lang$core$Json_Decode$map8 = _elm_lang$core$Native_Json.map8;
-var _elm_lang$core$Json_Decode$map7 = _elm_lang$core$Native_Json.map7;
-var _elm_lang$core$Json_Decode$map6 = _elm_lang$core$Native_Json.map6;
-var _elm_lang$core$Json_Decode$map5 = _elm_lang$core$Native_Json.map5;
-var _elm_lang$core$Json_Decode$map4 = _elm_lang$core$Native_Json.map4;
-var _elm_lang$core$Json_Decode$map3 = _elm_lang$core$Native_Json.map3;
-var _elm_lang$core$Json_Decode$map2 = _elm_lang$core$Native_Json.map2;
-var _elm_lang$core$Json_Decode$map = _elm_lang$core$Native_Json.map1;
-var _elm_lang$core$Json_Decode$oneOf = _elm_lang$core$Native_Json.oneOf;
-var _elm_lang$core$Json_Decode$maybe = function (decoder) {
-	return A2(_elm_lang$core$Native_Json.decodeContainer, 'maybe', decoder);
-};
-var _elm_lang$core$Json_Decode$index = _elm_lang$core$Native_Json.decodeIndex;
-var _elm_lang$core$Json_Decode$field = _elm_lang$core$Native_Json.decodeField;
-var _elm_lang$core$Json_Decode$at = F2(
-	function (fields, decoder) {
-		return A3(_elm_lang$core$List$foldr, _elm_lang$core$Json_Decode$field, decoder, fields);
+	return _VirtualDom_thunk([func, a], function() {
+		return func(a);
 	});
-var _elm_lang$core$Json_Decode$keyValuePairs = _elm_lang$core$Native_Json.decodeKeyValuePairs;
-var _elm_lang$core$Json_Decode$dict = function (decoder) {
-	return A2(
-		_elm_lang$core$Json_Decode$map,
-		_elm_lang$core$Dict$fromList,
-		_elm_lang$core$Json_Decode$keyValuePairs(decoder));
-};
-var _elm_lang$core$Json_Decode$array = function (decoder) {
-	return A2(_elm_lang$core$Native_Json.decodeContainer, 'array', decoder);
-};
-var _elm_lang$core$Json_Decode$list = function (decoder) {
-	return A2(_elm_lang$core$Native_Json.decodeContainer, 'list', decoder);
-};
-var _elm_lang$core$Json_Decode$nullable = function (decoder) {
-	return _elm_lang$core$Json_Decode$oneOf(
-		{
-			ctor: '::',
-			_0: _elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
-			_1: {
-				ctor: '::',
-				_0: A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Maybe$Just, decoder),
-				_1: {ctor: '[]'}
-			}
-		});
-};
-var _elm_lang$core$Json_Decode$float = _elm_lang$core$Native_Json.decodePrimitive('float');
-var _elm_lang$core$Json_Decode$int = _elm_lang$core$Native_Json.decodePrimitive('int');
-var _elm_lang$core$Json_Decode$bool = _elm_lang$core$Native_Json.decodePrimitive('bool');
-var _elm_lang$core$Json_Decode$string = _elm_lang$core$Native_Json.decodePrimitive('string');
-var _elm_lang$core$Json_Decode$Decoder = {ctor: 'Decoder'};
+});
 
-var _elm_lang$virtual_dom$VirtualDom_Debug$wrap;
-var _elm_lang$virtual_dom$VirtualDom_Debug$wrapWithFlags;
-
-var _elm_lang$virtual_dom$Native_VirtualDom = function() {
-
-var STYLE_KEY = 'STYLE';
-var EVENT_KEY = 'EVENT';
-var ATTR_KEY = 'ATTR';
-var ATTR_NS_KEY = 'ATTR_NS';
-
-var localDoc = typeof document !== 'undefined' ? document : {};
-
-
-////////////  VIRTUAL DOM NODES  ////////////
-
-
-function text(string)
+var _VirtualDom_lazy2 = F3(function(func, a, b)
 {
-	return {
-		type: 'text',
-		text: string
-	};
-}
-
-
-function node(tag)
-{
-	return F2(function(factList, kidList) {
-		return nodeHelp(tag, factList, kidList);
+	return _VirtualDom_thunk([func, a, b], function() {
+		return A2(func, a, b);
 	});
-}
+});
 
-
-function nodeHelp(tag, factList, kidList)
+var _VirtualDom_lazy3 = F4(function(func, a, b, c)
 {
-	var organized = organizeFacts(factList);
-	var namespace = organized.namespace;
-	var facts = organized.facts;
-
-	var children = [];
-	var descendantsCount = 0;
-	while (kidList.ctor !== '[]')
-	{
-		var kid = kidList._0;
-		descendantsCount += (kid.descendantsCount || 0);
-		children.push(kid);
-		kidList = kidList._1;
-	}
-	descendantsCount += children.length;
-
-	return {
-		type: 'node',
-		tag: tag,
-		facts: facts,
-		children: children,
-		namespace: namespace,
-		descendantsCount: descendantsCount
-	};
-}
-
-
-function keyedNode(tag, factList, kidList)
-{
-	var organized = organizeFacts(factList);
-	var namespace = organized.namespace;
-	var facts = organized.facts;
-
-	var children = [];
-	var descendantsCount = 0;
-	while (kidList.ctor !== '[]')
-	{
-		var kid = kidList._0;
-		descendantsCount += (kid._1.descendantsCount || 0);
-		children.push(kid);
-		kidList = kidList._1;
-	}
-	descendantsCount += children.length;
-
-	return {
-		type: 'keyed-node',
-		tag: tag,
-		facts: facts,
-		children: children,
-		namespace: namespace,
-		descendantsCount: descendantsCount
-	};
-}
-
-
-function custom(factList, model, impl)
-{
-	var facts = organizeFacts(factList).facts;
-
-	return {
-		type: 'custom',
-		facts: facts,
-		model: model,
-		impl: impl
-	};
-}
-
-
-function map(tagger, node)
-{
-	return {
-		type: 'tagger',
-		tagger: tagger,
-		node: node,
-		descendantsCount: 1 + (node.descendantsCount || 0)
-	};
-}
-
-
-function thunk(func, args, thunk)
-{
-	return {
-		type: 'thunk',
-		func: func,
-		args: args,
-		thunk: thunk,
-		node: undefined
-	};
-}
-
-function lazy(fn, a)
-{
-	return thunk(fn, [a], function() {
-		return fn(a);
+	return _VirtualDom_thunk([func, a, b, c], function() {
+		return A3(func, a, b, c);
 	});
-}
+});
 
-function lazy2(fn, a, b)
+var _VirtualDom_lazy4 = F5(function(func, a, b, c, d)
 {
-	return thunk(fn, [a,b], function() {
-		return A2(fn, a, b);
+	return _VirtualDom_thunk([func, a, b, c, d], function() {
+		return A4(func, a, b, c, d);
 	});
-}
+});
 
-function lazy3(fn, a, b, c)
+var _VirtualDom_lazy5 = F6(function(func, a, b, c, d, e)
 {
-	return thunk(fn, [a,b,c], function() {
-		return A3(fn, a, b, c);
+	return _VirtualDom_thunk([func, a, b, c, d, e], function() {
+		return A5(func, a, b, c, d, e);
 	});
-}
+});
+
+var _VirtualDom_lazy6 = F7(function(func, a, b, c, d, e, f)
+{
+	return _VirtualDom_thunk([func, a, b, c, d, e, f], function() {
+		return A6(func, a, b, c, d, e, f);
+	});
+});
+
+var _VirtualDom_lazy7 = F8(function(func, a, b, c, d, e, f, g)
+{
+	return _VirtualDom_thunk([func, a, b, c, d, e, f, g], function() {
+		return A7(func, a, b, c, d, e, f, g);
+	});
+});
+
+var _VirtualDom_lazy8 = F9(function(func, a, b, c, d, e, f, g, h)
+{
+	return _VirtualDom_thunk([func, a, b, c, d, e, f, g, h], function() {
+		return A8(func, a, b, c, d, e, f, g, h);
+	});
+});
 
 
 
 // FACTS
 
 
-function organizeFacts(factList)
+var _VirtualDom_on = F2(function(key, handler)
 {
-	var namespace, facts = {};
+	return {
+		$: 'a0',
+		n: key,
+		o: handler
+	};
+});
+var _VirtualDom_style = F2(function(key, value)
+{
+	return {
+		$: 'a1',
+		n: key,
+		o: value
+	};
+});
+var _VirtualDom_property = F2(function(key, value)
+{
+	return {
+		$: 'a2',
+		n: key,
+		o: value
+	};
+});
+var _VirtualDom_attribute = F2(function(key, value)
+{
+	return {
+		$: 'a3',
+		n: key,
+		o: value
+	};
+});
+var _VirtualDom_attributeNS = F3(function(namespace, key, value)
+{
+	return {
+		$: 'a4',
+		n: key,
+		o: { f: namespace, o: value }
+	};
+});
 
-	while (factList.ctor !== '[]')
+
+
+// XSS ATTACK VECTOR CHECKS
+
+
+function _VirtualDom_noScript(tag)
+{
+	return tag == 'script' ? 'p' : tag;
+}
+
+function _VirtualDom_noOnOrFormAction(key)
+{
+	return /^(on|formAction$)/i.test(key) ? 'data-' + key : key;
+}
+
+function _VirtualDom_noInnerHtmlOrFormAction(key)
+{
+	return key == 'innerHTML' || key == 'formAction' ? 'data-' + key : key;
+}
+
+function _VirtualDom_noJavaScriptUri_UNUSED(value)
+{
+	return /^javascript:/i.test(value.replace(/\s/g,'')) ? '' : value;
+}
+
+function _VirtualDom_noJavaScriptUri(value)
+{
+	return /^javascript:/i.test(value.replace(/\s/g,''))
+		? 'javascript:alert("This is an XSS vector. Please use ports or web components instead.")'
+		: value;
+}
+
+function _VirtualDom_noJavaScriptOrHtmlUri_UNUSED(value)
+{
+	return /^\s*(javascript:|data:text\/html)/i.test(value) ? '' : value;
+}
+
+function _VirtualDom_noJavaScriptOrHtmlUri(value)
+{
+	return /^\s*(javascript:|data:text\/html)/i.test(value)
+		? 'javascript:alert("This is an XSS vector. Please use ports or web components instead.")'
+		: value;
+}
+
+
+
+// MAP FACTS
+
+
+var _VirtualDom_mapAttribute = F2(function(func, attr)
+{
+	return (attr.$ === 'a0')
+		? A2(_VirtualDom_on, attr.n, _VirtualDom_mapHandler(func, attr.o))
+		: attr;
+});
+
+function _VirtualDom_mapHandler(func, handler)
+{
+	var tag = elm$virtual_dom$VirtualDom$toHandlerInt(handler);
+
+	// 0 = Normal
+	// 1 = MayStopPropagation
+	// 2 = MayPreventDefault
+	// 3 = Custom
+
+	return {
+		$: handler.$,
+		a:
+			!tag
+				? A2(elm$json$Json$Decode$map, func, handler.a)
+				:
+			A3(elm$json$Json$Decode$map2,
+				tag < 3
+					? _VirtualDom_mapEventTuple
+					: _VirtualDom_mapEventRecord,
+				elm$json$Json$Decode$succeed(func),
+				handler.a
+			)
+	};
+}
+
+var _VirtualDom_mapEventTuple = F2(function(func, tuple)
+{
+	return _Utils_Tuple2(func(tuple.a), tuple.b);
+});
+
+var _VirtualDom_mapEventRecord = F2(function(func, record)
+{
+	return {
+		message: func(record.message),
+		stopPropagation: record.stopPropagation,
+		preventDefault: record.preventDefault
+	}
+});
+
+
+
+// ORGANIZE FACTS
+
+
+function _VirtualDom_organizeFacts(factList)
+{
+	for (var facts = {}; factList.b; factList = factList.b) // WHILE_CONS
 	{
-		var entry = factList._0;
-		var key = entry.key;
+		var entry = factList.a;
 
-		if (key === ATTR_KEY || key === ATTR_NS_KEY || key === EVENT_KEY)
+		var tag = entry.$;
+		var key = entry.n;
+		var value = entry.o;
+
+		if (tag === 'a2')
 		{
-			var subFacts = facts[key] || {};
-			subFacts[entry.realKey] = entry.value;
-			facts[key] = subFacts;
+			(key === 'className')
+				? _VirtualDom_addClass(facts, key, _Json_unwrap(value))
+				: facts[key] = _Json_unwrap(value);
+
+			continue;
 		}
-		else if (key === STYLE_KEY)
-		{
-			var styles = facts[key] || {};
-			var styleList = entry.value;
-			while (styleList.ctor !== '[]')
-			{
-				var style = styleList._0;
-				styles[style._0] = style._1;
-				styleList = styleList._1;
-			}
-			facts[key] = styles;
-		}
-		else if (key === 'namespace')
-		{
-			namespace = entry.value;
-		}
-		else if (key === 'className')
-		{
-			var classes = facts[key];
-			facts[key] = typeof classes === 'undefined'
-				? entry.value
-				: classes + ' ' + entry.value;
-		}
- 		else
-		{
-			facts[key] = entry.value;
-		}
-		factList = factList._1;
+
+		var subFacts = facts[tag] || (facts[tag] = {});
+		(tag === 'a3' && key === 'class')
+			? _VirtualDom_addClass(subFacts, key, value)
+			: subFacts[key] = value;
 	}
 
-	return {
-		facts: facts,
-		namespace: namespace
-	};
+	return facts;
+}
+
+function _VirtualDom_addClass(object, key, newClass)
+{
+	var classes = object[key];
+	object[key] = classes ? classes + ' ' + newClass : newClass;
 }
 
 
 
-////////////  PROPERTIES AND ATTRIBUTES  ////////////
+// RENDER
 
 
-function style(value)
+function _VirtualDom_render(vNode, eventNode)
 {
-	return {
-		key: STYLE_KEY,
-		value: value
-	};
-}
+	var tag = vNode.$;
 
-
-function property(key, value)
-{
-	return {
-		key: key,
-		value: value
-	};
-}
-
-
-function attribute(key, value)
-{
-	return {
-		key: ATTR_KEY,
-		realKey: key,
-		value: value
-	};
-}
-
-
-function attributeNS(namespace, key, value)
-{
-	return {
-		key: ATTR_NS_KEY,
-		realKey: key,
-		value: {
-			value: value,
-			namespace: namespace
-		}
-	};
-}
-
-
-function on(name, options, decoder)
-{
-	return {
-		key: EVENT_KEY,
-		realKey: name,
-		value: {
-			options: options,
-			decoder: decoder
-		}
-	};
-}
-
-
-function equalEvents(a, b)
-{
-	if (a.options !== b.options)
+	if (tag === 5)
 	{
-		if (a.options.stopPropagation !== b.options.stopPropagation || a.options.preventDefault !== b.options.preventDefault)
+		return _VirtualDom_render(vNode.k || (vNode.k = vNode.m()), eventNode);
+	}
+
+	if (tag === 0)
+	{
+		return _VirtualDom_doc.createTextNode(vNode.a);
+	}
+
+	if (tag === 4)
+	{
+		var subNode = vNode.k;
+		var tagger = vNode.j;
+
+		while (subNode.$ === 4)
 		{
-			return false;
+			typeof tagger !== 'object'
+				? tagger = [tagger, subNode.j]
+				: tagger.push(subNode.j);
+
+			subNode = subNode.k;
 		}
+
+		var subEventRoot = { j: tagger, p: eventNode };
+		var domNode = _VirtualDom_render(subNode, subEventRoot);
+		domNode.elm_event_node_ref = subEventRoot;
+		return domNode;
 	}
-	return _elm_lang$core$Native_Json.equality(a.decoder, b.decoder);
-}
 
-
-function mapProperty(func, property)
-{
-	if (property.key !== EVENT_KEY)
+	if (tag === 3)
 	{
-		return property;
+		var domNode = vNode.h(vNode.g);
+		_VirtualDom_applyFacts(domNode, eventNode, vNode.d);
+		return domNode;
 	}
-	return on(
-		property.realKey,
-		property.value.options,
-		A2(_elm_lang$core$Json_Decode$map, func, property.value.decoder)
-	);
-}
 
+	// at this point `tag` must be 1 or 2
 
-////////////  RENDER  ////////////
+	var domNode = vNode.f
+		? _VirtualDom_doc.createElementNS(vNode.f, vNode.c)
+		: _VirtualDom_doc.createElement(vNode.c);
 
-
-function render(vNode, eventNode)
-{
-	switch (vNode.type)
+	if (_VirtualDom_divertHrefToApp && vNode.c == 'a')
 	{
-		case 'thunk':
-			if (!vNode.node)
-			{
-				vNode.node = vNode.thunk();
-			}
-			return render(vNode.node, eventNode);
-
-		case 'tagger':
-			var subNode = vNode.node;
-			var tagger = vNode.tagger;
-
-			while (subNode.type === 'tagger')
-			{
-				typeof tagger !== 'object'
-					? tagger = [tagger, subNode.tagger]
-					: tagger.push(subNode.tagger);
-
-				subNode = subNode.node;
-			}
-
-			var subEventRoot = { tagger: tagger, parent: eventNode };
-			var domNode = render(subNode, subEventRoot);
-			domNode.elm_event_node_ref = subEventRoot;
-			return domNode;
-
-		case 'text':
-			return localDoc.createTextNode(vNode.text);
-
-		case 'node':
-			var domNode = vNode.namespace
-				? localDoc.createElementNS(vNode.namespace, vNode.tag)
-				: localDoc.createElement(vNode.tag);
-
-			applyFacts(domNode, eventNode, vNode.facts);
-
-			var children = vNode.children;
-
-			for (var i = 0; i < children.length; i++)
-			{
-				domNode.appendChild(render(children[i], eventNode));
-			}
-
-			return domNode;
-
-		case 'keyed-node':
-			var domNode = vNode.namespace
-				? localDoc.createElementNS(vNode.namespace, vNode.tag)
-				: localDoc.createElement(vNode.tag);
-
-			applyFacts(domNode, eventNode, vNode.facts);
-
-			var children = vNode.children;
-
-			for (var i = 0; i < children.length; i++)
-			{
-				domNode.appendChild(render(children[i]._1, eventNode));
-			}
-
-			return domNode;
-
-		case 'custom':
-			var domNode = vNode.impl.render(vNode.model);
-			applyFacts(domNode, eventNode, vNode.facts);
-			return domNode;
+		domNode.addEventListener('click', _VirtualDom_divertHrefToApp(domNode));
 	}
+
+	_VirtualDom_applyFacts(domNode, eventNode, vNode.d);
+
+	for (var kids = vNode.e, i = 0; i < kids.length; i++)
+	{
+		_VirtualDom_appendChild(domNode, _VirtualDom_render(tag === 1 ? kids[i] : kids[i].b, eventNode));
+	}
+
+	return domNode;
 }
 
 
 
-////////////  APPLY FACTS  ////////////
+// APPLY FACTS
 
 
-function applyFacts(domNode, eventNode, facts)
+function _VirtualDom_applyFacts(domNode, eventNode, facts)
 {
 	for (var key in facts)
 	{
 		var value = facts[key];
 
-		switch (key)
-		{
-			case STYLE_KEY:
-				applyStyles(domNode, value);
-				break;
-
-			case EVENT_KEY:
-				applyEvents(domNode, eventNode, value);
-				break;
-
-			case ATTR_KEY:
-				applyAttrs(domNode, value);
-				break;
-
-			case ATTR_NS_KEY:
-				applyAttrsNS(domNode, value);
-				break;
-
-			case 'value':
-				if (domNode[key] !== value)
-				{
-					domNode[key] = value;
-				}
-				break;
-
-			default:
-				domNode[key] = value;
-				break;
-		}
+		key === 'a1'
+			? _VirtualDom_applyStyles(domNode, value)
+			:
+		key === 'a0'
+			? _VirtualDom_applyEvents(domNode, eventNode, value)
+			:
+		key === 'a3'
+			? _VirtualDom_applyAttrs(domNode, value)
+			:
+		key === 'a4'
+			? _VirtualDom_applyAttrsNS(domNode, value)
+			:
+		((key !== 'value' && key !== 'checked') || domNode[key] !== value) && (domNode[key] = value);
 	}
 }
 
-function applyStyles(domNode, styles)
+
+
+// APPLY STYLES
+
+
+function _VirtualDom_applyStyles(domNode, styles)
 {
 	var domNodeStyle = domNode.style;
 
@@ -6538,308 +2834,326 @@ function applyStyles(domNode, styles)
 	}
 }
 
-function applyEvents(domNode, eventNode, events)
-{
-	var allHandlers = domNode.elm_handlers || {};
 
-	for (var key in events)
-	{
-		var handler = allHandlers[key];
-		var value = events[key];
 
-		if (typeof value === 'undefined')
-		{
-			domNode.removeEventListener(key, handler);
-			allHandlers[key] = undefined;
-		}
-		else if (typeof handler === 'undefined')
-		{
-			var handler = makeEventHandler(eventNode, value);
-			domNode.addEventListener(key, handler);
-			allHandlers[key] = handler;
-		}
-		else
-		{
-			handler.info = value;
-		}
-	}
+// APPLY ATTRS
 
-	domNode.elm_handlers = allHandlers;
-}
 
-function makeEventHandler(eventNode, info)
-{
-	function eventHandler(event)
-	{
-		var info = eventHandler.info;
-
-		var value = A2(_elm_lang$core$Native_Json.run, info.decoder, event);
-
-		if (value.ctor === 'Ok')
-		{
-			var options = info.options;
-			if (options.stopPropagation)
-			{
-				event.stopPropagation();
-			}
-			if (options.preventDefault)
-			{
-				event.preventDefault();
-			}
-
-			var message = value._0;
-
-			var currentEventNode = eventNode;
-			while (currentEventNode)
-			{
-				var tagger = currentEventNode.tagger;
-				if (typeof tagger === 'function')
-				{
-					message = tagger(message);
-				}
-				else
-				{
-					for (var i = tagger.length; i--; )
-					{
-						message = tagger[i](message);
-					}
-				}
-				currentEventNode = currentEventNode.parent;
-			}
-		}
-	};
-
-	eventHandler.info = info;
-
-	return eventHandler;
-}
-
-function applyAttrs(domNode, attrs)
+function _VirtualDom_applyAttrs(domNode, attrs)
 {
 	for (var key in attrs)
 	{
 		var value = attrs[key];
-		if (typeof value === 'undefined')
-		{
-			domNode.removeAttribute(key);
-		}
-		else
-		{
-			domNode.setAttribute(key, value);
-		}
+		typeof value !== 'undefined'
+			? domNode.setAttribute(key, value)
+			: domNode.removeAttribute(key);
 	}
 }
 
-function applyAttrsNS(domNode, nsAttrs)
+
+
+// APPLY NAMESPACED ATTRS
+
+
+function _VirtualDom_applyAttrsNS(domNode, nsAttrs)
 {
 	for (var key in nsAttrs)
 	{
 		var pair = nsAttrs[key];
-		var namespace = pair.namespace;
-		var value = pair.value;
+		var namespace = pair.f;
+		var value = pair.o;
 
-		if (typeof value === 'undefined')
-		{
-			domNode.removeAttributeNS(namespace, key);
-		}
-		else
-		{
-			domNode.setAttributeNS(namespace, key, value);
-		}
+		typeof value !== 'undefined'
+			? domNode.setAttributeNS(namespace, key, value)
+			: domNode.removeAttributeNS(namespace, key);
 	}
 }
 
 
 
-////////////  DIFF  ////////////
+// APPLY EVENTS
 
 
-function diff(a, b)
+function _VirtualDom_applyEvents(domNode, eventNode, events)
+{
+	var allCallbacks = domNode.elmFs || (domNode.elmFs = {});
+
+	for (var key in events)
+	{
+		var newHandler = events[key];
+		var oldCallback = allCallbacks[key];
+
+		if (!newHandler)
+		{
+			domNode.removeEventListener(key, oldCallback);
+			allCallbacks[key] = undefined;
+			continue;
+		}
+
+		if (oldCallback)
+		{
+			var oldHandler = oldCallback.q;
+			if (oldHandler.$ === newHandler.$)
+			{
+				oldCallback.q = newHandler;
+				continue;
+			}
+			domNode.removeEventListener(key, oldCallback);
+		}
+
+		oldCallback = _VirtualDom_makeCallback(eventNode, newHandler);
+		domNode.addEventListener(key, oldCallback,
+			_VirtualDom_passiveSupported
+			&& { passive: elm$virtual_dom$VirtualDom$toHandlerInt(newHandler) < 2 }
+		);
+		allCallbacks[key] = oldCallback;
+	}
+}
+
+
+
+// PASSIVE EVENTS
+
+
+var _VirtualDom_passiveSupported;
+
+try
+{
+	window.addEventListener('t', null, Object.defineProperty({}, 'passive', {
+		get: function() { _VirtualDom_passiveSupported = true; }
+	}));
+}
+catch(e) {}
+
+
+
+// EVENT HANDLERS
+
+
+function _VirtualDom_makeCallback(eventNode, initialHandler)
+{
+	function callback(event)
+	{
+		var handler = callback.q;
+		var result = _Json_runHelp(handler.a, event);
+
+		if (!elm$core$Result$isOk(result))
+		{
+			return;
+		}
+
+		var tag = elm$virtual_dom$VirtualDom$toHandlerInt(handler);
+
+		// 0 = Normal
+		// 1 = MayStopPropagation
+		// 2 = MayPreventDefault
+		// 3 = Custom
+
+		var value = result.a;
+		var message = !tag ? value : tag < 3 ? value.a : value.message;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.stopPropagation;
+		var currentEventNode = (
+			stopPropagation && event.stopPropagation(),
+			(tag == 2 ? value.b : tag == 3 && value.preventDefault) && event.preventDefault(),
+			eventNode
+		);
+		var tagger;
+		var i;
+		while (tagger = currentEventNode.j)
+		{
+			if (typeof tagger == 'function')
+			{
+				message = tagger(message);
+			}
+			else
+			{
+				for (var i = tagger.length; i--; )
+				{
+					message = tagger[i](message);
+				}
+			}
+			currentEventNode = currentEventNode.p;
+		}
+		currentEventNode(message, stopPropagation); // stopPropagation implies isSync
+	}
+
+	callback.q = initialHandler;
+
+	return callback;
+}
+
+function _VirtualDom_equalEvents(x, y)
+{
+	return x.$ == y.$ && _Json_equality(x.a, y.a);
+}
+
+
+
+// DIFF
+
+
+// TODO: Should we do patches like in iOS?
+//
+// type Patch
+//   = At Int Patch
+//   | Batch (List Patch)
+//   | Change ...
+//
+// How could it not be better?
+//
+function _VirtualDom_diff(x, y)
 {
 	var patches = [];
-	diffHelp(a, b, patches, 0);
+	_VirtualDom_diffHelp(x, y, patches, 0);
 	return patches;
 }
 
 
-function makePatch(type, index, data)
+function _VirtualDom_pushPatch(patches, type, index, data)
 {
-	return {
-		index: index,
-		type: type,
-		data: data,
-		domNode: undefined,
-		eventNode: undefined
+	var patch = {
+		$: type,
+		r: index,
+		s: data,
+		t: undefined,
+		u: undefined
 	};
+	patches.push(patch);
+	return patch;
 }
 
 
-function diffHelp(a, b, patches, index)
+function _VirtualDom_diffHelp(x, y, patches, index)
 {
-	if (a === b)
+	if (x === y)
 	{
 		return;
 	}
 
-	var aType = a.type;
-	var bType = b.type;
+	var xType = x.$;
+	var yType = y.$;
 
 	// Bail if you run into different types of nodes. Implies that the
 	// structure has changed significantly and it's not worth a diff.
-	if (aType !== bType)
+	if (xType !== yType)
 	{
-		patches.push(makePatch('p-redraw', index, b));
-		return;
+		if (xType === 1 && yType === 2)
+		{
+			y = _VirtualDom_dekey(y);
+			yType = 1;
+		}
+		else
+		{
+			_VirtualDom_pushPatch(patches, 0, index, y);
+			return;
+		}
 	}
 
-	// Now we know that both nodes are the same type.
-	switch (bType)
+	// Now we know that both nodes are the same $.
+	switch (yType)
 	{
-		case 'thunk':
-			var aArgs = a.args;
-			var bArgs = b.args;
-			var i = aArgs.length;
-			var same = a.func === b.func && i === bArgs.length;
+		case 5:
+			var xRefs = x.l;
+			var yRefs = y.l;
+			var i = xRefs.length;
+			var same = i === yRefs.length;
 			while (same && i--)
 			{
-				same = aArgs[i] === bArgs[i];
+				same = xRefs[i] === yRefs[i];
 			}
 			if (same)
 			{
-				b.node = a.node;
+				y.k = x.k;
 				return;
 			}
-			b.node = b.thunk();
+			y.k = y.m();
 			var subPatches = [];
-			diffHelp(a.node, b.node, subPatches, 0);
-			if (subPatches.length > 0)
-			{
-				patches.push(makePatch('p-thunk', index, subPatches));
-			}
+			_VirtualDom_diffHelp(x.k, y.k, subPatches, 0);
+			subPatches.length > 0 && _VirtualDom_pushPatch(patches, 1, index, subPatches);
 			return;
 
-		case 'tagger':
+		case 4:
 			// gather nested taggers
-			var aTaggers = a.tagger;
-			var bTaggers = b.tagger;
+			var xTaggers = x.j;
+			var yTaggers = y.j;
 			var nesting = false;
 
-			var aSubNode = a.node;
-			while (aSubNode.type === 'tagger')
+			var xSubNode = x.k;
+			while (xSubNode.$ === 4)
 			{
 				nesting = true;
 
-				typeof aTaggers !== 'object'
-					? aTaggers = [aTaggers, aSubNode.tagger]
-					: aTaggers.push(aSubNode.tagger);
+				typeof xTaggers !== 'object'
+					? xTaggers = [xTaggers, xSubNode.j]
+					: xTaggers.push(xSubNode.j);
 
-				aSubNode = aSubNode.node;
+				xSubNode = xSubNode.k;
 			}
 
-			var bSubNode = b.node;
-			while (bSubNode.type === 'tagger')
+			var ySubNode = y.k;
+			while (ySubNode.$ === 4)
 			{
 				nesting = true;
 
-				typeof bTaggers !== 'object'
-					? bTaggers = [bTaggers, bSubNode.tagger]
-					: bTaggers.push(bSubNode.tagger);
+				typeof yTaggers !== 'object'
+					? yTaggers = [yTaggers, ySubNode.j]
+					: yTaggers.push(ySubNode.j);
 
-				bSubNode = bSubNode.node;
+				ySubNode = ySubNode.k;
 			}
 
 			// Just bail if different numbers of taggers. This implies the
 			// structure of the virtual DOM has changed.
-			if (nesting && aTaggers.length !== bTaggers.length)
+			if (nesting && xTaggers.length !== yTaggers.length)
 			{
-				patches.push(makePatch('p-redraw', index, b));
+				_VirtualDom_pushPatch(patches, 0, index, y);
 				return;
 			}
 
 			// check if taggers are "the same"
-			if (nesting ? !pairwiseRefEqual(aTaggers, bTaggers) : aTaggers !== bTaggers)
+			if (nesting ? !_VirtualDom_pairwiseRefEqual(xTaggers, yTaggers) : xTaggers !== yTaggers)
 			{
-				patches.push(makePatch('p-tagger', index, bTaggers));
+				_VirtualDom_pushPatch(patches, 2, index, yTaggers);
 			}
 
 			// diff everything below the taggers
-			diffHelp(aSubNode, bSubNode, patches, index + 1);
+			_VirtualDom_diffHelp(xSubNode, ySubNode, patches, index + 1);
 			return;
 
-		case 'text':
-			if (a.text !== b.text)
+		case 0:
+			if (x.a !== y.a)
 			{
-				patches.push(makePatch('p-text', index, b.text));
-				return;
+				_VirtualDom_pushPatch(patches, 3, index, y.a);
 			}
-
 			return;
 
-		case 'node':
-			// Bail if obvious indicators have changed. Implies more serious
-			// structural changes such that it's not worth it to diff.
-			if (a.tag !== b.tag || a.namespace !== b.namespace)
-			{
-				patches.push(makePatch('p-redraw', index, b));
-				return;
-			}
-
-			var factsDiff = diffFacts(a.facts, b.facts);
-
-			if (typeof factsDiff !== 'undefined')
-			{
-				patches.push(makePatch('p-facts', index, factsDiff));
-			}
-
-			diffChildren(a, b, patches, index);
+		case 1:
+			_VirtualDom_diffNodes(x, y, patches, index, _VirtualDom_diffKids);
 			return;
 
-		case 'keyed-node':
-			// Bail if obvious indicators have changed. Implies more serious
-			// structural changes such that it's not worth it to diff.
-			if (a.tag !== b.tag || a.namespace !== b.namespace)
-			{
-				patches.push(makePatch('p-redraw', index, b));
-				return;
-			}
-
-			var factsDiff = diffFacts(a.facts, b.facts);
-
-			if (typeof factsDiff !== 'undefined')
-			{
-				patches.push(makePatch('p-facts', index, factsDiff));
-			}
-
-			diffKeyedChildren(a, b, patches, index);
+		case 2:
+			_VirtualDom_diffNodes(x, y, patches, index, _VirtualDom_diffKeyedKids);
 			return;
 
-		case 'custom':
-			if (a.impl !== b.impl)
+		case 3:
+			if (x.h !== y.h)
 			{
-				patches.push(makePatch('p-redraw', index, b));
+				_VirtualDom_pushPatch(patches, 0, index, y);
 				return;
 			}
 
-			var factsDiff = diffFacts(a.facts, b.facts);
-			if (typeof factsDiff !== 'undefined')
-			{
-				patches.push(makePatch('p-facts', index, factsDiff));
-			}
+			var factsDiff = _VirtualDom_diffFacts(x.d, y.d);
+			factsDiff && _VirtualDom_pushPatch(patches, 4, index, factsDiff);
 
-			var patch = b.impl.diff(a,b);
-			if (patch)
-			{
-				patches.push(makePatch('p-custom', index, patch));
-				return;
-			}
+			var patch = y.i(x.g, y.g);
+			patch && _VirtualDom_pushPatch(patches, 5, index, patch);
 
 			return;
 	}
 }
 
-
 // assumes the incoming arrays are the same length
-function pairwiseRefEqual(as, bs)
+function _VirtualDom_pairwiseRefEqual(as, bs)
 {
 	for (var i = 0; i < as.length; i++)
 	{
@@ -6852,68 +3166,88 @@ function pairwiseRefEqual(as, bs)
 	return true;
 }
 
+function _VirtualDom_diffNodes(x, y, patches, index, diffKids)
+{
+	// Bail if obvious indicators have changed. Implies more serious
+	// structural changes such that it's not worth it to diff.
+	if (x.c !== y.c || x.f !== y.f)
+	{
+		_VirtualDom_pushPatch(patches, 0, index, y);
+		return;
+	}
+
+	var factsDiff = _VirtualDom_diffFacts(x.d, y.d);
+	factsDiff && _VirtualDom_pushPatch(patches, 4, index, factsDiff);
+
+	diffKids(x, y, patches, index);
+}
+
+
+
+// DIFF FACTS
+
 
 // TODO Instead of creating a new diff object, it's possible to just test if
 // there *is* a diff. During the actual patch, do the diff again and make the
 // modifications directly. This way, there's no new allocations. Worth it?
-function diffFacts(a, b, category)
+function _VirtualDom_diffFacts(x, y, category)
 {
 	var diff;
 
 	// look for changes and removals
-	for (var aKey in a)
+	for (var xKey in x)
 	{
-		if (aKey === STYLE_KEY || aKey === EVENT_KEY || aKey === ATTR_KEY || aKey === ATTR_NS_KEY)
+		if (xKey === 'a1' || xKey === 'a0' || xKey === 'a3' || xKey === 'a4')
 		{
-			var subDiff = diffFacts(a[aKey], b[aKey] || {}, aKey);
+			var subDiff = _VirtualDom_diffFacts(x[xKey], y[xKey] || {}, xKey);
 			if (subDiff)
 			{
 				diff = diff || {};
-				diff[aKey] = subDiff;
+				diff[xKey] = subDiff;
 			}
 			continue;
 		}
 
 		// remove if not in the new facts
-		if (!(aKey in b))
+		if (!(xKey in y))
 		{
 			diff = diff || {};
-			diff[aKey] =
-				(typeof category === 'undefined')
-					? (typeof a[aKey] === 'string' ? '' : null)
+			diff[xKey] =
+				!category
+					? (typeof x[xKey] === 'string' ? '' : null)
 					:
-				(category === STYLE_KEY)
+				(category === 'a1')
 					? ''
 					:
-				(category === EVENT_KEY || category === ATTR_KEY)
+				(category === 'a0' || category === 'a3')
 					? undefined
 					:
-				{ namespace: a[aKey].namespace, value: undefined };
+				{ f: x[xKey].f, o: undefined };
 
 			continue;
 		}
 
-		var aValue = a[aKey];
-		var bValue = b[aKey];
+		var xValue = x[xKey];
+		var yValue = y[xKey];
 
 		// reference equal, so don't worry about it
-		if (aValue === bValue && aKey !== 'value'
-			|| category === EVENT_KEY && equalEvents(aValue, bValue))
+		if (xValue === yValue && xKey !== 'value' && xKey !== 'checked'
+			|| category === 'a0' && _VirtualDom_equalEvents(xValue, yValue))
 		{
 			continue;
 		}
 
 		diff = diff || {};
-		diff[aKey] = bValue;
+		diff[xKey] = yValue;
 	}
 
 	// add new stuff
-	for (var bKey in b)
+	for (var yKey in y)
 	{
-		if (!(bKey in a))
+		if (!(yKey in x))
 		{
 			diff = diff || {};
-			diff[bKey] = b[bKey];
+			diff[yKey] = y[yKey];
 		}
 	}
 
@@ -6921,44 +3255,51 @@ function diffFacts(a, b, category)
 }
 
 
-function diffChildren(aParent, bParent, patches, rootIndex)
-{
-	var aChildren = aParent.children;
-	var bChildren = bParent.children;
 
-	var aLen = aChildren.length;
-	var bLen = bChildren.length;
+// DIFF KIDS
+
+
+function _VirtualDom_diffKids(xParent, yParent, patches, index)
+{
+	var xKids = xParent.e;
+	var yKids = yParent.e;
+
+	var xLen = xKids.length;
+	var yLen = yKids.length;
 
 	// FIGURE OUT IF THERE ARE INSERTS OR REMOVALS
 
-	if (aLen > bLen)
+	if (xLen > yLen)
 	{
-		patches.push(makePatch('p-remove-last', rootIndex, aLen - bLen));
+		_VirtualDom_pushPatch(patches, 6, index, {
+			v: yLen,
+			i: xLen - yLen
+		});
 	}
-	else if (aLen < bLen)
+	else if (xLen < yLen)
 	{
-		patches.push(makePatch('p-append', rootIndex, bChildren.slice(aLen)));
+		_VirtualDom_pushPatch(patches, 7, index, {
+			v: xLen,
+			e: yKids
+		});
 	}
 
 	// PAIRWISE DIFF EVERYTHING ELSE
 
-	var index = rootIndex;
-	var minLen = aLen < bLen ? aLen : bLen;
-	for (var i = 0; i < minLen; i++)
+	for (var minLen = xLen < yLen ? xLen : yLen, i = 0; i < minLen; i++)
 	{
-		index++;
-		var aChild = aChildren[i];
-		diffHelp(aChild, bChildren[i], patches, index);
-		index += aChild.descendantsCount || 0;
+		var xKid = xKids[i];
+		_VirtualDom_diffHelp(xKid, yKids[i], patches, ++index);
+		index += xKid.b || 0;
 	}
 }
 
 
 
-////////////  KEYED DIFF  ////////////
+// KEYED DIFF
 
 
-function diffKeyedChildren(aParent, bParent, patches, rootIndex)
+function _VirtualDom_diffKeyedKids(xParent, yParent, patches, rootIndex)
 {
 	var localPatches = [];
 
@@ -6966,120 +3307,121 @@ function diffKeyedChildren(aParent, bParent, patches, rootIndex)
 	var inserts = []; // Array { index : Int, entry : Entry }
 	// type Entry = { tag : String, vnode : VNode, index : Int, data : _ }
 
-	var aChildren = aParent.children;
-	var bChildren = bParent.children;
-	var aLen = aChildren.length;
-	var bLen = bChildren.length;
-	var aIndex = 0;
-	var bIndex = 0;
+	var xKids = xParent.e;
+	var yKids = yParent.e;
+	var xLen = xKids.length;
+	var yLen = yKids.length;
+	var xIndex = 0;
+	var yIndex = 0;
 
 	var index = rootIndex;
 
-	while (aIndex < aLen && bIndex < bLen)
+	while (xIndex < xLen && yIndex < yLen)
 	{
-		var a = aChildren[aIndex];
-		var b = bChildren[bIndex];
+		var x = xKids[xIndex];
+		var y = yKids[yIndex];
 
-		var aKey = a._0;
-		var bKey = b._0;
-		var aNode = a._1;
-		var bNode = b._1;
+		var xKey = x.a;
+		var yKey = y.a;
+		var xNode = x.b;
+		var yNode = y.b;
+
+		var newMatch = undefined;
+		var oldMatch = undefined;
 
 		// check if keys match
 
-		if (aKey === bKey)
+		if (xKey === yKey)
 		{
 			index++;
-			diffHelp(aNode, bNode, localPatches, index);
-			index += aNode.descendantsCount || 0;
+			_VirtualDom_diffHelp(xNode, yNode, localPatches, index);
+			index += xNode.b || 0;
 
-			aIndex++;
-			bIndex++;
+			xIndex++;
+			yIndex++;
 			continue;
 		}
 
 		// look ahead 1 to detect insertions and removals.
 
-		var aLookAhead = aIndex + 1 < aLen;
-		var bLookAhead = bIndex + 1 < bLen;
+		var xNext = xKids[xIndex + 1];
+		var yNext = yKids[yIndex + 1];
 
-		if (aLookAhead)
+		if (xNext)
 		{
-			var aNext = aChildren[aIndex + 1];
-			var aNextKey = aNext._0;
-			var aNextNode = aNext._1;
-			var oldMatch = bKey === aNextKey;
+			var xNextKey = xNext.a;
+			var xNextNode = xNext.b;
+			oldMatch = yKey === xNextKey;
 		}
 
-		if (bLookAhead)
+		if (yNext)
 		{
-			var bNext = bChildren[bIndex + 1];
-			var bNextKey = bNext._0;
-			var bNextNode = bNext._1;
-			var newMatch = aKey === bNextKey;
+			var yNextKey = yNext.a;
+			var yNextNode = yNext.b;
+			newMatch = xKey === yNextKey;
 		}
 
 
-		// swap a and b
-		if (aLookAhead && bLookAhead && newMatch && oldMatch)
+		// swap x and y
+		if (newMatch && oldMatch)
 		{
 			index++;
-			diffHelp(aNode, bNextNode, localPatches, index);
-			insertNode(changes, localPatches, aKey, bNode, bIndex, inserts);
-			index += aNode.descendantsCount || 0;
+			_VirtualDom_diffHelp(xNode, yNextNode, localPatches, index);
+			_VirtualDom_insertNode(changes, localPatches, xKey, yNode, yIndex, inserts);
+			index += xNode.b || 0;
 
 			index++;
-			removeNode(changes, localPatches, aKey, aNextNode, index);
-			index += aNextNode.descendantsCount || 0;
+			_VirtualDom_removeNode(changes, localPatches, xKey, xNextNode, index);
+			index += xNextNode.b || 0;
 
-			aIndex += 2;
-			bIndex += 2;
+			xIndex += 2;
+			yIndex += 2;
 			continue;
 		}
 
-		// insert b
-		if (bLookAhead && newMatch)
+		// insert y
+		if (newMatch)
 		{
 			index++;
-			insertNode(changes, localPatches, bKey, bNode, bIndex, inserts);
-			diffHelp(aNode, bNextNode, localPatches, index);
-			index += aNode.descendantsCount || 0;
+			_VirtualDom_insertNode(changes, localPatches, yKey, yNode, yIndex, inserts);
+			_VirtualDom_diffHelp(xNode, yNextNode, localPatches, index);
+			index += xNode.b || 0;
 
-			aIndex += 1;
-			bIndex += 2;
+			xIndex += 1;
+			yIndex += 2;
 			continue;
 		}
 
-		// remove a
-		if (aLookAhead && oldMatch)
+		// remove x
+		if (oldMatch)
 		{
 			index++;
-			removeNode(changes, localPatches, aKey, aNode, index);
-			index += aNode.descendantsCount || 0;
+			_VirtualDom_removeNode(changes, localPatches, xKey, xNode, index);
+			index += xNode.b || 0;
 
 			index++;
-			diffHelp(aNextNode, bNode, localPatches, index);
-			index += aNextNode.descendantsCount || 0;
+			_VirtualDom_diffHelp(xNextNode, yNode, localPatches, index);
+			index += xNextNode.b || 0;
 
-			aIndex += 2;
-			bIndex += 1;
+			xIndex += 2;
+			yIndex += 1;
 			continue;
 		}
 
-		// remove a, insert b
-		if (aLookAhead && bLookAhead && aNextKey === bNextKey)
+		// remove x, insert y
+		if (xNext && xNextKey === yNextKey)
 		{
 			index++;
-			removeNode(changes, localPatches, aKey, aNode, index);
-			insertNode(changes, localPatches, bKey, bNode, bIndex, inserts);
-			index += aNode.descendantsCount || 0;
+			_VirtualDom_removeNode(changes, localPatches, xKey, xNode, index);
+			_VirtualDom_insertNode(changes, localPatches, yKey, yNode, yIndex, inserts);
+			index += xNode.b || 0;
 
 			index++;
-			diffHelp(aNextNode, bNextNode, localPatches, index);
-			index += aNextNode.descendantsCount || 0;
+			_VirtualDom_diffHelp(xNextNode, yNextNode, localPatches, index);
+			index += xNextNode.b || 0;
 
-			aIndex += 2;
-			bIndex += 2;
+			xIndex += 2;
+			yIndex += 2;
 			continue;
 		}
 
@@ -7088,128 +3430,125 @@ function diffKeyedChildren(aParent, bParent, patches, rootIndex)
 
 	// eat up any remaining nodes with removeNode and insertNode
 
-	while (aIndex < aLen)
+	while (xIndex < xLen)
 	{
 		index++;
-		var a = aChildren[aIndex];
-		var aNode = a._1;
-		removeNode(changes, localPatches, a._0, aNode, index);
-		index += aNode.descendantsCount || 0;
-		aIndex++;
+		var x = xKids[xIndex];
+		var xNode = x.b;
+		_VirtualDom_removeNode(changes, localPatches, x.a, xNode, index);
+		index += xNode.b || 0;
+		xIndex++;
 	}
 
-	var endInserts;
-	while (bIndex < bLen)
+	while (yIndex < yLen)
 	{
-		endInserts = endInserts || [];
-		var b = bChildren[bIndex];
-		insertNode(changes, localPatches, b._0, b._1, undefined, endInserts);
-		bIndex++;
+		var endInserts = endInserts || [];
+		var y = yKids[yIndex];
+		_VirtualDom_insertNode(changes, localPatches, y.a, y.b, undefined, endInserts);
+		yIndex++;
 	}
 
-	if (localPatches.length > 0 || inserts.length > 0 || typeof endInserts !== 'undefined')
+	if (localPatches.length > 0 || inserts.length > 0 || endInserts)
 	{
-		patches.push(makePatch('p-reorder', rootIndex, {
-			patches: localPatches,
-			inserts: inserts,
-			endInserts: endInserts
-		}));
+		_VirtualDom_pushPatch(patches, 8, rootIndex, {
+			w: localPatches,
+			x: inserts,
+			y: endInserts
+		});
 	}
 }
 
 
 
-////////////  CHANGES FROM KEYED DIFF  ////////////
+// CHANGES FROM KEYED DIFF
 
 
-var POSTFIX = '_elmW6BL';
+var _VirtualDom_POSTFIX = '_elmW6BL';
 
 
-function insertNode(changes, localPatches, key, vnode, bIndex, inserts)
+function _VirtualDom_insertNode(changes, localPatches, key, vnode, yIndex, inserts)
 {
 	var entry = changes[key];
 
 	// never seen this key before
-	if (typeof entry === 'undefined')
+	if (!entry)
 	{
 		entry = {
-			tag: 'insert',
-			vnode: vnode,
-			index: bIndex,
-			data: undefined
+			c: 0,
+			z: vnode,
+			r: yIndex,
+			s: undefined
 		};
 
-		inserts.push({ index: bIndex, entry: entry });
+		inserts.push({ r: yIndex, A: entry });
 		changes[key] = entry;
 
 		return;
 	}
 
 	// this key was removed earlier, a match!
-	if (entry.tag === 'remove')
+	if (entry.c === 1)
 	{
-		inserts.push({ index: bIndex, entry: entry });
+		inserts.push({ r: yIndex, A: entry });
 
-		entry.tag = 'move';
+		entry.c = 2;
 		var subPatches = [];
-		diffHelp(entry.vnode, vnode, subPatches, entry.index);
-		entry.index = bIndex;
-		entry.data.data = {
-			patches: subPatches,
-			entry: entry
+		_VirtualDom_diffHelp(entry.z, vnode, subPatches, entry.r);
+		entry.r = yIndex;
+		entry.s.s = {
+			w: subPatches,
+			A: entry
 		};
 
 		return;
 	}
 
 	// this key has already been inserted or moved, a duplicate!
-	insertNode(changes, localPatches, key + POSTFIX, vnode, bIndex, inserts);
+	_VirtualDom_insertNode(changes, localPatches, key + _VirtualDom_POSTFIX, vnode, yIndex, inserts);
 }
 
 
-function removeNode(changes, localPatches, key, vnode, index)
+function _VirtualDom_removeNode(changes, localPatches, key, vnode, index)
 {
 	var entry = changes[key];
 
 	// never seen this key before
-	if (typeof entry === 'undefined')
+	if (!entry)
 	{
-		var patch = makePatch('p-remove', index, undefined);
-		localPatches.push(patch);
+		var patch = _VirtualDom_pushPatch(localPatches, 9, index, undefined);
 
 		changes[key] = {
-			tag: 'remove',
-			vnode: vnode,
-			index: index,
-			data: patch
+			c: 1,
+			z: vnode,
+			r: index,
+			s: patch
 		};
 
 		return;
 	}
 
 	// this key was inserted earlier, a match!
-	if (entry.tag === 'insert')
+	if (entry.c === 0)
 	{
-		entry.tag = 'move';
+		entry.c = 2;
 		var subPatches = [];
-		diffHelp(vnode, entry.vnode, subPatches, index);
+		_VirtualDom_diffHelp(vnode, entry.z, subPatches, index);
 
-		var patch = makePatch('p-remove', index, {
-			patches: subPatches,
-			entry: entry
+		_VirtualDom_pushPatch(localPatches, 9, index, {
+			w: subPatches,
+			A: entry
 		});
-		localPatches.push(patch);
 
 		return;
 	}
 
 	// this key has already been removed or moved, a duplicate!
-	removeNode(changes, localPatches, key + POSTFIX, vnode, index);
+	_VirtualDom_removeNode(changes, localPatches, key + _VirtualDom_POSTFIX, vnode, index);
 }
 
 
 
-////////////  ADD DOM NODES  ////////////
+// ADD DOM NODES
 //
 // Each DOM node has an "index" assigned in order of traversal. It is important
 // to minimize our crawl over the actual DOM, so these indexes (along with the
@@ -7217,148 +3556,126 @@ function removeNode(changes, localPatches, key, vnode, index)
 // the DOM if we know there are no patches there.
 
 
-function addDomNodes(domNode, vNode, patches, eventNode)
+function _VirtualDom_addDomNodes(domNode, vNode, patches, eventNode)
 {
-	addDomNodesHelp(domNode, vNode, patches, 0, 0, vNode.descendantsCount, eventNode);
+	_VirtualDom_addDomNodesHelp(domNode, vNode, patches, 0, 0, vNode.b, eventNode);
 }
 
 
 // assumes `patches` is non-empty and indexes increase monotonically.
-function addDomNodesHelp(domNode, vNode, patches, i, low, high, eventNode)
+function _VirtualDom_addDomNodesHelp(domNode, vNode, patches, i, low, high, eventNode)
 {
 	var patch = patches[i];
-	var index = patch.index;
+	var index = patch.r;
 
 	while (index === low)
 	{
-		var patchType = patch.type;
+		var patchType = patch.$;
 
-		if (patchType === 'p-thunk')
+		if (patchType === 1)
 		{
-			addDomNodes(domNode, vNode.node, patch.data, eventNode);
+			_VirtualDom_addDomNodes(domNode, vNode.k, patch.s, eventNode);
 		}
-		else if (patchType === 'p-reorder')
+		else if (patchType === 8)
 		{
-			patch.domNode = domNode;
-			patch.eventNode = eventNode;
+			patch.t = domNode;
+			patch.u = eventNode;
 
-			var subPatches = patch.data.patches;
+			var subPatches = patch.s.w;
 			if (subPatches.length > 0)
 			{
-				addDomNodesHelp(domNode, vNode, subPatches, 0, low, high, eventNode);
+				_VirtualDom_addDomNodesHelp(domNode, vNode, subPatches, 0, low, high, eventNode);
 			}
 		}
-		else if (patchType === 'p-remove')
+		else if (patchType === 9)
 		{
-			patch.domNode = domNode;
-			patch.eventNode = eventNode;
+			patch.t = domNode;
+			patch.u = eventNode;
 
-			var data = patch.data;
-			if (typeof data !== 'undefined')
+			var data = patch.s;
+			if (data)
 			{
-				data.entry.data = domNode;
-				var subPatches = data.patches;
+				data.A.s = domNode;
+				var subPatches = data.w;
 				if (subPatches.length > 0)
 				{
-					addDomNodesHelp(domNode, vNode, subPatches, 0, low, high, eventNode);
+					_VirtualDom_addDomNodesHelp(domNode, vNode, subPatches, 0, low, high, eventNode);
 				}
 			}
 		}
 		else
 		{
-			patch.domNode = domNode;
-			patch.eventNode = eventNode;
+			patch.t = domNode;
+			patch.u = eventNode;
 		}
 
 		i++;
 
-		if (!(patch = patches[i]) || (index = patch.index) > high)
+		if (!(patch = patches[i]) || (index = patch.r) > high)
 		{
 			return i;
 		}
 	}
 
-	switch (vNode.type)
+	var tag = vNode.$;
+
+	if (tag === 4)
 	{
-		case 'tagger':
-			var subNode = vNode.node;
+		var subNode = vNode.k;
 
-			while (subNode.type === "tagger")
-			{
-				subNode = subNode.node;
-			}
+		while (subNode.$ === 4)
+		{
+			subNode = subNode.k;
+		}
 
-			return addDomNodesHelp(domNode, subNode, patches, i, low + 1, high, domNode.elm_event_node_ref);
-
-		case 'node':
-			var vChildren = vNode.children;
-			var childNodes = domNode.childNodes;
-			for (var j = 0; j < vChildren.length; j++)
-			{
-				low++;
-				var vChild = vChildren[j];
-				var nextLow = low + (vChild.descendantsCount || 0);
-				if (low <= index && index <= nextLow)
-				{
-					i = addDomNodesHelp(childNodes[j], vChild, patches, i, low, nextLow, eventNode);
-					if (!(patch = patches[i]) || (index = patch.index) > high)
-					{
-						return i;
-					}
-				}
-				low = nextLow;
-			}
-			return i;
-
-		case 'keyed-node':
-			var vChildren = vNode.children;
-			var childNodes = domNode.childNodes;
-			for (var j = 0; j < vChildren.length; j++)
-			{
-				low++;
-				var vChild = vChildren[j]._1;
-				var nextLow = low + (vChild.descendantsCount || 0);
-				if (low <= index && index <= nextLow)
-				{
-					i = addDomNodesHelp(childNodes[j], vChild, patches, i, low, nextLow, eventNode);
-					if (!(patch = patches[i]) || (index = patch.index) > high)
-					{
-						return i;
-					}
-				}
-				low = nextLow;
-			}
-			return i;
-
-		case 'text':
-		case 'thunk':
-			throw new Error('should never traverse `text` or `thunk` nodes like this');
+		return _VirtualDom_addDomNodesHelp(domNode, subNode, patches, i, low + 1, high, domNode.elm_event_node_ref);
 	}
+
+	// tag must be 1 or 2 at this point
+
+	var vKids = vNode.e;
+	var childNodes = domNode.childNodes;
+	for (var j = 0; j < vKids.length; j++)
+	{
+		low++;
+		var vKid = tag === 1 ? vKids[j] : vKids[j].b;
+		var nextLow = low + (vKid.b || 0);
+		if (low <= index && index <= nextLow)
+		{
+			i = _VirtualDom_addDomNodesHelp(childNodes[j], vKid, patches, i, low, nextLow, eventNode);
+			if (!(patch = patches[i]) || (index = patch.r) > high)
+			{
+				return i;
+			}
+		}
+		low = nextLow;
+	}
+	return i;
 }
 
 
 
-////////////  APPLY PATCHES  ////////////
+// APPLY PATCHES
 
 
-function applyPatches(rootDomNode, oldVirtualNode, patches, eventNode)
+function _VirtualDom_applyPatches(rootDomNode, oldVirtualNode, patches, eventNode)
 {
 	if (patches.length === 0)
 	{
 		return rootDomNode;
 	}
 
-	addDomNodes(rootDomNode, oldVirtualNode, patches, eventNode);
-	return applyPatchesHelp(rootDomNode, patches);
+	_VirtualDom_addDomNodes(rootDomNode, oldVirtualNode, patches, eventNode);
+	return _VirtualDom_applyPatchesHelp(rootDomNode, patches);
 }
 
-function applyPatchesHelp(rootDomNode, patches)
+function _VirtualDom_applyPatchesHelp(rootDomNode, patches)
 {
 	for (var i = 0; i < patches.length; i++)
 	{
 		var patch = patches[i];
-		var localDomNode = patch.domNode
-		var newNode = applyPatch(localDomNode, patch);
+		var localDomNode = patch.t
+		var newNode = _VirtualDom_applyPatch(localDomNode, patch);
 		if (localDomNode === rootDomNode)
 		{
 			rootDomNode = newNode;
@@ -7367,85 +3684,87 @@ function applyPatchesHelp(rootDomNode, patches)
 	return rootDomNode;
 }
 
-function applyPatch(domNode, patch)
+function _VirtualDom_applyPatch(domNode, patch)
 {
-	switch (patch.type)
+	switch (patch.$)
 	{
-		case 'p-redraw':
-			return applyPatchRedraw(domNode, patch.data, patch.eventNode);
+		case 0:
+			return _VirtualDom_applyPatchRedraw(domNode, patch.s, patch.u);
 
-		case 'p-facts':
-			applyFacts(domNode, patch.eventNode, patch.data);
+		case 4:
+			_VirtualDom_applyFacts(domNode, patch.u, patch.s);
 			return domNode;
 
-		case 'p-text':
-			domNode.replaceData(0, domNode.length, patch.data);
+		case 3:
+			domNode.replaceData(0, domNode.length, patch.s);
 			return domNode;
 
-		case 'p-thunk':
-			return applyPatchesHelp(domNode, patch.data);
+		case 1:
+			return _VirtualDom_applyPatchesHelp(domNode, patch.s);
 
-		case 'p-tagger':
-			if (typeof domNode.elm_event_node_ref !== 'undefined')
+		case 2:
+			if (domNode.elm_event_node_ref)
 			{
-				domNode.elm_event_node_ref.tagger = patch.data;
+				domNode.elm_event_node_ref.j = patch.s;
 			}
 			else
 			{
-				domNode.elm_event_node_ref = { tagger: patch.data, parent: patch.eventNode };
+				domNode.elm_event_node_ref = { j: patch.s, p: patch.u };
 			}
 			return domNode;
 
-		case 'p-remove-last':
-			var i = patch.data;
-			while (i--)
+		case 6:
+			var data = patch.s;
+			for (var i = 0; i < data.i; i++)
 			{
-				domNode.removeChild(domNode.lastChild);
+				domNode.removeChild(domNode.childNodes[data.v]);
 			}
 			return domNode;
 
-		case 'p-append':
-			var newNodes = patch.data;
-			for (var i = 0; i < newNodes.length; i++)
+		case 7:
+			var data = patch.s;
+			var kids = data.e;
+			var i = data.v;
+			var theEnd = domNode.childNodes[i];
+			for (; i < kids.length; i++)
 			{
-				domNode.appendChild(render(newNodes[i], patch.eventNode));
+				domNode.insertBefore(_VirtualDom_render(kids[i], patch.u), theEnd);
 			}
 			return domNode;
 
-		case 'p-remove':
-			var data = patch.data;
-			if (typeof data === 'undefined')
+		case 9:
+			var data = patch.s;
+			if (!data)
 			{
 				domNode.parentNode.removeChild(domNode);
 				return domNode;
 			}
-			var entry = data.entry;
-			if (typeof entry.index !== 'undefined')
+			var entry = data.A;
+			if (typeof entry.r !== 'undefined')
 			{
 				domNode.parentNode.removeChild(domNode);
 			}
-			entry.data = applyPatchesHelp(domNode, data.patches);
+			entry.s = _VirtualDom_applyPatchesHelp(domNode, data.w);
 			return domNode;
 
-		case 'p-reorder':
-			return applyPatchReorder(domNode, patch);
+		case 8:
+			return _VirtualDom_applyPatchReorder(domNode, patch);
 
-		case 'p-custom':
-			var impl = patch.data;
-			return impl.applyPatch(domNode, impl.data);
+		case 5:
+			return patch.s(domNode);
 
 		default:
-			throw new Error('Ran into an unknown patch!');
+			_Debug_crash(10); // 'Ran into an unknown patch!'
 	}
 }
 
 
-function applyPatchRedraw(domNode, vNode, eventNode)
+function _VirtualDom_applyPatchRedraw(domNode, vNode, eventNode)
 {
 	var parentNode = domNode.parentNode;
-	var newNode = render(vNode, eventNode);
+	var newNode = _VirtualDom_render(vNode, eventNode);
 
-	if (typeof newNode.elm_event_node_ref === 'undefined')
+	if (!newNode.elm_event_node_ref)
 	{
 		newNode.elm_event_node_ref = domNode.elm_event_node_ref;
 	}
@@ -7458,3129 +3777,2071 @@ function applyPatchRedraw(domNode, vNode, eventNode)
 }
 
 
-function applyPatchReorder(domNode, patch)
+function _VirtualDom_applyPatchReorder(domNode, patch)
 {
-	var data = patch.data;
+	var data = patch.s;
 
 	// remove end inserts
-	var frag = applyPatchReorderEndInsertsHelp(data.endInserts, patch);
+	var frag = _VirtualDom_applyPatchReorderEndInsertsHelp(data.y, patch);
 
 	// removals
-	domNode = applyPatchesHelp(domNode, data.patches);
+	domNode = _VirtualDom_applyPatchesHelp(domNode, data.w);
 
 	// inserts
-	var inserts = data.inserts;
+	var inserts = data.x;
 	for (var i = 0; i < inserts.length; i++)
 	{
 		var insert = inserts[i];
-		var entry = insert.entry;
-		var node = entry.tag === 'move'
-			? entry.data
-			: render(entry.vnode, patch.eventNode);
-		domNode.insertBefore(node, domNode.childNodes[insert.index]);
+		var entry = insert.A;
+		var node = entry.c === 2
+			? entry.s
+			: _VirtualDom_render(entry.z, patch.u);
+		domNode.insertBefore(node, domNode.childNodes[insert.r]);
 	}
 
 	// add end inserts
-	if (typeof frag !== 'undefined')
+	if (frag)
 	{
-		domNode.appendChild(frag);
+		_VirtualDom_appendChild(domNode, frag);
 	}
 
 	return domNode;
 }
 
 
-function applyPatchReorderEndInsertsHelp(endInserts, patch)
+function _VirtualDom_applyPatchReorderEndInsertsHelp(endInserts, patch)
 {
-	if (typeof endInserts === 'undefined')
+	if (!endInserts)
 	{
 		return;
 	}
 
-	var frag = localDoc.createDocumentFragment();
+	var frag = _VirtualDom_doc.createDocumentFragment();
 	for (var i = 0; i < endInserts.length; i++)
 	{
 		var insert = endInserts[i];
-		var entry = insert.entry;
-		frag.appendChild(entry.tag === 'move'
-			? entry.data
-			: render(entry.vnode, patch.eventNode)
+		var entry = insert.A;
+		_VirtualDom_appendChild(frag, entry.c === 2
+			? entry.s
+			: _VirtualDom_render(entry.z, patch.u)
 		);
 	}
 	return frag;
 }
 
 
-// PROGRAMS
-
-var program = makeProgram(checkNoFlags);
-var programWithFlags = makeProgram(checkYesFlags);
-
-function makeProgram(flagChecker)
+function _VirtualDom_virtualize(node)
 {
-	return F2(function(debugWrap, impl)
+	// TEXT NODES
+
+	if (node.nodeType === 3)
 	{
-		return function(flagDecoder)
-		{
-			return function(object, moduleName, debugMetadata)
-			{
-				var checker = flagChecker(flagDecoder, moduleName);
-				if (typeof debugMetadata === 'undefined')
-				{
-					normalSetup(impl, object, moduleName, checker);
-				}
-				else
-				{
-					debugSetup(A2(debugWrap, debugMetadata, impl), object, moduleName, checker);
-				}
-			};
-		};
-	});
-}
-
-function staticProgram(vNode)
-{
-	var nothing = _elm_lang$core$Native_Utils.Tuple2(
-		_elm_lang$core$Native_Utils.Tuple0,
-		_elm_lang$core$Platform_Cmd$none
-	);
-	return A2(program, _elm_lang$virtual_dom$VirtualDom_Debug$wrap, {
-		init: nothing,
-		view: function() { return vNode; },
-		update: F2(function() { return nothing; }),
-		subscriptions: function() { return _elm_lang$core$Platform_Sub$none; }
-	})();
-}
-
-
-// FLAG CHECKERS
-
-function checkNoFlags(flagDecoder, moduleName)
-{
-	return function(init, flags, domNode)
-	{
-		if (typeof flags === 'undefined')
-		{
-			return init;
-		}
-
-		var errorMessage =
-			'The `' + moduleName + '` module does not need flags.\n'
-			+ 'Initialize it with no arguments and you should be all set!';
-
-		crash(errorMessage, domNode);
-	};
-}
-
-function checkYesFlags(flagDecoder, moduleName)
-{
-	return function(init, flags, domNode)
-	{
-		if (typeof flagDecoder === 'undefined')
-		{
-			var errorMessage =
-				'Are you trying to sneak a Never value into Elm? Trickster!\n'
-				+ 'It looks like ' + moduleName + '.main is defined with `programWithFlags` but has type `Program Never`.\n'
-				+ 'Use `program` instead if you do not want flags.'
-
-			crash(errorMessage, domNode);
-		}
-
-		var result = A2(_elm_lang$core$Native_Json.run, flagDecoder, flags);
-		if (result.ctor === 'Ok')
-		{
-			return init(result._0);
-		}
-
-		var errorMessage =
-			'Trying to initialize the `' + moduleName + '` module with an unexpected flag.\n'
-			+ 'I tried to convert it to an Elm value, but ran into this problem:\n\n'
-			+ result._0;
-
-		crash(errorMessage, domNode);
-	};
-}
-
-function crash(errorMessage, domNode)
-{
-	if (domNode)
-	{
-		domNode.innerHTML =
-			'<div style="padding-left:1em;">'
-			+ '<h2 style="font-weight:normal;"><b>Oops!</b> Something went wrong when starting your Elm program.</h2>'
-			+ '<pre style="padding-left:1em;">' + errorMessage + '</pre>'
-			+ '</div>';
+		return _VirtualDom_text(node.textContent);
 	}
 
-	throw new Error(errorMessage);
+
+	// WEIRD NODES
+
+	if (node.nodeType !== 1)
+	{
+		return _VirtualDom_text('');
+	}
+
+
+	// ELEMENT NODES
+
+	var attrList = _List_Nil;
+	var attrs = node.attributes;
+	for (var i = attrs.length; i--; )
+	{
+		var attr = attrs[i];
+		var name = attr.name;
+		var value = attr.value;
+		attrList = _List_Cons( A2(_VirtualDom_attribute, name, value), attrList );
+	}
+
+	var tag = node.tagName.toLowerCase();
+	var kidList = _List_Nil;
+	var kids = node.childNodes;
+
+	for (var i = kids.length; i--; )
+	{
+		kidList = _List_Cons(_VirtualDom_virtualize(kids[i]), kidList);
+	}
+	return A3(_VirtualDom_node, tag, attrList, kidList);
+}
+
+function _VirtualDom_dekey(keyedNode)
+{
+	var keyedKids = keyedNode.e;
+	var len = keyedKids.length;
+	var kids = new Array(len);
+	for (var i = 0; i < len; i++)
+	{
+		kids[i] = keyedKids[i].b;
+	}
+
+	return {
+		$: 1,
+		c: keyedNode.c,
+		d: keyedNode.d,
+		e: kids,
+		f: keyedNode.f,
+		b: keyedNode.b
+	};
 }
 
 
-//  NORMAL SETUP
 
-function normalSetup(impl, object, moduleName, flagChecker)
+
+// ELEMENT
+
+
+var _Debugger_element;
+
+var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debugMetadata, args)
 {
-	object['embed'] = function embed(node, flags)
-	{
-		while (node.lastChild)
-		{
-			node.removeChild(node.lastChild);
+	return _Platform_initialize(
+		flagDecoder,
+		args,
+		impl.init,
+		impl.update,
+		impl.subscriptions,
+		function(sendToApp, initialModel) {
+			var view = impl.view;
+			/**_UNUSED/
+			var domNode = args['node'];
+			//*/
+			/**/
+			var domNode = args && args['node'] ? args['node'] : _Debug_crash(0);
+			//*/
+			var currNode = _VirtualDom_virtualize(domNode);
+
+			return _Browser_makeAnimator(initialModel, function(model)
+			{
+				var nextNode = view(model);
+				var patches = _VirtualDom_diff(currNode, nextNode);
+				domNode = _VirtualDom_applyPatches(domNode, currNode, patches, sendToApp);
+				currNode = nextNode;
+			});
 		}
+	);
+});
 
-		return _elm_lang$core$Native_Platform.initialize(
-			flagChecker(impl.init, flags, node),
-			impl.update,
-			impl.subscriptions,
-			normalRenderer(node, impl.view)
-		);
-	};
 
-	object['fullscreen'] = function fullscreen(flags)
-	{
-		return _elm_lang$core$Native_Platform.initialize(
-			flagChecker(impl.init, flags, document.body),
-			impl.update,
-			impl.subscriptions,
-			normalRenderer(document.body, impl.view)
-		);
-	};
-}
 
-function normalRenderer(parentNode, view)
+// DOCUMENT
+
+
+var _Debugger_document;
+
+var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, debugMetadata, args)
 {
-	return function(tagger, initialModel)
-	{
-		var eventNode = { tagger: tagger, parent: undefined };
-		var initialVirtualNode = view(initialModel);
-		var domNode = render(initialVirtualNode, eventNode);
-		parentNode.appendChild(domNode);
-		return makeStepper(domNode, view, initialVirtualNode, eventNode);
-	};
-}
+	return _Platform_initialize(
+		flagDecoder,
+		args,
+		impl.init,
+		impl.update,
+		impl.subscriptions,
+		function(sendToApp, initialModel) {
+			var divertHrefToApp = impl.setup && impl.setup(sendToApp)
+			var view = impl.view;
+			var title = _VirtualDom_doc.title;
+			var bodyNode = _VirtualDom_doc.body;
+			var currNode = _VirtualDom_virtualize(bodyNode);
+			return _Browser_makeAnimator(initialModel, function(model)
+			{
+				_VirtualDom_divertHrefToApp = divertHrefToApp;
+				var doc = view(model);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.body);
+				var patches = _VirtualDom_diff(currNode, nextNode);
+				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
+				currNode = nextNode;
+				_VirtualDom_divertHrefToApp = 0;
+				(title !== doc.title) && (_VirtualDom_doc.title = title = doc.title);
+			});
+		}
+	);
+});
 
 
-// STEPPER
 
-var rAF =
+// ANIMATION
+
+
+var _Browser_requestAnimationFrame =
 	typeof requestAnimationFrame !== 'undefined'
 		? requestAnimationFrame
 		: function(callback) { setTimeout(callback, 1000 / 60); };
 
-function makeStepper(domNode, view, initialVirtualNode, eventNode)
+
+function _Browser_makeAnimator(model, draw)
 {
-	var state = 'NO_REQUEST';
-	var currNode = initialVirtualNode;
-	var nextModel;
+	draw(model);
+
+	var state = 0;
 
 	function updateIfNeeded()
 	{
-		switch (state)
-		{
-			case 'NO_REQUEST':
-				throw new Error(
-					'Unexpected draw callback.\n' +
-					'Please report this to <https://github.com/elm-lang/virtual-dom/issues>.'
+		state = state === 1
+			? 0
+			: ( _Browser_requestAnimationFrame(updateIfNeeded), draw(model), 1 );
+	}
+
+	return function(nextModel, isSync)
+	{
+		model = nextModel;
+
+		isSync
+			? ( draw(model),
+				state === 2 && (state = 1)
+				)
+			: ( state === 0 && _Browser_requestAnimationFrame(updateIfNeeded),
+				state = 2
 				);
-
-			case 'PENDING_REQUEST':
-				rAF(updateIfNeeded);
-				state = 'EXTRA_REQUEST';
-
-				var nextNode = view(nextModel);
-				var patches = diff(currNode, nextNode);
-				domNode = applyPatches(domNode, currNode, patches, eventNode);
-				currNode = nextNode;
-
-				return;
-
-			case 'EXTRA_REQUEST':
-				state = 'NO_REQUEST';
-				return;
-		}
-	}
-
-	return function stepper(model)
-	{
-		if (state === 'NO_REQUEST')
-		{
-			rAF(updateIfNeeded);
-		}
-		state = 'PENDING_REQUEST';
-		nextModel = model;
 	};
 }
 
 
-// DEBUG SETUP
 
-function debugSetup(impl, object, moduleName, flagChecker)
+// APPLICATION
+
+
+function _Browser_application(impl)
 {
-	object['fullscreen'] = function fullscreen(flags)
-	{
-		var popoutRef = { doc: undefined };
-		return _elm_lang$core$Native_Platform.initialize(
-			flagChecker(impl.init, flags, document.body),
-			impl.update(scrollTask(popoutRef)),
-			impl.subscriptions,
-			debugRenderer(moduleName, document.body, popoutRef, impl.view, impl.viewIn, impl.viewOut)
-		);
-	};
+	var onUrlChange = impl.onUrlChange;
+	var onUrlRequest = impl.onUrlRequest;
+	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
-	object['embed'] = function fullscreen(node, flags)
-	{
-		var popoutRef = { doc: undefined };
-		return _elm_lang$core$Native_Platform.initialize(
-			flagChecker(impl.init, flags, node),
-			impl.update(scrollTask(popoutRef)),
-			impl.subscriptions,
-			debugRenderer(moduleName, node, popoutRef, impl.view, impl.viewIn, impl.viewOut)
-		);
-	};
-}
-
-function scrollTask(popoutRef)
-{
-	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
-	{
-		var doc = popoutRef.doc;
-		if (doc)
+	return _Browser_document({
+		setup: function(sendToApp)
 		{
-			var msgs = doc.getElementsByClassName('debugger-sidebar-messages')[0];
-			if (msgs)
+			key.a = sendToApp;
+			_Browser_window.addEventListener('popstate', key);
+			_Browser_window.navigator.userAgent.indexOf('Trident') < 0 || _Browser_window.addEventListener('hashchange', key);
+
+			return F2(function(domNode, event)
 			{
-				msgs.scrollTop = msgs.scrollHeight;
-			}
-		}
-		callback(_elm_lang$core$Native_Scheduler.succeed(_elm_lang$core$Native_Utils.Tuple0));
+				if (!event.ctrlKey && !event.metaKey && !event.shiftKey && event.button < 1 && !domNode.target && !domNode.download)
+				{
+					event.preventDefault();
+					var href = domNode.href;
+					var curr = _Browser_getUrl();
+					var next = elm$url$Url$fromString(href).a;
+					sendToApp(onUrlRequest(
+						(next
+							&& curr.protocol === next.protocol
+							&& curr.host === next.host
+							&& curr.port_.a === next.port_.a
+						)
+							? elm$browser$Browser$Internal(next)
+							: elm$browser$Browser$External(href)
+					));
+				}
+			});
+		},
+		init: function(flags)
+		{
+			return A3(impl.init, flags, _Browser_getUrl(), key);
+		},
+		view: impl.view,
+		update: impl.update,
+		subscriptions: impl.subscriptions
 	});
 }
 
-
-function debugRenderer(moduleName, parentNode, popoutRef, view, viewIn, viewOut)
+function _Browser_getUrl()
 {
-	return function(tagger, initialModel)
-	{
-		var appEventNode = { tagger: tagger, parent: undefined };
-		var eventNode = { tagger: tagger, parent: undefined };
-
-		// make normal stepper
-		var appVirtualNode = view(initialModel);
-		var appNode = render(appVirtualNode, appEventNode);
-		parentNode.appendChild(appNode);
-		var appStepper = makeStepper(appNode, view, appVirtualNode, appEventNode);
-
-		// make overlay stepper
-		var overVirtualNode = viewIn(initialModel)._1;
-		var overNode = render(overVirtualNode, eventNode);
-		parentNode.appendChild(overNode);
-		var wrappedViewIn = wrapViewIn(appEventNode, overNode, viewIn);
-		var overStepper = makeStepper(overNode, wrappedViewIn, overVirtualNode, eventNode);
-
-		// make debugger stepper
-		var debugStepper = makeDebugStepper(initialModel, viewOut, eventNode, parentNode, moduleName, popoutRef);
-
-		return function stepper(model)
-		{
-			appStepper(model);
-			overStepper(model);
-			debugStepper(model);
-		}
-	};
+	return elm$url$Url$fromString(_VirtualDom_doc.location.href).a || _Debug_crash(1);
 }
 
-function makeDebugStepper(initialModel, view, eventNode, parentNode, moduleName, popoutRef)
+var _Browser_go = F2(function(key, n)
 {
-	var curr;
-	var domNode;
+	return A2(elm$core$Task$perform, elm$core$Basics$never, _Scheduler_binding(function() {
+		n && history.go(n);
+		key();
+	}));
+});
 
-	return function stepper(model)
-	{
-		if (!model.isDebuggerOpen)
-		{
-			return;
-		}
-
-		if (!popoutRef.doc)
-		{
-			curr = view(model);
-			domNode = openDebugWindow(moduleName, popoutRef, curr, eventNode);
-			return;
-		}
-
-		// switch to document of popout
-		localDoc = popoutRef.doc;
-
-		var next = view(model);
-		var patches = diff(curr, next);
-		domNode = applyPatches(domNode, curr, patches, eventNode);
-		curr = next;
-
-		// switch back to normal document
-		localDoc = document;
-	};
-}
-
-function openDebugWindow(moduleName, popoutRef, virtualNode, eventNode)
+var _Browser_pushUrl = F2(function(key, url)
 {
-	var w = 900;
-	var h = 360;
-	var x = screen.width - w;
-	var y = screen.height - h;
-	var debugWindow = window.open('', '', 'width=' + w + ',height=' + h + ',left=' + x + ',top=' + y);
+	return A2(elm$core$Task$perform, elm$core$Basics$never, _Scheduler_binding(function() {
+		history.pushState({}, '', url);
+		key();
+	}));
+});
 
-	// switch to window document
-	localDoc = debugWindow.document;
+var _Browser_replaceUrl = F2(function(key, url)
+{
+	return A2(elm$core$Task$perform, elm$core$Basics$never, _Scheduler_binding(function() {
+		history.replaceState({}, '', url);
+		key();
+	}));
+});
 
-	popoutRef.doc = localDoc;
-	localDoc.title = 'Debugger - ' + moduleName;
-	localDoc.body.style.margin = '0';
-	localDoc.body.style.padding = '0';
-	var domNode = render(virtualNode, eventNode);
-	localDoc.body.appendChild(domNode);
 
-	localDoc.addEventListener('keydown', function(event) {
-		if (event.metaKey && event.which === 82)
-		{
-			window.location.reload();
-		}
-		if (event.which === 38)
-		{
-			eventNode.tagger({ ctor: 'Up' });
-			event.preventDefault();
-		}
-		if (event.which === 40)
-		{
-			eventNode.tagger({ ctor: 'Down' });
-			event.preventDefault();
-		}
-	});
 
-	function close()
+// GLOBAL EVENTS
+
+
+var _Browser_fakeNode = { addEventListener: function() {}, removeEventListener: function() {} };
+var _Browser_doc = typeof document !== 'undefined' ? document : _Browser_fakeNode;
+var _Browser_window = typeof window !== 'undefined' ? window : _Browser_fakeNode;
+
+var _Browser_on = F3(function(node, eventName, sendToSelf)
+{
+	return _Scheduler_spawn(_Scheduler_binding(function(callback)
 	{
-		popoutRef.doc = undefined;
-		debugWindow.close();
-	}
-	window.addEventListener('unload', close);
-	debugWindow.addEventListener('unload', function() {
-		popoutRef.doc = undefined;
-		window.removeEventListener('unload', close);
-		eventNode.tagger({ ctor: 'Close' });
-	});
+		function handler(event)	{ _Scheduler_rawSpawn(sendToSelf(event)); }
+		node.addEventListener(eventName, handler, _VirtualDom_passiveSupported && { passive: true });
+		return function() { node.removeEventListener(eventName, handler); };
+	}));
+});
 
-	// switch back to the normal document
-	localDoc = document;
+var _Browser_decodeEvent = F2(function(decoder, event)
+{
+	var result = _Json_runHelp(decoder, event);
+	return elm$core$Result$isOk(result) ? elm$core$Maybe$Just(result.a) : elm$core$Maybe$Nothing;
+});
 
-	return domNode;
+
+
+// PAGE VISIBILITY
+
+
+function _Browser_visibilityInfo()
+{
+	return (typeof _VirtualDom_doc.hidden !== 'undefined')
+		? { hidden: 'hidden', change: 'visibilitychange' }
+		:
+	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
+		? { hidden: 'mozHidden', change: 'mozvisibilitychange' }
+		:
+	(typeof _VirtualDom_doc.msHidden !== 'undefined')
+		? { hidden: 'msHidden', change: 'msvisibilitychange' }
+		:
+	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
+		? { hidden: 'webkitHidden', change: 'webkitvisibilitychange' }
+		: { hidden: 'hidden', change: 'visibilitychange' };
 }
 
 
-// BLOCK EVENTS
 
-function wrapViewIn(appEventNode, overlayNode, viewIn)
+// ANIMATION FRAMES
+
+
+function _Browser_rAF()
 {
-	var ignorer = makeIgnorer(overlayNode);
-	var blocking = 'Normal';
-	var overflow;
-
-	var normalTagger = appEventNode.tagger;
-	var blockTagger = function() {};
-
-	return function(model)
+	return _Scheduler_binding(function(callback)
 	{
-		var tuple = viewIn(model);
-		var newBlocking = tuple._0.ctor;
-		appEventNode.tagger = newBlocking === 'Normal' ? normalTagger : blockTagger;
-		if (blocking !== newBlocking)
-		{
-			traverse('removeEventListener', ignorer, blocking);
-			traverse('addEventListener', ignorer, newBlocking);
-
-			if (blocking === 'Normal')
-			{
-				overflow = document.body.style.overflow;
-				document.body.style.overflow = 'hidden';
-			}
-
-			if (newBlocking === 'Normal')
-			{
-				document.body.style.overflow = overflow;
-			}
-
-			blocking = newBlocking;
-		}
-		return tuple._1;
-	}
-}
-
-function traverse(verbEventListener, ignorer, blocking)
-{
-	switch(blocking)
-	{
-		case 'Normal':
-			return;
-
-		case 'Pause':
-			return traverseHelp(verbEventListener, ignorer, mostEvents);
-
-		case 'Message':
-			return traverseHelp(verbEventListener, ignorer, allEvents);
-	}
-}
-
-function traverseHelp(verbEventListener, handler, eventNames)
-{
-	for (var i = 0; i < eventNames.length; i++)
-	{
-		document.body[verbEventListener](eventNames[i], handler, true);
-	}
-}
-
-function makeIgnorer(overlayNode)
-{
-	return function(event)
-	{
-		if (event.type === 'keydown' && event.metaKey && event.which === 82)
-		{
-			return;
-		}
-
-		var isScroll = event.type === 'scroll' || event.type === 'wheel';
-
-		var node = event.target;
-		while (node !== null)
-		{
-			if (node.className === 'elm-overlay-message-details' && isScroll)
-			{
-				return;
-			}
-
-			if (node === overlayNode && !isScroll)
-			{
-				return;
-			}
-			node = node.parentNode;
-		}
-
-		event.stopPropagation();
-		event.preventDefault();
-	}
-}
-
-var mostEvents = [
-	'click', 'dblclick', 'mousemove',
-	'mouseup', 'mousedown', 'mouseenter', 'mouseleave',
-	'touchstart', 'touchend', 'touchcancel', 'touchmove',
-	'pointerdown', 'pointerup', 'pointerover', 'pointerout',
-	'pointerenter', 'pointerleave', 'pointermove', 'pointercancel',
-	'dragstart', 'drag', 'dragend', 'dragenter', 'dragover', 'dragleave', 'drop',
-	'keyup', 'keydown', 'keypress',
-	'input', 'change',
-	'focus', 'blur'
-];
-
-var allEvents = mostEvents.concat('wheel', 'scroll');
-
-
-return {
-	node: node,
-	text: text,
-	custom: custom,
-	map: F2(map),
-
-	on: F3(on),
-	style: style,
-	property: F2(property),
-	attribute: F2(attribute),
-	attributeNS: F3(attributeNS),
-	mapProperty: F2(mapProperty),
-
-	lazy: F2(lazy),
-	lazy2: F3(lazy2),
-	lazy3: F4(lazy3),
-	keyedNode: F3(keyedNode),
-
-	program: program,
-	programWithFlags: programWithFlags,
-	staticProgram: staticProgram
-};
-
-}();
-
-var _elm_lang$virtual_dom$VirtualDom$programWithFlags = function (impl) {
-	return A2(_elm_lang$virtual_dom$Native_VirtualDom.programWithFlags, _elm_lang$virtual_dom$VirtualDom_Debug$wrapWithFlags, impl);
-};
-var _elm_lang$virtual_dom$VirtualDom$program = function (impl) {
-	return A2(_elm_lang$virtual_dom$Native_VirtualDom.program, _elm_lang$virtual_dom$VirtualDom_Debug$wrap, impl);
-};
-var _elm_lang$virtual_dom$VirtualDom$keyedNode = _elm_lang$virtual_dom$Native_VirtualDom.keyedNode;
-var _elm_lang$virtual_dom$VirtualDom$lazy3 = _elm_lang$virtual_dom$Native_VirtualDom.lazy3;
-var _elm_lang$virtual_dom$VirtualDom$lazy2 = _elm_lang$virtual_dom$Native_VirtualDom.lazy2;
-var _elm_lang$virtual_dom$VirtualDom$lazy = _elm_lang$virtual_dom$Native_VirtualDom.lazy;
-var _elm_lang$virtual_dom$VirtualDom$defaultOptions = {stopPropagation: false, preventDefault: false};
-var _elm_lang$virtual_dom$VirtualDom$onWithOptions = _elm_lang$virtual_dom$Native_VirtualDom.on;
-var _elm_lang$virtual_dom$VirtualDom$on = F2(
-	function (eventName, decoder) {
-		return A3(_elm_lang$virtual_dom$VirtualDom$onWithOptions, eventName, _elm_lang$virtual_dom$VirtualDom$defaultOptions, decoder);
-	});
-var _elm_lang$virtual_dom$VirtualDom$style = _elm_lang$virtual_dom$Native_VirtualDom.style;
-var _elm_lang$virtual_dom$VirtualDom$mapProperty = _elm_lang$virtual_dom$Native_VirtualDom.mapProperty;
-var _elm_lang$virtual_dom$VirtualDom$attributeNS = _elm_lang$virtual_dom$Native_VirtualDom.attributeNS;
-var _elm_lang$virtual_dom$VirtualDom$attribute = _elm_lang$virtual_dom$Native_VirtualDom.attribute;
-var _elm_lang$virtual_dom$VirtualDom$property = _elm_lang$virtual_dom$Native_VirtualDom.property;
-var _elm_lang$virtual_dom$VirtualDom$map = _elm_lang$virtual_dom$Native_VirtualDom.map;
-var _elm_lang$virtual_dom$VirtualDom$text = _elm_lang$virtual_dom$Native_VirtualDom.text;
-var _elm_lang$virtual_dom$VirtualDom$node = _elm_lang$virtual_dom$Native_VirtualDom.node;
-var _elm_lang$virtual_dom$VirtualDom$Options = F2(
-	function (a, b) {
-		return {stopPropagation: a, preventDefault: b};
-	});
-var _elm_lang$virtual_dom$VirtualDom$Node = {ctor: 'Node'};
-var _elm_lang$virtual_dom$VirtualDom$Property = {ctor: 'Property'};
-
-var _elm_lang$html$Html$programWithFlags = _elm_lang$virtual_dom$VirtualDom$programWithFlags;
-var _elm_lang$html$Html$program = _elm_lang$virtual_dom$VirtualDom$program;
-var _elm_lang$html$Html$beginnerProgram = function (_p0) {
-	var _p1 = _p0;
-	return _elm_lang$html$Html$program(
-		{
-			init: A2(
-				_elm_lang$core$Platform_Cmd_ops['!'],
-				_p1.model,
-				{ctor: '[]'}),
-			update: F2(
-				function (msg, model) {
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						A2(_p1.update, msg, model),
-						{ctor: '[]'});
-				}),
-			view: _p1.view,
-			subscriptions: function (_p2) {
-				return _elm_lang$core$Platform_Sub$none;
-			}
+		var id = requestAnimationFrame(function() {
+			callback(_Scheduler_succeed(Date.now()));
 		});
-};
-var _elm_lang$html$Html$map = _elm_lang$virtual_dom$VirtualDom$map;
-var _elm_lang$html$Html$text = _elm_lang$virtual_dom$VirtualDom$text;
-var _elm_lang$html$Html$node = _elm_lang$virtual_dom$VirtualDom$node;
-var _elm_lang$html$Html$body = _elm_lang$html$Html$node('body');
-var _elm_lang$html$Html$section = _elm_lang$html$Html$node('section');
-var _elm_lang$html$Html$nav = _elm_lang$html$Html$node('nav');
-var _elm_lang$html$Html$article = _elm_lang$html$Html$node('article');
-var _elm_lang$html$Html$aside = _elm_lang$html$Html$node('aside');
-var _elm_lang$html$Html$h1 = _elm_lang$html$Html$node('h1');
-var _elm_lang$html$Html$h2 = _elm_lang$html$Html$node('h2');
-var _elm_lang$html$Html$h3 = _elm_lang$html$Html$node('h3');
-var _elm_lang$html$Html$h4 = _elm_lang$html$Html$node('h4');
-var _elm_lang$html$Html$h5 = _elm_lang$html$Html$node('h5');
-var _elm_lang$html$Html$h6 = _elm_lang$html$Html$node('h6');
-var _elm_lang$html$Html$header = _elm_lang$html$Html$node('header');
-var _elm_lang$html$Html$footer = _elm_lang$html$Html$node('footer');
-var _elm_lang$html$Html$address = _elm_lang$html$Html$node('address');
-var _elm_lang$html$Html$main_ = _elm_lang$html$Html$node('main');
-var _elm_lang$html$Html$p = _elm_lang$html$Html$node('p');
-var _elm_lang$html$Html$hr = _elm_lang$html$Html$node('hr');
-var _elm_lang$html$Html$pre = _elm_lang$html$Html$node('pre');
-var _elm_lang$html$Html$blockquote = _elm_lang$html$Html$node('blockquote');
-var _elm_lang$html$Html$ol = _elm_lang$html$Html$node('ol');
-var _elm_lang$html$Html$ul = _elm_lang$html$Html$node('ul');
-var _elm_lang$html$Html$li = _elm_lang$html$Html$node('li');
-var _elm_lang$html$Html$dl = _elm_lang$html$Html$node('dl');
-var _elm_lang$html$Html$dt = _elm_lang$html$Html$node('dt');
-var _elm_lang$html$Html$dd = _elm_lang$html$Html$node('dd');
-var _elm_lang$html$Html$figure = _elm_lang$html$Html$node('figure');
-var _elm_lang$html$Html$figcaption = _elm_lang$html$Html$node('figcaption');
-var _elm_lang$html$Html$div = _elm_lang$html$Html$node('div');
-var _elm_lang$html$Html$a = _elm_lang$html$Html$node('a');
-var _elm_lang$html$Html$em = _elm_lang$html$Html$node('em');
-var _elm_lang$html$Html$strong = _elm_lang$html$Html$node('strong');
-var _elm_lang$html$Html$small = _elm_lang$html$Html$node('small');
-var _elm_lang$html$Html$s = _elm_lang$html$Html$node('s');
-var _elm_lang$html$Html$cite = _elm_lang$html$Html$node('cite');
-var _elm_lang$html$Html$q = _elm_lang$html$Html$node('q');
-var _elm_lang$html$Html$dfn = _elm_lang$html$Html$node('dfn');
-var _elm_lang$html$Html$abbr = _elm_lang$html$Html$node('abbr');
-var _elm_lang$html$Html$time = _elm_lang$html$Html$node('time');
-var _elm_lang$html$Html$code = _elm_lang$html$Html$node('code');
-var _elm_lang$html$Html$var = _elm_lang$html$Html$node('var');
-var _elm_lang$html$Html$samp = _elm_lang$html$Html$node('samp');
-var _elm_lang$html$Html$kbd = _elm_lang$html$Html$node('kbd');
-var _elm_lang$html$Html$sub = _elm_lang$html$Html$node('sub');
-var _elm_lang$html$Html$sup = _elm_lang$html$Html$node('sup');
-var _elm_lang$html$Html$i = _elm_lang$html$Html$node('i');
-var _elm_lang$html$Html$b = _elm_lang$html$Html$node('b');
-var _elm_lang$html$Html$u = _elm_lang$html$Html$node('u');
-var _elm_lang$html$Html$mark = _elm_lang$html$Html$node('mark');
-var _elm_lang$html$Html$ruby = _elm_lang$html$Html$node('ruby');
-var _elm_lang$html$Html$rt = _elm_lang$html$Html$node('rt');
-var _elm_lang$html$Html$rp = _elm_lang$html$Html$node('rp');
-var _elm_lang$html$Html$bdi = _elm_lang$html$Html$node('bdi');
-var _elm_lang$html$Html$bdo = _elm_lang$html$Html$node('bdo');
-var _elm_lang$html$Html$span = _elm_lang$html$Html$node('span');
-var _elm_lang$html$Html$br = _elm_lang$html$Html$node('br');
-var _elm_lang$html$Html$wbr = _elm_lang$html$Html$node('wbr');
-var _elm_lang$html$Html$ins = _elm_lang$html$Html$node('ins');
-var _elm_lang$html$Html$del = _elm_lang$html$Html$node('del');
-var _elm_lang$html$Html$img = _elm_lang$html$Html$node('img');
-var _elm_lang$html$Html$iframe = _elm_lang$html$Html$node('iframe');
-var _elm_lang$html$Html$embed = _elm_lang$html$Html$node('embed');
-var _elm_lang$html$Html$object = _elm_lang$html$Html$node('object');
-var _elm_lang$html$Html$param = _elm_lang$html$Html$node('param');
-var _elm_lang$html$Html$video = _elm_lang$html$Html$node('video');
-var _elm_lang$html$Html$audio = _elm_lang$html$Html$node('audio');
-var _elm_lang$html$Html$source = _elm_lang$html$Html$node('source');
-var _elm_lang$html$Html$track = _elm_lang$html$Html$node('track');
-var _elm_lang$html$Html$canvas = _elm_lang$html$Html$node('canvas');
-var _elm_lang$html$Html$math = _elm_lang$html$Html$node('math');
-var _elm_lang$html$Html$table = _elm_lang$html$Html$node('table');
-var _elm_lang$html$Html$caption = _elm_lang$html$Html$node('caption');
-var _elm_lang$html$Html$colgroup = _elm_lang$html$Html$node('colgroup');
-var _elm_lang$html$Html$col = _elm_lang$html$Html$node('col');
-var _elm_lang$html$Html$tbody = _elm_lang$html$Html$node('tbody');
-var _elm_lang$html$Html$thead = _elm_lang$html$Html$node('thead');
-var _elm_lang$html$Html$tfoot = _elm_lang$html$Html$node('tfoot');
-var _elm_lang$html$Html$tr = _elm_lang$html$Html$node('tr');
-var _elm_lang$html$Html$td = _elm_lang$html$Html$node('td');
-var _elm_lang$html$Html$th = _elm_lang$html$Html$node('th');
-var _elm_lang$html$Html$form = _elm_lang$html$Html$node('form');
-var _elm_lang$html$Html$fieldset = _elm_lang$html$Html$node('fieldset');
-var _elm_lang$html$Html$legend = _elm_lang$html$Html$node('legend');
-var _elm_lang$html$Html$label = _elm_lang$html$Html$node('label');
-var _elm_lang$html$Html$input = _elm_lang$html$Html$node('input');
-var _elm_lang$html$Html$button = _elm_lang$html$Html$node('button');
-var _elm_lang$html$Html$select = _elm_lang$html$Html$node('select');
-var _elm_lang$html$Html$datalist = _elm_lang$html$Html$node('datalist');
-var _elm_lang$html$Html$optgroup = _elm_lang$html$Html$node('optgroup');
-var _elm_lang$html$Html$option = _elm_lang$html$Html$node('option');
-var _elm_lang$html$Html$textarea = _elm_lang$html$Html$node('textarea');
-var _elm_lang$html$Html$keygen = _elm_lang$html$Html$node('keygen');
-var _elm_lang$html$Html$output = _elm_lang$html$Html$node('output');
-var _elm_lang$html$Html$progress = _elm_lang$html$Html$node('progress');
-var _elm_lang$html$Html$meter = _elm_lang$html$Html$node('meter');
-var _elm_lang$html$Html$details = _elm_lang$html$Html$node('details');
-var _elm_lang$html$Html$summary = _elm_lang$html$Html$node('summary');
-var _elm_lang$html$Html$menuitem = _elm_lang$html$Html$node('menuitem');
-var _elm_lang$html$Html$menu = _elm_lang$html$Html$node('menu');
 
-var _elm_lang$html$Html_Attributes$map = _elm_lang$virtual_dom$VirtualDom$mapProperty;
-var _elm_lang$html$Html_Attributes$attribute = _elm_lang$virtual_dom$VirtualDom$attribute;
-var _elm_lang$html$Html_Attributes$contextmenu = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$attribute, 'contextmenu', value);
-};
-var _elm_lang$html$Html_Attributes$draggable = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$attribute, 'draggable', value);
-};
-var _elm_lang$html$Html_Attributes$itemprop = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$attribute, 'itemprop', value);
-};
-var _elm_lang$html$Html_Attributes$tabindex = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$attribute,
-		'tabIndex',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$charset = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$attribute, 'charset', value);
-};
-var _elm_lang$html$Html_Attributes$height = function (value) {
-	return A2(
-		_elm_lang$html$Html_Attributes$attribute,
-		'height',
-		_elm_lang$core$Basics$toString(value));
-};
-var _elm_lang$html$Html_Attributes$width = function (value) {
-	return A2(
-		_elm_lang$html$Html_Attributes$attribute,
-		'width',
-		_elm_lang$core$Basics$toString(value));
-};
-var _elm_lang$html$Html_Attributes$formaction = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$attribute, 'formAction', value);
-};
-var _elm_lang$html$Html_Attributes$list = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$attribute, 'list', value);
-};
-var _elm_lang$html$Html_Attributes$minlength = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$attribute,
-		'minLength',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$maxlength = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$attribute,
-		'maxlength',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$size = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$attribute,
-		'size',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$form = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$attribute, 'form', value);
-};
-var _elm_lang$html$Html_Attributes$cols = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$attribute,
-		'cols',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$rows = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$attribute,
-		'rows',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$challenge = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$attribute, 'challenge', value);
-};
-var _elm_lang$html$Html_Attributes$media = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$attribute, 'media', value);
-};
-var _elm_lang$html$Html_Attributes$rel = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$attribute, 'rel', value);
-};
-var _elm_lang$html$Html_Attributes$datetime = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$attribute, 'datetime', value);
-};
-var _elm_lang$html$Html_Attributes$pubdate = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$attribute, 'pubdate', value);
-};
-var _elm_lang$html$Html_Attributes$colspan = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$attribute,
-		'colspan',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$rowspan = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$attribute,
-		'rowspan',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$manifest = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$attribute, 'manifest', value);
-};
-var _elm_lang$html$Html_Attributes$property = _elm_lang$virtual_dom$VirtualDom$property;
-var _elm_lang$html$Html_Attributes$stringProperty = F2(
-	function (name, string) {
-		return A2(
-			_elm_lang$html$Html_Attributes$property,
-			name,
-			_elm_lang$core$Json_Encode$string(string));
+		return function() {
+			cancelAnimationFrame(id);
+		};
 	});
-var _elm_lang$html$Html_Attributes$class = function (name) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'className', name);
-};
-var _elm_lang$html$Html_Attributes$id = function (name) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'id', name);
-};
-var _elm_lang$html$Html_Attributes$title = function (name) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'title', name);
-};
-var _elm_lang$html$Html_Attributes$accesskey = function ($char) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'accessKey',
-		_elm_lang$core$String$fromChar($char));
-};
-var _elm_lang$html$Html_Attributes$dir = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'dir', value);
-};
-var _elm_lang$html$Html_Attributes$dropzone = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'dropzone', value);
-};
-var _elm_lang$html$Html_Attributes$lang = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'lang', value);
-};
-var _elm_lang$html$Html_Attributes$content = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'content', value);
-};
-var _elm_lang$html$Html_Attributes$httpEquiv = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'httpEquiv', value);
-};
-var _elm_lang$html$Html_Attributes$language = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'language', value);
-};
-var _elm_lang$html$Html_Attributes$src = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'src', value);
-};
-var _elm_lang$html$Html_Attributes$alt = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'alt', value);
-};
-var _elm_lang$html$Html_Attributes$preload = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'preload', value);
-};
-var _elm_lang$html$Html_Attributes$poster = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'poster', value);
-};
-var _elm_lang$html$Html_Attributes$kind = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'kind', value);
-};
-var _elm_lang$html$Html_Attributes$srclang = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'srclang', value);
-};
-var _elm_lang$html$Html_Attributes$sandbox = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'sandbox', value);
-};
-var _elm_lang$html$Html_Attributes$srcdoc = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'srcdoc', value);
-};
-var _elm_lang$html$Html_Attributes$type_ = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'type', value);
-};
-var _elm_lang$html$Html_Attributes$value = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'value', value);
-};
-var _elm_lang$html$Html_Attributes$defaultValue = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'defaultValue', value);
-};
-var _elm_lang$html$Html_Attributes$placeholder = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'placeholder', value);
-};
-var _elm_lang$html$Html_Attributes$accept = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'accept', value);
-};
-var _elm_lang$html$Html_Attributes$acceptCharset = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'acceptCharset', value);
-};
-var _elm_lang$html$Html_Attributes$action = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'action', value);
-};
-var _elm_lang$html$Html_Attributes$autocomplete = function (bool) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'autocomplete',
-		bool ? 'on' : 'off');
-};
-var _elm_lang$html$Html_Attributes$enctype = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'enctype', value);
-};
-var _elm_lang$html$Html_Attributes$method = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'method', value);
-};
-var _elm_lang$html$Html_Attributes$name = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'name', value);
-};
-var _elm_lang$html$Html_Attributes$pattern = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'pattern', value);
-};
-var _elm_lang$html$Html_Attributes$for = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'htmlFor', value);
-};
-var _elm_lang$html$Html_Attributes$max = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'max', value);
-};
-var _elm_lang$html$Html_Attributes$min = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'min', value);
-};
-var _elm_lang$html$Html_Attributes$step = function (n) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'step', n);
-};
-var _elm_lang$html$Html_Attributes$wrap = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'wrap', value);
-};
-var _elm_lang$html$Html_Attributes$usemap = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'useMap', value);
-};
-var _elm_lang$html$Html_Attributes$shape = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'shape', value);
-};
-var _elm_lang$html$Html_Attributes$coords = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'coords', value);
-};
-var _elm_lang$html$Html_Attributes$keytype = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'keytype', value);
-};
-var _elm_lang$html$Html_Attributes$align = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'align', value);
-};
-var _elm_lang$html$Html_Attributes$cite = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'cite', value);
-};
-var _elm_lang$html$Html_Attributes$href = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'href', value);
-};
-var _elm_lang$html$Html_Attributes$target = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'target', value);
-};
-var _elm_lang$html$Html_Attributes$downloadAs = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'download', value);
-};
-var _elm_lang$html$Html_Attributes$hreflang = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'hreflang', value);
-};
-var _elm_lang$html$Html_Attributes$ping = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'ping', value);
-};
-var _elm_lang$html$Html_Attributes$start = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'start',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$headers = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'headers', value);
-};
-var _elm_lang$html$Html_Attributes$scope = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'scope', value);
-};
-var _elm_lang$html$Html_Attributes$boolProperty = F2(
-	function (name, bool) {
-		return A2(
-			_elm_lang$html$Html_Attributes$property,
-			name,
-			_elm_lang$core$Json_Encode$bool(bool));
-	});
-var _elm_lang$html$Html_Attributes$hidden = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'hidden', bool);
-};
-var _elm_lang$html$Html_Attributes$contenteditable = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'contentEditable', bool);
-};
-var _elm_lang$html$Html_Attributes$spellcheck = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'spellcheck', bool);
-};
-var _elm_lang$html$Html_Attributes$async = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'async', bool);
-};
-var _elm_lang$html$Html_Attributes$defer = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'defer', bool);
-};
-var _elm_lang$html$Html_Attributes$scoped = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'scoped', bool);
-};
-var _elm_lang$html$Html_Attributes$autoplay = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'autoplay', bool);
-};
-var _elm_lang$html$Html_Attributes$controls = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'controls', bool);
-};
-var _elm_lang$html$Html_Attributes$loop = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'loop', bool);
-};
-var _elm_lang$html$Html_Attributes$default = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'default', bool);
-};
-var _elm_lang$html$Html_Attributes$seamless = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'seamless', bool);
-};
-var _elm_lang$html$Html_Attributes$checked = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'checked', bool);
-};
-var _elm_lang$html$Html_Attributes$selected = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'selected', bool);
-};
-var _elm_lang$html$Html_Attributes$autofocus = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'autofocus', bool);
-};
-var _elm_lang$html$Html_Attributes$disabled = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'disabled', bool);
-};
-var _elm_lang$html$Html_Attributes$multiple = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'multiple', bool);
-};
-var _elm_lang$html$Html_Attributes$novalidate = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'noValidate', bool);
-};
-var _elm_lang$html$Html_Attributes$readonly = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'readOnly', bool);
-};
-var _elm_lang$html$Html_Attributes$required = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'required', bool);
-};
-var _elm_lang$html$Html_Attributes$ismap = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'isMap', value);
-};
-var _elm_lang$html$Html_Attributes$download = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'download', bool);
-};
-var _elm_lang$html$Html_Attributes$reversed = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'reversed', bool);
-};
-var _elm_lang$html$Html_Attributes$classList = function (list) {
-	return _elm_lang$html$Html_Attributes$class(
-		A2(
-			_elm_lang$core$String$join,
-			' ',
-			A2(
-				_elm_lang$core$List$map,
-				_elm_lang$core$Tuple$first,
-				A2(_elm_lang$core$List$filter, _elm_lang$core$Tuple$second, list))));
-};
-var _elm_lang$html$Html_Attributes$style = _elm_lang$virtual_dom$VirtualDom$style;
+}
 
-var _elm_lang$html$Html_Events$keyCode = A2(_elm_lang$core$Json_Decode$field, 'keyCode', _elm_lang$core$Json_Decode$int);
-var _elm_lang$html$Html_Events$targetChecked = A2(
-	_elm_lang$core$Json_Decode$at,
+
+function _Browser_now()
+{
+	return _Scheduler_binding(function(callback)
 	{
-		ctor: '::',
-		_0: 'target',
-		_1: {
-			ctor: '::',
-			_0: 'checked',
-			_1: {ctor: '[]'}
-		}
-	},
-	_elm_lang$core$Json_Decode$bool);
-var _elm_lang$html$Html_Events$targetValue = A2(
-	_elm_lang$core$Json_Decode$at,
+		callback(_Scheduler_succeed(Date.now()));
+	});
+}
+
+
+
+// DOM STUFF
+
+
+function _Browser_withNode(id, doStuff)
+{
+	return _Scheduler_binding(function(callback)
 	{
-		ctor: '::',
-		_0: 'target',
-		_1: {
-			ctor: '::',
-			_0: 'value',
-			_1: {ctor: '[]'}
+		_Browser_requestAnimationFrame(function() {
+			var node = document.getElementById(id);
+			callback(node
+				? _Scheduler_succeed(doStuff(node))
+				: _Scheduler_fail(elm$browser$Browser$Dom$NotFound(id))
+			);
+		});
+	});
+}
+
+
+function _Browser_withWindow(doStuff)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		_Browser_requestAnimationFrame(function() {
+			callback(_Scheduler_succeed(doStuff()));
+		});
+	});
+}
+
+
+// FOCUS and BLUR
+
+
+var _Browser_call = F2(function(functionName, id)
+{
+	return _Browser_withNode(id, function(node) {
+		node[functionName]();
+		return _Utils_Tuple0;
+	});
+});
+
+
+
+// WINDOW VIEWPORT
+
+
+function _Browser_getViewport()
+{
+	return {
+		scene: _Browser_getScene(),
+		viewport: {
+			x: _Browser_window.pageXOffset,
+			y: _Browser_window.pageYOffset,
+			width: _Browser_doc.documentElement.clientWidth,
+			height: _Browser_doc.documentElement.clientHeight
 		}
-	},
-	_elm_lang$core$Json_Decode$string);
-var _elm_lang$html$Html_Events$defaultOptions = _elm_lang$virtual_dom$VirtualDom$defaultOptions;
-var _elm_lang$html$Html_Events$onWithOptions = _elm_lang$virtual_dom$VirtualDom$onWithOptions;
-var _elm_lang$html$Html_Events$on = _elm_lang$virtual_dom$VirtualDom$on;
-var _elm_lang$html$Html_Events$onFocus = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'focus',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onBlur = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'blur',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onSubmitOptions = _elm_lang$core$Native_Utils.update(
-	_elm_lang$html$Html_Events$defaultOptions,
-	{preventDefault: true});
-var _elm_lang$html$Html_Events$onSubmit = function (msg) {
+	};
+}
+
+function _Browser_getScene()
+{
+	var body = _Browser_doc.body;
+	var elem = _Browser_doc.documentElement;
+	return {
+		width: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		height: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+	};
+}
+
+var _Browser_setViewport = F2(function(x, y)
+{
+	return _Browser_withWindow(function()
+	{
+		_Browser_window.scroll(x, y);
+		return _Utils_Tuple0;
+	});
+});
+
+
+
+// ELEMENT VIEWPORT
+
+
+function _Browser_getViewportOf(id)
+{
+	return _Browser_withNode(id, function(node)
+	{
+		return {
+			scene: {
+				width: node.scrollWidth,
+				height: node.scrollHeight
+			},
+			viewport: {
+				x: node.scrollLeft,
+				y: node.scrollTop,
+				width: node.clientWidth,
+				height: node.clientHeight
+			}
+		};
+	});
+}
+
+
+var _Browser_setViewportOf = F3(function(id, x, y)
+{
+	return _Browser_withNode(id, function(node)
+	{
+		node.scrollLeft = x;
+		node.scrollTop = y;
+		return _Utils_Tuple0;
+	});
+});
+
+
+
+// ELEMENT
+
+
+function _Browser_getElement(id)
+{
+	return _Browser_withNode(id, function(node)
+	{
+		var rect = node.getBoundingClientRect();
+		var x = _Browser_window.pageXOffset;
+		var y = _Browser_window.pageYOffset;
+		return {
+			scene: _Browser_getScene(),
+			viewport: {
+				x: x,
+				y: y,
+				width: _Browser_doc.documentElement.clientWidth,
+				height: _Browser_doc.documentElement.clientHeight
+			},
+			element: {
+				x: x + rect.left,
+				y: y + rect.top,
+				width: rect.width,
+				height: rect.height
+			}
+		};
+	});
+}
+
+
+
+// LOAD and RELOAD
+
+
+function _Browser_reload(skipCache)
+{
+	return A2(elm$core$Task$perform, elm$core$Basics$never, _Scheduler_binding(function(callback)
+	{
+		_VirtualDom_doc.location.reload(skipCache);
+	}));
+}
+
+function _Browser_load(url)
+{
+	return A2(elm$core$Task$perform, elm$core$Basics$never, _Scheduler_binding(function(callback)
+	{
+		try
+		{
+			_Browser_window.location = url;
+		}
+		catch(err)
+		{
+			// Only Firefox can throw a NS_ERROR_MALFORMED_URI exception here.
+			// Other browsers reload the page, so let's be consistent about that.
+			_VirtualDom_doc.location.reload(false);
+		}
+	}));
+}
+var elm$core$Basics$False = {$: 'False'};
+var elm$core$Basics$True = {$: 'True'};
+var author$project$Main$initialModel = {content: 'add [eax],ebx', decode: false, is32Bits: true};
+var elm$core$Basics$EQ = {$: 'EQ'};
+var elm$core$Basics$GT = {$: 'GT'};
+var elm$core$Basics$LT = {$: 'LT'};
+var elm$core$Dict$foldr = F3(
+	function (func, acc, t) {
+		foldr:
+		while (true) {
+			if (t.$ === 'RBEmpty_elm_builtin') {
+				return acc;
+			} else {
+				var key = t.b;
+				var value = t.c;
+				var left = t.d;
+				var right = t.e;
+				var $temp$func = func,
+					$temp$acc = A3(
+					func,
+					key,
+					value,
+					A3(elm$core$Dict$foldr, func, acc, right)),
+					$temp$t = left;
+				func = $temp$func;
+				acc = $temp$acc;
+				t = $temp$t;
+				continue foldr;
+			}
+		}
+	});
+var elm$core$List$cons = _List_cons;
+var elm$core$Dict$toList = function (dict) {
 	return A3(
-		_elm_lang$html$Html_Events$onWithOptions,
-		'submit',
-		_elm_lang$html$Html_Events$onSubmitOptions,
-		_elm_lang$core$Json_Decode$succeed(msg));
+		elm$core$Dict$foldr,
+		F3(
+			function (key, value, list) {
+				return A2(
+					elm$core$List$cons,
+					_Utils_Tuple2(key, value),
+					list);
+			}),
+		_List_Nil,
+		dict);
 };
-var _elm_lang$html$Html_Events$onCheck = function (tagger) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'change',
-		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetChecked));
+var elm$core$Dict$keys = function (dict) {
+	return A3(
+		elm$core$Dict$foldr,
+		F3(
+			function (key, value, keyList) {
+				return A2(elm$core$List$cons, key, keyList);
+			}),
+		_List_Nil,
+		dict);
 };
-var _elm_lang$html$Html_Events$onInput = function (tagger) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'input',
-		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetValue));
+var elm$core$Set$toList = function (_n0) {
+	var dict = _n0.a;
+	return elm$core$Dict$keys(dict);
 };
-var _elm_lang$html$Html_Events$onMouseOut = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseout',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseOver = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseover',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseLeave = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseleave',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseEnter = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseenter',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseUp = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseup',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseDown = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mousedown',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onDoubleClick = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'dblclick',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onClick = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'click',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$Options = F2(
-	function (a, b) {
-		return {stopPropagation: a, preventDefault: b};
-	});
-
-var _elm_lang$svg$Svg$map = _elm_lang$virtual_dom$VirtualDom$map;
-var _elm_lang$svg$Svg$text = _elm_lang$virtual_dom$VirtualDom$text;
-var _elm_lang$svg$Svg$svgNamespace = A2(
-	_elm_lang$virtual_dom$VirtualDom$property,
-	'namespace',
-	_elm_lang$core$Json_Encode$string('http://www.w3.org/2000/svg'));
-var _elm_lang$svg$Svg$node = F3(
-	function (name, attributes, children) {
+var elm$core$Elm$JsArray$foldr = _JsArray_foldr;
+var elm$core$Array$foldr = F3(
+	function (func, baseCase, _n0) {
+		var tree = _n0.c;
+		var tail = _n0.d;
+		var helper = F2(
+			function (node, acc) {
+				if (node.$ === 'SubTree') {
+					var subTree = node.a;
+					return A3(elm$core$Elm$JsArray$foldr, helper, acc, subTree);
+				} else {
+					var values = node.a;
+					return A3(elm$core$Elm$JsArray$foldr, func, acc, values);
+				}
+			});
 		return A3(
-			_elm_lang$virtual_dom$VirtualDom$node,
-			name,
-			{ctor: '::', _0: _elm_lang$svg$Svg$svgNamespace, _1: attributes},
-			children);
+			elm$core$Elm$JsArray$foldr,
+			helper,
+			A3(elm$core$Elm$JsArray$foldr, func, baseCase, tail),
+			tree);
 	});
-var _elm_lang$svg$Svg$svg = _elm_lang$svg$Svg$node('svg');
-var _elm_lang$svg$Svg$foreignObject = _elm_lang$svg$Svg$node('foreignObject');
-var _elm_lang$svg$Svg$animate = _elm_lang$svg$Svg$node('animate');
-var _elm_lang$svg$Svg$animateColor = _elm_lang$svg$Svg$node('animateColor');
-var _elm_lang$svg$Svg$animateMotion = _elm_lang$svg$Svg$node('animateMotion');
-var _elm_lang$svg$Svg$animateTransform = _elm_lang$svg$Svg$node('animateTransform');
-var _elm_lang$svg$Svg$mpath = _elm_lang$svg$Svg$node('mpath');
-var _elm_lang$svg$Svg$set = _elm_lang$svg$Svg$node('set');
-var _elm_lang$svg$Svg$a = _elm_lang$svg$Svg$node('a');
-var _elm_lang$svg$Svg$defs = _elm_lang$svg$Svg$node('defs');
-var _elm_lang$svg$Svg$g = _elm_lang$svg$Svg$node('g');
-var _elm_lang$svg$Svg$marker = _elm_lang$svg$Svg$node('marker');
-var _elm_lang$svg$Svg$mask = _elm_lang$svg$Svg$node('mask');
-var _elm_lang$svg$Svg$pattern = _elm_lang$svg$Svg$node('pattern');
-var _elm_lang$svg$Svg$switch = _elm_lang$svg$Svg$node('switch');
-var _elm_lang$svg$Svg$symbol = _elm_lang$svg$Svg$node('symbol');
-var _elm_lang$svg$Svg$desc = _elm_lang$svg$Svg$node('desc');
-var _elm_lang$svg$Svg$metadata = _elm_lang$svg$Svg$node('metadata');
-var _elm_lang$svg$Svg$title = _elm_lang$svg$Svg$node('title');
-var _elm_lang$svg$Svg$feBlend = _elm_lang$svg$Svg$node('feBlend');
-var _elm_lang$svg$Svg$feColorMatrix = _elm_lang$svg$Svg$node('feColorMatrix');
-var _elm_lang$svg$Svg$feComponentTransfer = _elm_lang$svg$Svg$node('feComponentTransfer');
-var _elm_lang$svg$Svg$feComposite = _elm_lang$svg$Svg$node('feComposite');
-var _elm_lang$svg$Svg$feConvolveMatrix = _elm_lang$svg$Svg$node('feConvolveMatrix');
-var _elm_lang$svg$Svg$feDiffuseLighting = _elm_lang$svg$Svg$node('feDiffuseLighting');
-var _elm_lang$svg$Svg$feDisplacementMap = _elm_lang$svg$Svg$node('feDisplacementMap');
-var _elm_lang$svg$Svg$feFlood = _elm_lang$svg$Svg$node('feFlood');
-var _elm_lang$svg$Svg$feFuncA = _elm_lang$svg$Svg$node('feFuncA');
-var _elm_lang$svg$Svg$feFuncB = _elm_lang$svg$Svg$node('feFuncB');
-var _elm_lang$svg$Svg$feFuncG = _elm_lang$svg$Svg$node('feFuncG');
-var _elm_lang$svg$Svg$feFuncR = _elm_lang$svg$Svg$node('feFuncR');
-var _elm_lang$svg$Svg$feGaussianBlur = _elm_lang$svg$Svg$node('feGaussianBlur');
-var _elm_lang$svg$Svg$feImage = _elm_lang$svg$Svg$node('feImage');
-var _elm_lang$svg$Svg$feMerge = _elm_lang$svg$Svg$node('feMerge');
-var _elm_lang$svg$Svg$feMergeNode = _elm_lang$svg$Svg$node('feMergeNode');
-var _elm_lang$svg$Svg$feMorphology = _elm_lang$svg$Svg$node('feMorphology');
-var _elm_lang$svg$Svg$feOffset = _elm_lang$svg$Svg$node('feOffset');
-var _elm_lang$svg$Svg$feSpecularLighting = _elm_lang$svg$Svg$node('feSpecularLighting');
-var _elm_lang$svg$Svg$feTile = _elm_lang$svg$Svg$node('feTile');
-var _elm_lang$svg$Svg$feTurbulence = _elm_lang$svg$Svg$node('feTurbulence');
-var _elm_lang$svg$Svg$font = _elm_lang$svg$Svg$node('font');
-var _elm_lang$svg$Svg$linearGradient = _elm_lang$svg$Svg$node('linearGradient');
-var _elm_lang$svg$Svg$radialGradient = _elm_lang$svg$Svg$node('radialGradient');
-var _elm_lang$svg$Svg$stop = _elm_lang$svg$Svg$node('stop');
-var _elm_lang$svg$Svg$circle = _elm_lang$svg$Svg$node('circle');
-var _elm_lang$svg$Svg$ellipse = _elm_lang$svg$Svg$node('ellipse');
-var _elm_lang$svg$Svg$image = _elm_lang$svg$Svg$node('image');
-var _elm_lang$svg$Svg$line = _elm_lang$svg$Svg$node('line');
-var _elm_lang$svg$Svg$path = _elm_lang$svg$Svg$node('path');
-var _elm_lang$svg$Svg$polygon = _elm_lang$svg$Svg$node('polygon');
-var _elm_lang$svg$Svg$polyline = _elm_lang$svg$Svg$node('polyline');
-var _elm_lang$svg$Svg$rect = _elm_lang$svg$Svg$node('rect');
-var _elm_lang$svg$Svg$use = _elm_lang$svg$Svg$node('use');
-var _elm_lang$svg$Svg$feDistantLight = _elm_lang$svg$Svg$node('feDistantLight');
-var _elm_lang$svg$Svg$fePointLight = _elm_lang$svg$Svg$node('fePointLight');
-var _elm_lang$svg$Svg$feSpotLight = _elm_lang$svg$Svg$node('feSpotLight');
-var _elm_lang$svg$Svg$altGlyph = _elm_lang$svg$Svg$node('altGlyph');
-var _elm_lang$svg$Svg$altGlyphDef = _elm_lang$svg$Svg$node('altGlyphDef');
-var _elm_lang$svg$Svg$altGlyphItem = _elm_lang$svg$Svg$node('altGlyphItem');
-var _elm_lang$svg$Svg$glyph = _elm_lang$svg$Svg$node('glyph');
-var _elm_lang$svg$Svg$glyphRef = _elm_lang$svg$Svg$node('glyphRef');
-var _elm_lang$svg$Svg$textPath = _elm_lang$svg$Svg$node('textPath');
-var _elm_lang$svg$Svg$text_ = _elm_lang$svg$Svg$node('text');
-var _elm_lang$svg$Svg$tref = _elm_lang$svg$Svg$node('tref');
-var _elm_lang$svg$Svg$tspan = _elm_lang$svg$Svg$node('tspan');
-var _elm_lang$svg$Svg$clipPath = _elm_lang$svg$Svg$node('clipPath');
-var _elm_lang$svg$Svg$colorProfile = _elm_lang$svg$Svg$node('colorProfile');
-var _elm_lang$svg$Svg$cursor = _elm_lang$svg$Svg$node('cursor');
-var _elm_lang$svg$Svg$filter = _elm_lang$svg$Svg$node('filter');
-var _elm_lang$svg$Svg$script = _elm_lang$svg$Svg$node('script');
-var _elm_lang$svg$Svg$style = _elm_lang$svg$Svg$node('style');
-var _elm_lang$svg$Svg$view = _elm_lang$svg$Svg$node('view');
-
-var _elm_lang$svg$Svg_Attributes$writingMode = _elm_lang$virtual_dom$VirtualDom$attribute('writing-mode');
-var _elm_lang$svg$Svg_Attributes$wordSpacing = _elm_lang$virtual_dom$VirtualDom$attribute('word-spacing');
-var _elm_lang$svg$Svg_Attributes$visibility = _elm_lang$virtual_dom$VirtualDom$attribute('visibility');
-var _elm_lang$svg$Svg_Attributes$unicodeBidi = _elm_lang$virtual_dom$VirtualDom$attribute('unicode-bidi');
-var _elm_lang$svg$Svg_Attributes$textRendering = _elm_lang$virtual_dom$VirtualDom$attribute('text-rendering');
-var _elm_lang$svg$Svg_Attributes$textDecoration = _elm_lang$virtual_dom$VirtualDom$attribute('text-decoration');
-var _elm_lang$svg$Svg_Attributes$textAnchor = _elm_lang$virtual_dom$VirtualDom$attribute('text-anchor');
-var _elm_lang$svg$Svg_Attributes$stroke = _elm_lang$virtual_dom$VirtualDom$attribute('stroke');
-var _elm_lang$svg$Svg_Attributes$strokeWidth = _elm_lang$virtual_dom$VirtualDom$attribute('stroke-width');
-var _elm_lang$svg$Svg_Attributes$strokeOpacity = _elm_lang$virtual_dom$VirtualDom$attribute('stroke-opacity');
-var _elm_lang$svg$Svg_Attributes$strokeMiterlimit = _elm_lang$virtual_dom$VirtualDom$attribute('stroke-miterlimit');
-var _elm_lang$svg$Svg_Attributes$strokeLinejoin = _elm_lang$virtual_dom$VirtualDom$attribute('stroke-linejoin');
-var _elm_lang$svg$Svg_Attributes$strokeLinecap = _elm_lang$virtual_dom$VirtualDom$attribute('stroke-linecap');
-var _elm_lang$svg$Svg_Attributes$strokeDashoffset = _elm_lang$virtual_dom$VirtualDom$attribute('stroke-dashoffset');
-var _elm_lang$svg$Svg_Attributes$strokeDasharray = _elm_lang$virtual_dom$VirtualDom$attribute('stroke-dasharray');
-var _elm_lang$svg$Svg_Attributes$stopOpacity = _elm_lang$virtual_dom$VirtualDom$attribute('stop-opacity');
-var _elm_lang$svg$Svg_Attributes$stopColor = _elm_lang$virtual_dom$VirtualDom$attribute('stop-color');
-var _elm_lang$svg$Svg_Attributes$shapeRendering = _elm_lang$virtual_dom$VirtualDom$attribute('shape-rendering');
-var _elm_lang$svg$Svg_Attributes$pointerEvents = _elm_lang$virtual_dom$VirtualDom$attribute('pointer-events');
-var _elm_lang$svg$Svg_Attributes$overflow = _elm_lang$virtual_dom$VirtualDom$attribute('overflow');
-var _elm_lang$svg$Svg_Attributes$opacity = _elm_lang$virtual_dom$VirtualDom$attribute('opacity');
-var _elm_lang$svg$Svg_Attributes$mask = _elm_lang$virtual_dom$VirtualDom$attribute('mask');
-var _elm_lang$svg$Svg_Attributes$markerStart = _elm_lang$virtual_dom$VirtualDom$attribute('marker-start');
-var _elm_lang$svg$Svg_Attributes$markerMid = _elm_lang$virtual_dom$VirtualDom$attribute('marker-mid');
-var _elm_lang$svg$Svg_Attributes$markerEnd = _elm_lang$virtual_dom$VirtualDom$attribute('marker-end');
-var _elm_lang$svg$Svg_Attributes$lightingColor = _elm_lang$virtual_dom$VirtualDom$attribute('lighting-color');
-var _elm_lang$svg$Svg_Attributes$letterSpacing = _elm_lang$virtual_dom$VirtualDom$attribute('letter-spacing');
-var _elm_lang$svg$Svg_Attributes$kerning = _elm_lang$virtual_dom$VirtualDom$attribute('kerning');
-var _elm_lang$svg$Svg_Attributes$imageRendering = _elm_lang$virtual_dom$VirtualDom$attribute('image-rendering');
-var _elm_lang$svg$Svg_Attributes$glyphOrientationVertical = _elm_lang$virtual_dom$VirtualDom$attribute('glyph-orientation-vertical');
-var _elm_lang$svg$Svg_Attributes$glyphOrientationHorizontal = _elm_lang$virtual_dom$VirtualDom$attribute('glyph-orientation-horizontal');
-var _elm_lang$svg$Svg_Attributes$fontWeight = _elm_lang$virtual_dom$VirtualDom$attribute('font-weight');
-var _elm_lang$svg$Svg_Attributes$fontVariant = _elm_lang$virtual_dom$VirtualDom$attribute('font-variant');
-var _elm_lang$svg$Svg_Attributes$fontStyle = _elm_lang$virtual_dom$VirtualDom$attribute('font-style');
-var _elm_lang$svg$Svg_Attributes$fontStretch = _elm_lang$virtual_dom$VirtualDom$attribute('font-stretch');
-var _elm_lang$svg$Svg_Attributes$fontSize = _elm_lang$virtual_dom$VirtualDom$attribute('font-size');
-var _elm_lang$svg$Svg_Attributes$fontSizeAdjust = _elm_lang$virtual_dom$VirtualDom$attribute('font-size-adjust');
-var _elm_lang$svg$Svg_Attributes$fontFamily = _elm_lang$virtual_dom$VirtualDom$attribute('font-family');
-var _elm_lang$svg$Svg_Attributes$floodOpacity = _elm_lang$virtual_dom$VirtualDom$attribute('flood-opacity');
-var _elm_lang$svg$Svg_Attributes$floodColor = _elm_lang$virtual_dom$VirtualDom$attribute('flood-color');
-var _elm_lang$svg$Svg_Attributes$filter = _elm_lang$virtual_dom$VirtualDom$attribute('filter');
-var _elm_lang$svg$Svg_Attributes$fill = _elm_lang$virtual_dom$VirtualDom$attribute('fill');
-var _elm_lang$svg$Svg_Attributes$fillRule = _elm_lang$virtual_dom$VirtualDom$attribute('fill-rule');
-var _elm_lang$svg$Svg_Attributes$fillOpacity = _elm_lang$virtual_dom$VirtualDom$attribute('fill-opacity');
-var _elm_lang$svg$Svg_Attributes$enableBackground = _elm_lang$virtual_dom$VirtualDom$attribute('enable-background');
-var _elm_lang$svg$Svg_Attributes$dominantBaseline = _elm_lang$virtual_dom$VirtualDom$attribute('dominant-baseline');
-var _elm_lang$svg$Svg_Attributes$display = _elm_lang$virtual_dom$VirtualDom$attribute('display');
-var _elm_lang$svg$Svg_Attributes$direction = _elm_lang$virtual_dom$VirtualDom$attribute('direction');
-var _elm_lang$svg$Svg_Attributes$cursor = _elm_lang$virtual_dom$VirtualDom$attribute('cursor');
-var _elm_lang$svg$Svg_Attributes$color = _elm_lang$virtual_dom$VirtualDom$attribute('color');
-var _elm_lang$svg$Svg_Attributes$colorRendering = _elm_lang$virtual_dom$VirtualDom$attribute('color-rendering');
-var _elm_lang$svg$Svg_Attributes$colorProfile = _elm_lang$virtual_dom$VirtualDom$attribute('color-profile');
-var _elm_lang$svg$Svg_Attributes$colorInterpolation = _elm_lang$virtual_dom$VirtualDom$attribute('color-interpolation');
-var _elm_lang$svg$Svg_Attributes$colorInterpolationFilters = _elm_lang$virtual_dom$VirtualDom$attribute('color-interpolation-filters');
-var _elm_lang$svg$Svg_Attributes$clip = _elm_lang$virtual_dom$VirtualDom$attribute('clip');
-var _elm_lang$svg$Svg_Attributes$clipRule = _elm_lang$virtual_dom$VirtualDom$attribute('clip-rule');
-var _elm_lang$svg$Svg_Attributes$clipPath = _elm_lang$virtual_dom$VirtualDom$attribute('clip-path');
-var _elm_lang$svg$Svg_Attributes$baselineShift = _elm_lang$virtual_dom$VirtualDom$attribute('baseline-shift');
-var _elm_lang$svg$Svg_Attributes$alignmentBaseline = _elm_lang$virtual_dom$VirtualDom$attribute('alignment-baseline');
-var _elm_lang$svg$Svg_Attributes$zoomAndPan = _elm_lang$virtual_dom$VirtualDom$attribute('zoomAndPan');
-var _elm_lang$svg$Svg_Attributes$z = _elm_lang$virtual_dom$VirtualDom$attribute('z');
-var _elm_lang$svg$Svg_Attributes$yChannelSelector = _elm_lang$virtual_dom$VirtualDom$attribute('yChannelSelector');
-var _elm_lang$svg$Svg_Attributes$y2 = _elm_lang$virtual_dom$VirtualDom$attribute('y2');
-var _elm_lang$svg$Svg_Attributes$y1 = _elm_lang$virtual_dom$VirtualDom$attribute('y1');
-var _elm_lang$svg$Svg_Attributes$y = _elm_lang$virtual_dom$VirtualDom$attribute('y');
-var _elm_lang$svg$Svg_Attributes$xmlSpace = A2(_elm_lang$virtual_dom$VirtualDom$attributeNS, 'http://www.w3.org/XML/1998/namespace', 'xml:space');
-var _elm_lang$svg$Svg_Attributes$xmlLang = A2(_elm_lang$virtual_dom$VirtualDom$attributeNS, 'http://www.w3.org/XML/1998/namespace', 'xml:lang');
-var _elm_lang$svg$Svg_Attributes$xmlBase = A2(_elm_lang$virtual_dom$VirtualDom$attributeNS, 'http://www.w3.org/XML/1998/namespace', 'xml:base');
-var _elm_lang$svg$Svg_Attributes$xlinkType = A2(_elm_lang$virtual_dom$VirtualDom$attributeNS, 'http://www.w3.org/1999/xlink', 'xlink:type');
-var _elm_lang$svg$Svg_Attributes$xlinkTitle = A2(_elm_lang$virtual_dom$VirtualDom$attributeNS, 'http://www.w3.org/1999/xlink', 'xlink:title');
-var _elm_lang$svg$Svg_Attributes$xlinkShow = A2(_elm_lang$virtual_dom$VirtualDom$attributeNS, 'http://www.w3.org/1999/xlink', 'xlink:show');
-var _elm_lang$svg$Svg_Attributes$xlinkRole = A2(_elm_lang$virtual_dom$VirtualDom$attributeNS, 'http://www.w3.org/1999/xlink', 'xlink:role');
-var _elm_lang$svg$Svg_Attributes$xlinkHref = A2(_elm_lang$virtual_dom$VirtualDom$attributeNS, 'http://www.w3.org/1999/xlink', 'xlink:href');
-var _elm_lang$svg$Svg_Attributes$xlinkArcrole = A2(_elm_lang$virtual_dom$VirtualDom$attributeNS, 'http://www.w3.org/1999/xlink', 'xlink:arcrole');
-var _elm_lang$svg$Svg_Attributes$xlinkActuate = A2(_elm_lang$virtual_dom$VirtualDom$attributeNS, 'http://www.w3.org/1999/xlink', 'xlink:actuate');
-var _elm_lang$svg$Svg_Attributes$xChannelSelector = _elm_lang$virtual_dom$VirtualDom$attribute('xChannelSelector');
-var _elm_lang$svg$Svg_Attributes$x2 = _elm_lang$virtual_dom$VirtualDom$attribute('x2');
-var _elm_lang$svg$Svg_Attributes$x1 = _elm_lang$virtual_dom$VirtualDom$attribute('x1');
-var _elm_lang$svg$Svg_Attributes$xHeight = _elm_lang$virtual_dom$VirtualDom$attribute('x-height');
-var _elm_lang$svg$Svg_Attributes$x = _elm_lang$virtual_dom$VirtualDom$attribute('x');
-var _elm_lang$svg$Svg_Attributes$widths = _elm_lang$virtual_dom$VirtualDom$attribute('widths');
-var _elm_lang$svg$Svg_Attributes$width = _elm_lang$virtual_dom$VirtualDom$attribute('width');
-var _elm_lang$svg$Svg_Attributes$viewTarget = _elm_lang$virtual_dom$VirtualDom$attribute('viewTarget');
-var _elm_lang$svg$Svg_Attributes$viewBox = _elm_lang$virtual_dom$VirtualDom$attribute('viewBox');
-var _elm_lang$svg$Svg_Attributes$vertOriginY = _elm_lang$virtual_dom$VirtualDom$attribute('vert-origin-y');
-var _elm_lang$svg$Svg_Attributes$vertOriginX = _elm_lang$virtual_dom$VirtualDom$attribute('vert-origin-x');
-var _elm_lang$svg$Svg_Attributes$vertAdvY = _elm_lang$virtual_dom$VirtualDom$attribute('vert-adv-y');
-var _elm_lang$svg$Svg_Attributes$version = _elm_lang$virtual_dom$VirtualDom$attribute('version');
-var _elm_lang$svg$Svg_Attributes$values = _elm_lang$virtual_dom$VirtualDom$attribute('values');
-var _elm_lang$svg$Svg_Attributes$vMathematical = _elm_lang$virtual_dom$VirtualDom$attribute('v-mathematical');
-var _elm_lang$svg$Svg_Attributes$vIdeographic = _elm_lang$virtual_dom$VirtualDom$attribute('v-ideographic');
-var _elm_lang$svg$Svg_Attributes$vHanging = _elm_lang$virtual_dom$VirtualDom$attribute('v-hanging');
-var _elm_lang$svg$Svg_Attributes$vAlphabetic = _elm_lang$virtual_dom$VirtualDom$attribute('v-alphabetic');
-var _elm_lang$svg$Svg_Attributes$unitsPerEm = _elm_lang$virtual_dom$VirtualDom$attribute('units-per-em');
-var _elm_lang$svg$Svg_Attributes$unicodeRange = _elm_lang$virtual_dom$VirtualDom$attribute('unicode-range');
-var _elm_lang$svg$Svg_Attributes$unicode = _elm_lang$virtual_dom$VirtualDom$attribute('unicode');
-var _elm_lang$svg$Svg_Attributes$underlineThickness = _elm_lang$virtual_dom$VirtualDom$attribute('underline-thickness');
-var _elm_lang$svg$Svg_Attributes$underlinePosition = _elm_lang$virtual_dom$VirtualDom$attribute('underline-position');
-var _elm_lang$svg$Svg_Attributes$u2 = _elm_lang$virtual_dom$VirtualDom$attribute('u2');
-var _elm_lang$svg$Svg_Attributes$u1 = _elm_lang$virtual_dom$VirtualDom$attribute('u1');
-var _elm_lang$svg$Svg_Attributes$type_ = _elm_lang$virtual_dom$VirtualDom$attribute('type');
-var _elm_lang$svg$Svg_Attributes$transform = _elm_lang$virtual_dom$VirtualDom$attribute('transform');
-var _elm_lang$svg$Svg_Attributes$to = _elm_lang$virtual_dom$VirtualDom$attribute('to');
-var _elm_lang$svg$Svg_Attributes$title = _elm_lang$virtual_dom$VirtualDom$attribute('title');
-var _elm_lang$svg$Svg_Attributes$textLength = _elm_lang$virtual_dom$VirtualDom$attribute('textLength');
-var _elm_lang$svg$Svg_Attributes$targetY = _elm_lang$virtual_dom$VirtualDom$attribute('targetY');
-var _elm_lang$svg$Svg_Attributes$targetX = _elm_lang$virtual_dom$VirtualDom$attribute('targetX');
-var _elm_lang$svg$Svg_Attributes$target = _elm_lang$virtual_dom$VirtualDom$attribute('target');
-var _elm_lang$svg$Svg_Attributes$tableValues = _elm_lang$virtual_dom$VirtualDom$attribute('tableValues');
-var _elm_lang$svg$Svg_Attributes$systemLanguage = _elm_lang$virtual_dom$VirtualDom$attribute('systemLanguage');
-var _elm_lang$svg$Svg_Attributes$surfaceScale = _elm_lang$virtual_dom$VirtualDom$attribute('surfaceScale');
-var _elm_lang$svg$Svg_Attributes$style = _elm_lang$virtual_dom$VirtualDom$attribute('style');
-var _elm_lang$svg$Svg_Attributes$string = _elm_lang$virtual_dom$VirtualDom$attribute('string');
-var _elm_lang$svg$Svg_Attributes$strikethroughThickness = _elm_lang$virtual_dom$VirtualDom$attribute('strikethrough-thickness');
-var _elm_lang$svg$Svg_Attributes$strikethroughPosition = _elm_lang$virtual_dom$VirtualDom$attribute('strikethrough-position');
-var _elm_lang$svg$Svg_Attributes$stitchTiles = _elm_lang$virtual_dom$VirtualDom$attribute('stitchTiles');
-var _elm_lang$svg$Svg_Attributes$stemv = _elm_lang$virtual_dom$VirtualDom$attribute('stemv');
-var _elm_lang$svg$Svg_Attributes$stemh = _elm_lang$virtual_dom$VirtualDom$attribute('stemh');
-var _elm_lang$svg$Svg_Attributes$stdDeviation = _elm_lang$virtual_dom$VirtualDom$attribute('stdDeviation');
-var _elm_lang$svg$Svg_Attributes$startOffset = _elm_lang$virtual_dom$VirtualDom$attribute('startOffset');
-var _elm_lang$svg$Svg_Attributes$spreadMethod = _elm_lang$virtual_dom$VirtualDom$attribute('spreadMethod');
-var _elm_lang$svg$Svg_Attributes$speed = _elm_lang$virtual_dom$VirtualDom$attribute('speed');
-var _elm_lang$svg$Svg_Attributes$specularExponent = _elm_lang$virtual_dom$VirtualDom$attribute('specularExponent');
-var _elm_lang$svg$Svg_Attributes$specularConstant = _elm_lang$virtual_dom$VirtualDom$attribute('specularConstant');
-var _elm_lang$svg$Svg_Attributes$spacing = _elm_lang$virtual_dom$VirtualDom$attribute('spacing');
-var _elm_lang$svg$Svg_Attributes$slope = _elm_lang$virtual_dom$VirtualDom$attribute('slope');
-var _elm_lang$svg$Svg_Attributes$seed = _elm_lang$virtual_dom$VirtualDom$attribute('seed');
-var _elm_lang$svg$Svg_Attributes$scale = _elm_lang$virtual_dom$VirtualDom$attribute('scale');
-var _elm_lang$svg$Svg_Attributes$ry = _elm_lang$virtual_dom$VirtualDom$attribute('ry');
-var _elm_lang$svg$Svg_Attributes$rx = _elm_lang$virtual_dom$VirtualDom$attribute('rx');
-var _elm_lang$svg$Svg_Attributes$rotate = _elm_lang$virtual_dom$VirtualDom$attribute('rotate');
-var _elm_lang$svg$Svg_Attributes$result = _elm_lang$virtual_dom$VirtualDom$attribute('result');
-var _elm_lang$svg$Svg_Attributes$restart = _elm_lang$virtual_dom$VirtualDom$attribute('restart');
-var _elm_lang$svg$Svg_Attributes$requiredFeatures = _elm_lang$virtual_dom$VirtualDom$attribute('requiredFeatures');
-var _elm_lang$svg$Svg_Attributes$requiredExtensions = _elm_lang$virtual_dom$VirtualDom$attribute('requiredExtensions');
-var _elm_lang$svg$Svg_Attributes$repeatDur = _elm_lang$virtual_dom$VirtualDom$attribute('repeatDur');
-var _elm_lang$svg$Svg_Attributes$repeatCount = _elm_lang$virtual_dom$VirtualDom$attribute('repeatCount');
-var _elm_lang$svg$Svg_Attributes$renderingIntent = _elm_lang$virtual_dom$VirtualDom$attribute('rendering-intent');
-var _elm_lang$svg$Svg_Attributes$refY = _elm_lang$virtual_dom$VirtualDom$attribute('refY');
-var _elm_lang$svg$Svg_Attributes$refX = _elm_lang$virtual_dom$VirtualDom$attribute('refX');
-var _elm_lang$svg$Svg_Attributes$radius = _elm_lang$virtual_dom$VirtualDom$attribute('radius');
-var _elm_lang$svg$Svg_Attributes$r = _elm_lang$virtual_dom$VirtualDom$attribute('r');
-var _elm_lang$svg$Svg_Attributes$primitiveUnits = _elm_lang$virtual_dom$VirtualDom$attribute('primitiveUnits');
-var _elm_lang$svg$Svg_Attributes$preserveAspectRatio = _elm_lang$virtual_dom$VirtualDom$attribute('preserveAspectRatio');
-var _elm_lang$svg$Svg_Attributes$preserveAlpha = _elm_lang$virtual_dom$VirtualDom$attribute('preserveAlpha');
-var _elm_lang$svg$Svg_Attributes$pointsAtZ = _elm_lang$virtual_dom$VirtualDom$attribute('pointsAtZ');
-var _elm_lang$svg$Svg_Attributes$pointsAtY = _elm_lang$virtual_dom$VirtualDom$attribute('pointsAtY');
-var _elm_lang$svg$Svg_Attributes$pointsAtX = _elm_lang$virtual_dom$VirtualDom$attribute('pointsAtX');
-var _elm_lang$svg$Svg_Attributes$points = _elm_lang$virtual_dom$VirtualDom$attribute('points');
-var _elm_lang$svg$Svg_Attributes$pointOrder = _elm_lang$virtual_dom$VirtualDom$attribute('point-order');
-var _elm_lang$svg$Svg_Attributes$patternUnits = _elm_lang$virtual_dom$VirtualDom$attribute('patternUnits');
-var _elm_lang$svg$Svg_Attributes$patternTransform = _elm_lang$virtual_dom$VirtualDom$attribute('patternTransform');
-var _elm_lang$svg$Svg_Attributes$patternContentUnits = _elm_lang$virtual_dom$VirtualDom$attribute('patternContentUnits');
-var _elm_lang$svg$Svg_Attributes$pathLength = _elm_lang$virtual_dom$VirtualDom$attribute('pathLength');
-var _elm_lang$svg$Svg_Attributes$path = _elm_lang$virtual_dom$VirtualDom$attribute('path');
-var _elm_lang$svg$Svg_Attributes$panose1 = _elm_lang$virtual_dom$VirtualDom$attribute('panose-1');
-var _elm_lang$svg$Svg_Attributes$overlineThickness = _elm_lang$virtual_dom$VirtualDom$attribute('overline-thickness');
-var _elm_lang$svg$Svg_Attributes$overlinePosition = _elm_lang$virtual_dom$VirtualDom$attribute('overline-position');
-var _elm_lang$svg$Svg_Attributes$origin = _elm_lang$virtual_dom$VirtualDom$attribute('origin');
-var _elm_lang$svg$Svg_Attributes$orientation = _elm_lang$virtual_dom$VirtualDom$attribute('orientation');
-var _elm_lang$svg$Svg_Attributes$orient = _elm_lang$virtual_dom$VirtualDom$attribute('orient');
-var _elm_lang$svg$Svg_Attributes$order = _elm_lang$virtual_dom$VirtualDom$attribute('order');
-var _elm_lang$svg$Svg_Attributes$operator = _elm_lang$virtual_dom$VirtualDom$attribute('operator');
-var _elm_lang$svg$Svg_Attributes$offset = _elm_lang$virtual_dom$VirtualDom$attribute('offset');
-var _elm_lang$svg$Svg_Attributes$numOctaves = _elm_lang$virtual_dom$VirtualDom$attribute('numOctaves');
-var _elm_lang$svg$Svg_Attributes$name = _elm_lang$virtual_dom$VirtualDom$attribute('name');
-var _elm_lang$svg$Svg_Attributes$mode = _elm_lang$virtual_dom$VirtualDom$attribute('mode');
-var _elm_lang$svg$Svg_Attributes$min = _elm_lang$virtual_dom$VirtualDom$attribute('min');
-var _elm_lang$svg$Svg_Attributes$method = _elm_lang$virtual_dom$VirtualDom$attribute('method');
-var _elm_lang$svg$Svg_Attributes$media = _elm_lang$virtual_dom$VirtualDom$attribute('media');
-var _elm_lang$svg$Svg_Attributes$max = _elm_lang$virtual_dom$VirtualDom$attribute('max');
-var _elm_lang$svg$Svg_Attributes$mathematical = _elm_lang$virtual_dom$VirtualDom$attribute('mathematical');
-var _elm_lang$svg$Svg_Attributes$maskUnits = _elm_lang$virtual_dom$VirtualDom$attribute('maskUnits');
-var _elm_lang$svg$Svg_Attributes$maskContentUnits = _elm_lang$virtual_dom$VirtualDom$attribute('maskContentUnits');
-var _elm_lang$svg$Svg_Attributes$markerWidth = _elm_lang$virtual_dom$VirtualDom$attribute('markerWidth');
-var _elm_lang$svg$Svg_Attributes$markerUnits = _elm_lang$virtual_dom$VirtualDom$attribute('markerUnits');
-var _elm_lang$svg$Svg_Attributes$markerHeight = _elm_lang$virtual_dom$VirtualDom$attribute('markerHeight');
-var _elm_lang$svg$Svg_Attributes$local = _elm_lang$virtual_dom$VirtualDom$attribute('local');
-var _elm_lang$svg$Svg_Attributes$limitingConeAngle = _elm_lang$virtual_dom$VirtualDom$attribute('limitingConeAngle');
-var _elm_lang$svg$Svg_Attributes$lengthAdjust = _elm_lang$virtual_dom$VirtualDom$attribute('lengthAdjust');
-var _elm_lang$svg$Svg_Attributes$lang = _elm_lang$virtual_dom$VirtualDom$attribute('lang');
-var _elm_lang$svg$Svg_Attributes$keyTimes = _elm_lang$virtual_dom$VirtualDom$attribute('keyTimes');
-var _elm_lang$svg$Svg_Attributes$keySplines = _elm_lang$virtual_dom$VirtualDom$attribute('keySplines');
-var _elm_lang$svg$Svg_Attributes$keyPoints = _elm_lang$virtual_dom$VirtualDom$attribute('keyPoints');
-var _elm_lang$svg$Svg_Attributes$kernelUnitLength = _elm_lang$virtual_dom$VirtualDom$attribute('kernelUnitLength');
-var _elm_lang$svg$Svg_Attributes$kernelMatrix = _elm_lang$virtual_dom$VirtualDom$attribute('kernelMatrix');
-var _elm_lang$svg$Svg_Attributes$k4 = _elm_lang$virtual_dom$VirtualDom$attribute('k4');
-var _elm_lang$svg$Svg_Attributes$k3 = _elm_lang$virtual_dom$VirtualDom$attribute('k3');
-var _elm_lang$svg$Svg_Attributes$k2 = _elm_lang$virtual_dom$VirtualDom$attribute('k2');
-var _elm_lang$svg$Svg_Attributes$k1 = _elm_lang$virtual_dom$VirtualDom$attribute('k1');
-var _elm_lang$svg$Svg_Attributes$k = _elm_lang$virtual_dom$VirtualDom$attribute('k');
-var _elm_lang$svg$Svg_Attributes$intercept = _elm_lang$virtual_dom$VirtualDom$attribute('intercept');
-var _elm_lang$svg$Svg_Attributes$in2 = _elm_lang$virtual_dom$VirtualDom$attribute('in2');
-var _elm_lang$svg$Svg_Attributes$in_ = _elm_lang$virtual_dom$VirtualDom$attribute('in');
-var _elm_lang$svg$Svg_Attributes$ideographic = _elm_lang$virtual_dom$VirtualDom$attribute('ideographic');
-var _elm_lang$svg$Svg_Attributes$id = _elm_lang$virtual_dom$VirtualDom$attribute('id');
-var _elm_lang$svg$Svg_Attributes$horizOriginY = _elm_lang$virtual_dom$VirtualDom$attribute('horiz-origin-y');
-var _elm_lang$svg$Svg_Attributes$horizOriginX = _elm_lang$virtual_dom$VirtualDom$attribute('horiz-origin-x');
-var _elm_lang$svg$Svg_Attributes$horizAdvX = _elm_lang$virtual_dom$VirtualDom$attribute('horiz-adv-x');
-var _elm_lang$svg$Svg_Attributes$height = _elm_lang$virtual_dom$VirtualDom$attribute('height');
-var _elm_lang$svg$Svg_Attributes$hanging = _elm_lang$virtual_dom$VirtualDom$attribute('hanging');
-var _elm_lang$svg$Svg_Attributes$gradientUnits = _elm_lang$virtual_dom$VirtualDom$attribute('gradientUnits');
-var _elm_lang$svg$Svg_Attributes$gradientTransform = _elm_lang$virtual_dom$VirtualDom$attribute('gradientTransform');
-var _elm_lang$svg$Svg_Attributes$glyphRef = _elm_lang$virtual_dom$VirtualDom$attribute('glyphRef');
-var _elm_lang$svg$Svg_Attributes$glyphName = _elm_lang$virtual_dom$VirtualDom$attribute('glyph-name');
-var _elm_lang$svg$Svg_Attributes$g2 = _elm_lang$virtual_dom$VirtualDom$attribute('g2');
-var _elm_lang$svg$Svg_Attributes$g1 = _elm_lang$virtual_dom$VirtualDom$attribute('g1');
-var _elm_lang$svg$Svg_Attributes$fy = _elm_lang$virtual_dom$VirtualDom$attribute('fy');
-var _elm_lang$svg$Svg_Attributes$fx = _elm_lang$virtual_dom$VirtualDom$attribute('fx');
-var _elm_lang$svg$Svg_Attributes$from = _elm_lang$virtual_dom$VirtualDom$attribute('from');
-var _elm_lang$svg$Svg_Attributes$format = _elm_lang$virtual_dom$VirtualDom$attribute('format');
-var _elm_lang$svg$Svg_Attributes$filterUnits = _elm_lang$virtual_dom$VirtualDom$attribute('filterUnits');
-var _elm_lang$svg$Svg_Attributes$filterRes = _elm_lang$virtual_dom$VirtualDom$attribute('filterRes');
-var _elm_lang$svg$Svg_Attributes$externalResourcesRequired = _elm_lang$virtual_dom$VirtualDom$attribute('externalResourcesRequired');
-var _elm_lang$svg$Svg_Attributes$exponent = _elm_lang$virtual_dom$VirtualDom$attribute('exponent');
-var _elm_lang$svg$Svg_Attributes$end = _elm_lang$virtual_dom$VirtualDom$attribute('end');
-var _elm_lang$svg$Svg_Attributes$elevation = _elm_lang$virtual_dom$VirtualDom$attribute('elevation');
-var _elm_lang$svg$Svg_Attributes$edgeMode = _elm_lang$virtual_dom$VirtualDom$attribute('edgeMode');
-var _elm_lang$svg$Svg_Attributes$dy = _elm_lang$virtual_dom$VirtualDom$attribute('dy');
-var _elm_lang$svg$Svg_Attributes$dx = _elm_lang$virtual_dom$VirtualDom$attribute('dx');
-var _elm_lang$svg$Svg_Attributes$dur = _elm_lang$virtual_dom$VirtualDom$attribute('dur');
-var _elm_lang$svg$Svg_Attributes$divisor = _elm_lang$virtual_dom$VirtualDom$attribute('divisor');
-var _elm_lang$svg$Svg_Attributes$diffuseConstant = _elm_lang$virtual_dom$VirtualDom$attribute('diffuseConstant');
-var _elm_lang$svg$Svg_Attributes$descent = _elm_lang$virtual_dom$VirtualDom$attribute('descent');
-var _elm_lang$svg$Svg_Attributes$decelerate = _elm_lang$virtual_dom$VirtualDom$attribute('decelerate');
-var _elm_lang$svg$Svg_Attributes$d = _elm_lang$virtual_dom$VirtualDom$attribute('d');
-var _elm_lang$svg$Svg_Attributes$cy = _elm_lang$virtual_dom$VirtualDom$attribute('cy');
-var _elm_lang$svg$Svg_Attributes$cx = _elm_lang$virtual_dom$VirtualDom$attribute('cx');
-var _elm_lang$svg$Svg_Attributes$contentStyleType = _elm_lang$virtual_dom$VirtualDom$attribute('contentStyleType');
-var _elm_lang$svg$Svg_Attributes$contentScriptType = _elm_lang$virtual_dom$VirtualDom$attribute('contentScriptType');
-var _elm_lang$svg$Svg_Attributes$clipPathUnits = _elm_lang$virtual_dom$VirtualDom$attribute('clipPathUnits');
-var _elm_lang$svg$Svg_Attributes$class = _elm_lang$virtual_dom$VirtualDom$attribute('class');
-var _elm_lang$svg$Svg_Attributes$capHeight = _elm_lang$virtual_dom$VirtualDom$attribute('cap-height');
-var _elm_lang$svg$Svg_Attributes$calcMode = _elm_lang$virtual_dom$VirtualDom$attribute('calcMode');
-var _elm_lang$svg$Svg_Attributes$by = _elm_lang$virtual_dom$VirtualDom$attribute('by');
-var _elm_lang$svg$Svg_Attributes$bias = _elm_lang$virtual_dom$VirtualDom$attribute('bias');
-var _elm_lang$svg$Svg_Attributes$begin = _elm_lang$virtual_dom$VirtualDom$attribute('begin');
-var _elm_lang$svg$Svg_Attributes$bbox = _elm_lang$virtual_dom$VirtualDom$attribute('bbox');
-var _elm_lang$svg$Svg_Attributes$baseProfile = _elm_lang$virtual_dom$VirtualDom$attribute('baseProfile');
-var _elm_lang$svg$Svg_Attributes$baseFrequency = _elm_lang$virtual_dom$VirtualDom$attribute('baseFrequency');
-var _elm_lang$svg$Svg_Attributes$azimuth = _elm_lang$virtual_dom$VirtualDom$attribute('azimuth');
-var _elm_lang$svg$Svg_Attributes$autoReverse = _elm_lang$virtual_dom$VirtualDom$attribute('autoReverse');
-var _elm_lang$svg$Svg_Attributes$attributeType = _elm_lang$virtual_dom$VirtualDom$attribute('attributeType');
-var _elm_lang$svg$Svg_Attributes$attributeName = _elm_lang$virtual_dom$VirtualDom$attribute('attributeName');
-var _elm_lang$svg$Svg_Attributes$ascent = _elm_lang$virtual_dom$VirtualDom$attribute('ascent');
-var _elm_lang$svg$Svg_Attributes$arabicForm = _elm_lang$virtual_dom$VirtualDom$attribute('arabic-form');
-var _elm_lang$svg$Svg_Attributes$amplitude = _elm_lang$virtual_dom$VirtualDom$attribute('amplitude');
-var _elm_lang$svg$Svg_Attributes$allowReorder = _elm_lang$virtual_dom$VirtualDom$attribute('allowReorder');
-var _elm_lang$svg$Svg_Attributes$alphabetic = _elm_lang$virtual_dom$VirtualDom$attribute('alphabetic');
-var _elm_lang$svg$Svg_Attributes$additive = _elm_lang$virtual_dom$VirtualDom$attribute('additive');
-var _elm_lang$svg$Svg_Attributes$accumulate = _elm_lang$virtual_dom$VirtualDom$attribute('accumulate');
-var _elm_lang$svg$Svg_Attributes$accelerate = _elm_lang$virtual_dom$VirtualDom$attribute('accelerate');
-var _elm_lang$svg$Svg_Attributes$accentHeight = _elm_lang$virtual_dom$VirtualDom$attribute('accent-height');
-
-var _elm_lang$svg$Svg_Events$on = _elm_lang$virtual_dom$VirtualDom$on;
-var _elm_lang$svg$Svg_Events$simpleOn = F2(
-	function (name, msg) {
+var elm$core$Array$toList = function (array) {
+	return A3(elm$core$Array$foldr, elm$core$List$cons, _List_Nil, array);
+};
+var elm$core$Basics$not = _Basics_not;
+var author$project$Main$update = F2(
+	function (msg, model) {
+		switch (msg.$) {
+			case 'Change':
+				var text = msg.a;
+				return _Utils_update(
+					model,
+					{content: text});
+			case 'OperationModeChange':
+				return _Utils_update(
+					model,
+					{decode: !model.decode});
+			default:
+				return _Utils_update(
+					model,
+					{is32Bits: !model.is32Bits});
+		}
+	});
+var elm$core$Maybe$Just = function (a) {
+	return {$: 'Just', a: a};
+};
+var elm$core$Maybe$Nothing = {$: 'Nothing'};
+var elm$core$String$fromInt = _String_fromNumber;
+var elm$core$String$join = F2(
+	function (sep, chunks) {
 		return A2(
-			_elm_lang$svg$Svg_Events$on,
-			name,
-			_elm_lang$core$Json_Decode$succeed(msg));
+			_String_join,
+			sep,
+			_List_toArray(chunks));
 	});
-var _elm_lang$svg$Svg_Events$onBegin = _elm_lang$svg$Svg_Events$simpleOn('begin');
-var _elm_lang$svg$Svg_Events$onEnd = _elm_lang$svg$Svg_Events$simpleOn('end');
-var _elm_lang$svg$Svg_Events$onRepeat = _elm_lang$svg$Svg_Events$simpleOn('repeat');
-var _elm_lang$svg$Svg_Events$onAbort = _elm_lang$svg$Svg_Events$simpleOn('abort');
-var _elm_lang$svg$Svg_Events$onError = _elm_lang$svg$Svg_Events$simpleOn('error');
-var _elm_lang$svg$Svg_Events$onResize = _elm_lang$svg$Svg_Events$simpleOn('resize');
-var _elm_lang$svg$Svg_Events$onScroll = _elm_lang$svg$Svg_Events$simpleOn('scroll');
-var _elm_lang$svg$Svg_Events$onLoad = _elm_lang$svg$Svg_Events$simpleOn('load');
-var _elm_lang$svg$Svg_Events$onUnload = _elm_lang$svg$Svg_Events$simpleOn('unload');
-var _elm_lang$svg$Svg_Events$onZoom = _elm_lang$svg$Svg_Events$simpleOn('zoom');
-var _elm_lang$svg$Svg_Events$onActivate = _elm_lang$svg$Svg_Events$simpleOn('activate');
-var _elm_lang$svg$Svg_Events$onClick = _elm_lang$svg$Svg_Events$simpleOn('click');
-var _elm_lang$svg$Svg_Events$onFocusIn = _elm_lang$svg$Svg_Events$simpleOn('focusin');
-var _elm_lang$svg$Svg_Events$onFocusOut = _elm_lang$svg$Svg_Events$simpleOn('focusout');
-var _elm_lang$svg$Svg_Events$onMouseDown = _elm_lang$svg$Svg_Events$simpleOn('mousedown');
-var _elm_lang$svg$Svg_Events$onMouseMove = _elm_lang$svg$Svg_Events$simpleOn('mousemove');
-var _elm_lang$svg$Svg_Events$onMouseOut = _elm_lang$svg$Svg_Events$simpleOn('mouseout');
-var _elm_lang$svg$Svg_Events$onMouseOver = _elm_lang$svg$Svg_Events$simpleOn('mouseover');
-var _elm_lang$svg$Svg_Events$onMouseUp = _elm_lang$svg$Svg_Events$simpleOn('mouseup');
-
-var _timjs$elm_collage$Helpers$foldrLazy = F3(
-	function (f, acc, list) {
-		var _p0 = list;
-		if (_p0.ctor === '[]') {
+var author$project$Diagram$blockName = F3(
+	function (prefix, level, i) {
+		return A2(
+			elm$core$String$join,
+			'_',
+			_List_fromArray(
+				[
+					prefix,
+					elm$core$String$fromInt(level),
+					elm$core$String$fromInt(i)
+				]));
+	});
+var elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var elm$core$Basics$apR = F2(
+	function (x, f) {
+		return f(x);
+	});
+var elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
+var elm$core$Basics$eq = _Utils_equal;
+var elm$core$Basics$mul = _Basics_mul;
+var elm$core$Basics$add = _Basics_add;
+var elm$core$Basics$gt = _Utils_gt;
+var elm$core$List$foldl = F3(
+	function (func, acc, list) {
+		foldl:
+		while (true) {
+			if (!list.b) {
+				return acc;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				var $temp$func = func,
+					$temp$acc = A2(func, x, acc),
+					$temp$list = xs;
+				func = $temp$func;
+				acc = $temp$acc;
+				list = $temp$list;
+				continue foldl;
+			}
+		}
+	});
+var elm$core$List$reverse = function (list) {
+	return A3(elm$core$List$foldl, elm$core$List$cons, _List_Nil, list);
+};
+var elm$core$List$foldrHelper = F4(
+	function (fn, acc, ctr, ls) {
+		if (!ls.b) {
 			return acc;
 		} else {
-			return A2(
-				f,
-				_p0._0,
-				function (_p1) {
-					var _p2 = _p1;
-					return A3(_timjs$elm_collage$Helpers$foldrLazy, f, acc, _p0._1);
-				});
-		}
-	});
-
-var _timjs$elm_collage$Collage_Core$search = F2(
-	function (pred, collage) {
-		var recurse = function (queue) {
-			recurse:
-			while (true) {
-				var _p0 = queue;
-				if (_p0.ctor === '[]') {
-					return _elm_lang$core$Maybe$Nothing;
-				} else {
-					var _p3 = _p0._1;
-					var _p2 = _p0._0;
-					if (pred(_p2)) {
-						return _elm_lang$core$Maybe$Just(_p2);
-					} else {
-						var _p1 = _p2.basic;
-						switch (_p1.ctor) {
-							case 'Group':
-								var _v2 = A2(_elm_lang$core$Basics_ops['++'], _p3, _p1._0);
-								queue = _v2;
-								continue recurse;
-							case 'Subcollage':
-								var _v3 = A2(
-									_elm_lang$core$Basics_ops['++'],
-									_p3,
-									{
-										ctor: '::',
-										_0: _p1._0,
-										_1: {
-											ctor: '::',
-											_0: _p1._1,
-											_1: {ctor: '[]'}
-										}
-									});
-								queue = _v3;
-								continue recurse;
-							default:
-								var _v4 = _p3;
-								queue = _v4;
-								continue recurse;
-						}
-					}
-				}
-			}
-		};
-		return recurse(
-			{
-				ctor: '::',
-				_0: collage,
-				_1: {ctor: '[]'}
-			});
-	});
-var _timjs$elm_collage$Collage_Core$levels = function (collage) {
-	var recurse = F2(
-		function (result, queue) {
-			recurse:
-			while (true) {
-				var _p4 = queue;
-				if (_p4.ctor === '[]') {
-					return _elm_lang$core$List$reverse(result);
-				} else {
-					var _p7 = _p4._1;
-					var _p6 = _p4._0;
-					var _p5 = _p6.basic;
-					switch (_p5.ctor) {
-						case 'Group':
-							var _v7 = result,
-								_v8 = A2(_elm_lang$core$Basics_ops['++'], _p7, _p5._0);
-							result = _v7;
-							queue = _v8;
-							continue recurse;
-						case 'Subcollage':
-							var _v9 = result,
-								_v10 = A2(
-								_elm_lang$core$Basics_ops['++'],
-								_p7,
-								{
-									ctor: '::',
-									_0: _p5._0,
-									_1: {
-										ctor: '::',
-										_0: _p5._1,
-										_1: {ctor: '[]'}
-									}
-								});
-							result = _v9;
-							queue = _v10;
-							continue recurse;
-						default:
-							var _v11 = {ctor: '::', _0: _p6, _1: result},
-								_v12 = _p7;
-							result = _v11;
-							queue = _v12;
-							continue recurse;
-					}
-				}
-			}
-		});
-	return A2(
-		recurse,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: collage,
-			_1: {ctor: '[]'}
-		});
-};
-var _timjs$elm_collage$Collage_Core$foldl = F3(
-	function (f, acc, collage) {
-		var foldlOf = function (acc) {
-			return A2(
-				_elm_lang$core$List$foldl,
-				F2(
-					function (collage, acc) {
-						return A3(_timjs$elm_collage$Collage_Core$foldl, f, acc, collage);
-					}),
-				acc);
-		};
-		var recurse = function (acc) {
-			var _p8 = collage.basic;
-			switch (_p8.ctor) {
-				case 'Group':
-					return A2(foldlOf, acc, _p8._0);
-				case 'Subcollage':
-					return A2(
-						foldlOf,
-						acc,
-						{
-							ctor: '::',
-							_0: _p8._0,
-							_1: {
-								ctor: '::',
-								_0: _p8._1,
-								_1: {ctor: '[]'}
-							}
-						});
-				default:
-					return acc;
-			}
-		};
-		return recurse(
-			A2(f, collage, acc));
-	});
-var _timjs$elm_collage$Collage_Core$foldrLazy = F3(
-	function (f, acc, collage) {
-		var foldrOf = A2(
-			_timjs$elm_collage$Helpers$foldrLazy,
-			F2(
-				function (collage, acc) {
-					return A3(
-						_timjs$elm_collage$Collage_Core$foldrLazy,
-						f,
-						acc(
-							{ctor: '_Tuple0'}),
-						collage);
-				}),
-			acc);
-		var recurse = function (_p9) {
-			var _p10 = _p9;
-			var _p11 = collage.basic;
-			switch (_p11.ctor) {
-				case 'Group':
-					return foldrOf(_p11._0);
-				case 'Subcollage':
-					return foldrOf(
-						{
-							ctor: '::',
-							_0: _p11._0,
-							_1: {
-								ctor: '::',
-								_0: _p11._1,
-								_1: {ctor: '[]'}
-							}
-						});
-				default:
-					return acc;
-			}
-		};
-		return A2(f, collage, recurse);
-	});
-var _timjs$elm_collage$Collage_Core$find = function (p) {
-	var f = function (x) {
-		return p(x) ? _elm_lang$core$Maybe$Just(x) : _elm_lang$core$Maybe$Nothing;
-	};
-	return A2(
-		_timjs$elm_collage$Collage_Core$foldrLazy,
-		function (_p12) {
-			return _elm_community$maybe_extra$Maybe_Extra$orLazy(
-				f(_p12));
-		},
-		_elm_lang$core$Maybe$Nothing);
-};
-var _timjs$elm_collage$Collage_Core$foldr = F3(
-	function (f, acc, collage) {
-		var foldrOf = A2(
-			_elm_lang$core$List$foldr,
-			F2(
-				function (collage, acc) {
-					return A3(_timjs$elm_collage$Collage_Core$foldr, f, acc, collage);
-				}),
-			acc);
-		var recurse = function () {
-			var _p13 = collage.basic;
-			switch (_p13.ctor) {
-				case 'Group':
-					return foldrOf(_p13._0);
-				case 'Subcollage':
-					return foldrOf(
-						{
-							ctor: '::',
-							_0: _p13._0,
-							_1: {
-								ctor: '::',
-								_0: _p13._1,
-								_1: {ctor: '[]'}
-							}
-						});
-				default:
-					return acc;
-			}
-		}();
-		return A2(f, collage, recurse);
-	});
-var _timjs$elm_collage$Collage_Core$combine = F2(
-	function (_p14, $this) {
-		var _p15 = _p14;
-		var _p16 = $this.shift;
-		var sx = _p16._0;
-		var sy = _p16._1;
-		var _p17 = $this.shift;
-		var x = _p17._0;
-		var y = _p17._1;
-		var _p18 = _p15.scale;
-		var fx = _p18._0;
-		var fy = _p18._1;
-		var _p19 = _p15.shift;
-		var dx = _p19._0;
-		var dy = _p19._1;
-		return _elm_lang$core$Native_Utils.update(
-			$this,
-			{
-				shift: {ctor: '_Tuple2', _0: x + dx, _1: y + dy},
-				scale: {ctor: '_Tuple2', _0: sx * fx, _1: sy * fy},
-				rotation: $this.rotation + _p15.rotation
-			});
-	});
-var _timjs$elm_collage$Collage_Core$apply = function (_p20) {
-	var _p21 = _p20;
-	var _p33 = _p21.rotation;
-	var rotated = function (_p22) {
-		var _p23 = _p22;
-		var _p25 = _p23._1;
-		var _p24 = _p23._0;
-		var s = _elm_lang$core$Basics$sin(_p33);
-		var c = _elm_lang$core$Basics$cos(_p33);
-		return {ctor: '_Tuple2', _0: (c * _p24) - (s * _p25), _1: (s * _p24) + (c * _p25)};
-	};
-	var _p26 = _p21.scale;
-	var sx = _p26._0;
-	var sy = _p26._1;
-	var scaled = function (_p27) {
-		var _p28 = _p27;
-		return {ctor: '_Tuple2', _0: sx * _p28._0, _1: sy * _p28._1};
-	};
-	var _p29 = _p21.shift;
-	var dx = _p29._0;
-	var dy = _p29._1;
-	var shifted = function (_p30) {
-		var _p31 = _p30;
-		return {ctor: '_Tuple2', _0: _p31._0 + dx, _1: _p31._1 + dy};
-	};
-	return function (_p32) {
-		return shifted(
-			scaled(
-				rotated(_p32)));
-	};
-};
-var _timjs$elm_collage$Collage_Core$collage = function (basic) {
-	return {
-		shift: {ctor: '_Tuple2', _0: 0, _1: 0},
-		scale: {ctor: '_Tuple2', _0: 1, _1: 1},
-		rotation: 0,
-		opacity: 1,
-		name: _elm_lang$core$Maybe$Nothing,
-		handlers: {ctor: '[]'},
-		basic: basic
-	};
-};
-var _timjs$elm_collage$Collage_Core$Subcollage = F2(
-	function (a, b) {
-		return {ctor: 'Subcollage', _0: a, _1: b};
-	});
-var _timjs$elm_collage$Collage_Core$Group = function (a) {
-	return {ctor: 'Group', _0: a};
-};
-var _timjs$elm_collage$Collage_Core$Html = F2(
-	function (a, b) {
-		return {ctor: 'Html', _0: a, _1: b};
-	});
-var _timjs$elm_collage$Collage_Core$Image = F2(
-	function (a, b) {
-		return {ctor: 'Image', _0: a, _1: b};
-	});
-var _timjs$elm_collage$Collage_Core$Text = F2(
-	function (a, b) {
-		return {ctor: 'Text', _0: a, _1: b};
-	});
-var _timjs$elm_collage$Collage_Core$Path = F2(
-	function (a, b) {
-		return {ctor: 'Path', _0: a, _1: b};
-	});
-var _timjs$elm_collage$Collage_Core$Shape = F2(
-	function (a, b) {
-		return {ctor: 'Shape', _0: a, _1: b};
-	});
-var _timjs$elm_collage$Collage_Core$Loop = function (a) {
-	return {ctor: 'Loop', _0: a};
-};
-var _timjs$elm_collage$Collage_Core$Circle = function (a) {
-	return {ctor: 'Circle', _0: a};
-};
-var _timjs$elm_collage$Collage_Core$Ellipse = F2(
-	function (a, b) {
-		return {ctor: 'Ellipse', _0: a, _1: b};
-	});
-var _timjs$elm_collage$Collage_Core$Rectangle = F3(
-	function (a, b, c) {
-		return {ctor: 'Rectangle', _0: a, _1: b, _2: c};
-	});
-var _timjs$elm_collage$Collage_Core$Polygon = function (a) {
-	return {ctor: 'Polygon', _0: a};
-};
-var _timjs$elm_collage$Collage_Core$Polyline = function (a) {
-	return {ctor: 'Polyline', _0: a};
-};
-var _timjs$elm_collage$Collage_Core$Chunk = F2(
-	function (a, b) {
-		return {ctor: 'Chunk', _0: a, _1: b};
-	});
-var _timjs$elm_collage$Collage_Core$Uniform = function (a) {
-	return {ctor: 'Uniform', _0: a};
-};
-var _timjs$elm_collage$Collage_Core$Transparent = {ctor: 'Transparent'};
-
-let _timjs$elm_collage$Native_Text = function() {
-
-  //NOTE: We re-use the canvas object for better performance
-  let canvas = document.createElement("canvas");
-  let context = canvas.getContext("2d");
-
-  /**
-  * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
-  *
-  * @param {String} font The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
-  * @param {String} text The text to be rendered.
-  *
-  * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
-  */
-  function width(font, text) {
-    context.font = font;
-    let metrics = context.measureText(text);
-    return metrics.width;
-  }
-
-  return {
-    width: F2(width)
-  };
-
-}();
-
-var _timjs$elm_collage$Collage_Text$toCssFontSpec = function (style) {
-	var spec = {
-		ctor: '::',
-		_0: function () {
-			var _p0 = style.shape;
-			switch (_p0.ctor) {
-				case 'Upright':
-					return 'normal';
-				case 'SmallCaps':
-					return 'normal';
-				case 'Slanted':
-					return 'oblique';
-				default:
-					return 'italic';
-			}
-		}(),
-		_1: {
-			ctor: '::',
-			_0: function () {
-				var _p1 = style.shape;
-				if (_p1.ctor === 'SmallCaps') {
-					return 'small-caps';
-				} else {
-					return 'normal';
-				}
-			}(),
-			_1: {
-				ctor: '::',
-				_0: function () {
-					var _p2 = style.weight;
-					switch (_p2.ctor) {
-						case 'Thin':
-							return '200';
-						case 'Light':
-							return '300';
-						case 'Regular':
-							return 'normal';
-						case 'Medium':
-							return '500';
-						case 'SemiBold':
-							return '600';
-						case 'Bold':
-							return 'bold';
-						default:
-							return '800';
-					}
-				}(),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$core$Basics_ops['++'],
-						_elm_lang$core$Basics$toString(style.size),
-						'px'),
-					_1: {
-						ctor: '::',
-						_0: function () {
-							var _p3 = style.typeface;
-							switch (_p3.ctor) {
-								case 'Serif':
-									return 'serif';
-								case 'Sansserif':
-									return 'sans-serif';
-								case 'Monospace':
-									return 'monospace';
-								default:
-									return _p3._0;
-							}
-						}(),
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		}
-	};
-	return _elm_lang$core$String$concat(
-		A2(_elm_lang$core$List$intersperse, ' ', spec));
-};
-var _timjs$elm_collage$Collage_Text$height = function (_p4) {
-	var _p5 = _p4;
-	return _elm_lang$core$Basics$toFloat(_p5._0.size);
-};
-var _timjs$elm_collage$Collage_Text$width = function (_p6) {
-	var _p7 = _p6;
-	return A2(
-		_timjs$elm_collage$Native_Text.width,
-		_timjs$elm_collage$Collage_Text$toCssFontSpec(_p7._0),
-		_p7._1);
-};
-var _timjs$elm_collage$Collage_Text$line = F2(
-	function (line, _p8) {
-		var _p9 = _p8;
-		return A2(
-			_timjs$elm_collage$Collage_Core$Chunk,
-			_elm_lang$core$Native_Utils.update(
-				_p9._0,
-				{line: line}),
-			_p9._1);
-	});
-var _timjs$elm_collage$Collage_Text$weight = F2(
-	function (weight, _p10) {
-		var _p11 = _p10;
-		return A2(
-			_timjs$elm_collage$Collage_Core$Chunk,
-			_elm_lang$core$Native_Utils.update(
-				_p11._0,
-				{weight: weight}),
-			_p11._1);
-	});
-var _timjs$elm_collage$Collage_Text$shape = F2(
-	function (shape, _p12) {
-		var _p13 = _p12;
-		return A2(
-			_timjs$elm_collage$Collage_Core$Chunk,
-			_elm_lang$core$Native_Utils.update(
-				_p13._0,
-				{shape: shape}),
-			_p13._1);
-	});
-var _timjs$elm_collage$Collage_Text$enormous = 27;
-var _timjs$elm_collage$Collage_Text$huge = 23;
-var _timjs$elm_collage$Collage_Text$large = 19;
-var _timjs$elm_collage$Collage_Text$normal = 16;
-var _timjs$elm_collage$Collage_Text$small = 13;
-var _timjs$elm_collage$Collage_Text$tiny = 11;
-var _timjs$elm_collage$Collage_Text$size = F2(
-	function (size, _p14) {
-		var _p15 = _p14;
-		return A2(
-			_timjs$elm_collage$Collage_Core$Chunk,
-			_elm_lang$core$Native_Utils.update(
-				_p15._0,
-				{size: size}),
-			_p15._1);
-	});
-var _timjs$elm_collage$Collage_Text$color = F2(
-	function (color, _p16) {
-		var _p17 = _p16;
-		return A2(
-			_timjs$elm_collage$Collage_Core$Chunk,
-			_elm_lang$core$Native_Utils.update(
-				_p17._0,
-				{color: color}),
-			_p17._1);
-	});
-var _timjs$elm_collage$Collage_Text$typeface = F2(
-	function (typeface, _p18) {
-		var _p19 = _p18;
-		return A2(
-			_timjs$elm_collage$Collage_Core$Chunk,
-			_elm_lang$core$Native_Utils.update(
-				_p19._0,
-				{typeface: typeface}),
-			_p19._1);
-	});
-var _timjs$elm_collage$Collage_Text$style = F2(
-	function (style, _p20) {
-		var _p21 = _p20;
-		return A2(_timjs$elm_collage$Collage_Core$Chunk, style, _p21._1);
-	});
-var _timjs$elm_collage$Collage_Text$Style = F6(
-	function (a, b, c, d, e, f) {
-		return {typeface: a, size: b, color: c, shape: d, weight: e, line: f};
-	});
-var _timjs$elm_collage$Collage_Text$Font = function (a) {
-	return {ctor: 'Font', _0: a};
-};
-var _timjs$elm_collage$Collage_Text$Monospace = {ctor: 'Monospace'};
-var _timjs$elm_collage$Collage_Text$Sansserif = {ctor: 'Sansserif'};
-var _timjs$elm_collage$Collage_Text$Serif = {ctor: 'Serif'};
-var _timjs$elm_collage$Collage_Text$Italic = {ctor: 'Italic'};
-var _timjs$elm_collage$Collage_Text$Slanted = {ctor: 'Slanted'};
-var _timjs$elm_collage$Collage_Text$SmallCaps = {ctor: 'SmallCaps'};
-var _timjs$elm_collage$Collage_Text$Upright = {ctor: 'Upright'};
-var _timjs$elm_collage$Collage_Text$Black = {ctor: 'Black'};
-var _timjs$elm_collage$Collage_Text$Bold = {ctor: 'Bold'};
-var _timjs$elm_collage$Collage_Text$SemiBold = {ctor: 'SemiBold'};
-var _timjs$elm_collage$Collage_Text$Medium = {ctor: 'Medium'};
-var _timjs$elm_collage$Collage_Text$Regular = {ctor: 'Regular'};
-var _timjs$elm_collage$Collage_Text$Light = {ctor: 'Light'};
-var _timjs$elm_collage$Collage_Text$Thin = {ctor: 'Thin'};
-var _timjs$elm_collage$Collage_Text$Expanded = {ctor: 'Expanded'};
-var _timjs$elm_collage$Collage_Text$Normal = {ctor: 'Normal'};
-var _timjs$elm_collage$Collage_Text$Condensed = {ctor: 'Condensed'};
-var _timjs$elm_collage$Collage_Text$Through = {ctor: 'Through'};
-var _timjs$elm_collage$Collage_Text$Over = {ctor: 'Over'};
-var _timjs$elm_collage$Collage_Text$Under = {ctor: 'Under'};
-var _timjs$elm_collage$Collage_Text$None = {ctor: 'None'};
-var _timjs$elm_collage$Collage_Text$defaultStyle = {typeface: _timjs$elm_collage$Collage_Text$Sansserif, size: _timjs$elm_collage$Collage_Text$normal, color: _elm_lang$core$Color$black, shape: _timjs$elm_collage$Collage_Text$Upright, weight: _timjs$elm_collage$Collage_Text$Regular, line: _timjs$elm_collage$Collage_Text$None};
-var _timjs$elm_collage$Collage_Text$fromString = _timjs$elm_collage$Collage_Core$Chunk(_timjs$elm_collage$Collage_Text$defaultStyle);
-var _timjs$elm_collage$Collage_Text$empty = _timjs$elm_collage$Collage_Text$fromString('');
-
-var _timjs$elm_collage$Collage$ultrathick = 8.0;
-var _timjs$elm_collage$Collage$verythick = 6.0;
-var _timjs$elm_collage$Collage$thick = 4.0;
-var _timjs$elm_collage$Collage$semithick = 3.0;
-var _timjs$elm_collage$Collage$thin = 2.0;
-var _timjs$elm_collage$Collage$verythin = 1.0;
-var _timjs$elm_collage$Collage$ultrathin = 0.5;
-var _timjs$elm_collage$Collage$transparent = _timjs$elm_collage$Collage_Core$Transparent;
-var _timjs$elm_collage$Collage$uniform = _timjs$elm_collage$Collage_Core$Uniform;
-var _timjs$elm_collage$Collage$html = function (dims) {
-	return function (_p0) {
-		return _timjs$elm_collage$Collage_Core$collage(
-			A2(_timjs$elm_collage$Collage_Core$Html, dims, _p0));
-	};
-};
-var _timjs$elm_collage$Collage$image = function (dims) {
-	return function (_p1) {
-		return _timjs$elm_collage$Collage_Core$collage(
-			A2(_timjs$elm_collage$Collage_Core$Image, dims, _p1));
-	};
-};
-var _timjs$elm_collage$Collage$rendered = function (text) {
-	return _timjs$elm_collage$Collage_Core$collage(
-		A2(
-			_timjs$elm_collage$Collage_Core$Text,
-			{
-				ctor: '_Tuple2',
-				_0: _timjs$elm_collage$Collage_Text$width(text),
-				_1: _timjs$elm_collage$Collage_Text$height(text)
-			},
-			text));
-};
-var _timjs$elm_collage$Collage$close = _timjs$elm_collage$Collage_Core$Loop;
-var _timjs$elm_collage$Collage$traced = F2(
-	function (style, path) {
-		return _timjs$elm_collage$Collage_Core$collage(
-			A2(_timjs$elm_collage$Collage_Core$Path, style, path));
-	});
-var _timjs$elm_collage$Collage$path = _timjs$elm_collage$Collage_Core$Polyline;
-var _timjs$elm_collage$Collage$segment = F2(
-	function (a, b) {
-		return _timjs$elm_collage$Collage$path(
-			{
-				ctor: '::',
-				_0: a,
-				_1: {
-					ctor: '::',
-					_0: b,
-					_1: {ctor: '[]'}
-				}
-			});
-	});
-var _timjs$elm_collage$Collage$line = function (l) {
-	return _timjs$elm_collage$Collage$path(
-		{
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: (0 - l) / 2, _1: 0},
-			_1: {
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: l / 2, _1: 0},
-				_1: {ctor: '[]'}
-			}
-		});
-};
-var _timjs$elm_collage$Collage$styled = function (style) {
-	return function (_p2) {
-		return _timjs$elm_collage$Collage_Core$collage(
-			A2(_timjs$elm_collage$Collage_Core$Shape, style, _p2));
-	};
-};
-var _timjs$elm_collage$Collage$outlined = function (line) {
-	return _timjs$elm_collage$Collage$styled(
-		{ctor: '_Tuple2', _0: _timjs$elm_collage$Collage$transparent, _1: line});
-};
-var _timjs$elm_collage$Collage$circle = _timjs$elm_collage$Collage_Core$Circle;
-var _timjs$elm_collage$Collage$ellipse = _timjs$elm_collage$Collage_Core$Ellipse;
-var _timjs$elm_collage$Collage$roundedRectangle = _timjs$elm_collage$Collage_Core$Rectangle;
-var _timjs$elm_collage$Collage$roundedSquare = function (size) {
-	return A2(_timjs$elm_collage$Collage$roundedRectangle, size, size);
-};
-var _timjs$elm_collage$Collage$rectangle = F2(
-	function (w, h) {
-		return A3(_timjs$elm_collage$Collage$roundedRectangle, w, h, 0);
-	});
-var _timjs$elm_collage$Collage$square = function (size) {
-	return A2(_timjs$elm_collage$Collage$rectangle, size, size);
-};
-var _timjs$elm_collage$Collage$polygon = _timjs$elm_collage$Collage_Core$Polygon;
-var _timjs$elm_collage$Collage$ngon = F2(
-	function (n, r) {
-		var m = _elm_lang$core$Basics$toFloat(n);
-		var t = (2 * _elm_lang$core$Basics$pi) / m;
-		var f = function (i) {
-			return {
-				ctor: '_Tuple2',
-				_0: r * _elm_lang$core$Basics$cos(
-					(t * _elm_lang$core$Basics$toFloat(i)) + (_elm_lang$core$Basics$pi / 2)),
-				_1: r * _elm_lang$core$Basics$sin(
-					(t * _elm_lang$core$Basics$toFloat(i)) + (_elm_lang$core$Basics$pi / 2))
-			};
-		};
-		return _timjs$elm_collage$Collage$polygon(
-			A2(
-				_elm_lang$core$List$map,
-				f,
-				A2(_elm_lang$core$List$range, 0, n)));
-	});
-var _timjs$elm_collage$Collage$triangle = function (b) {
-	var x = b / 2;
-	var y = (_elm_lang$core$Basics$sqrt(3) / 2) * x;
-	return _timjs$elm_collage$Collage$polygon(
-		{
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 0 - x, _1: 0 - y},
-			_1: {
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: x, _1: 0 - y},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 0, _1: y},
-					_1: {ctor: '[]'}
-				}
-			}
-		});
-};
-var _timjs$elm_collage$Collage$opacity = F2(
-	function (a, collage) {
-		return _elm_lang$core$Native_Utils.update(
-			collage,
-			{opacity: a});
-	});
-var _timjs$elm_collage$Collage$rotate = F2(
-	function (t, collage) {
-		return _elm_lang$core$Native_Utils.update(
-			collage,
-			{rotation: collage.rotation + t});
-	});
-var _timjs$elm_collage$Collage$scaleXY = F2(
-	function (_p3, collage) {
-		var _p4 = _p3;
-		var _p5 = collage.scale;
-		var sx0 = _p5._0;
-		var sy0 = _p5._1;
-		return _elm_lang$core$Native_Utils.update(
-			collage,
-			{
-				scale: {ctor: '_Tuple2', _0: sx0 * _p4._0, _1: sy0 * _p4._1}
-			});
-	});
-var _timjs$elm_collage$Collage$scaleY = F2(
-	function (s, collage) {
-		return A2(
-			_timjs$elm_collage$Collage$scaleXY,
-			{ctor: '_Tuple2', _0: 1, _1: s},
-			collage);
-	});
-var _timjs$elm_collage$Collage$scaleX = F2(
-	function (s, collage) {
-		return A2(
-			_timjs$elm_collage$Collage$scaleXY,
-			{ctor: '_Tuple2', _0: s, _1: 1},
-			collage);
-	});
-var _timjs$elm_collage$Collage$scale = F2(
-	function (s, collage) {
-		return A2(
-			_timjs$elm_collage$Collage$scaleXY,
-			{ctor: '_Tuple2', _0: s, _1: s},
-			collage);
-	});
-var _timjs$elm_collage$Collage$shiftY = F2(
-	function (dy, collage) {
-		var _p6 = collage.shift;
-		var x = _p6._0;
-		var y = _p6._1;
-		return _elm_lang$core$Native_Utils.update(
-			collage,
-			{
-				shift: {ctor: '_Tuple2', _0: x, _1: y + dy}
-			});
-	});
-var _timjs$elm_collage$Collage$shiftX = F2(
-	function (dx, collage) {
-		var _p7 = collage.shift;
-		var x = _p7._0;
-		var y = _p7._1;
-		return _elm_lang$core$Native_Utils.update(
-			collage,
-			{
-				shift: {ctor: '_Tuple2', _0: x + dx, _1: y}
-			});
-	});
-var _timjs$elm_collage$Collage$shift = F2(
-	function (_p8, collage) {
-		var _p9 = _p8;
-		var _p10 = collage.shift;
-		var x = _p10._0;
-		var y = _p10._1;
-		return _elm_lang$core$Native_Utils.update(
-			collage,
-			{
-				shift: {ctor: '_Tuple2', _0: x + _p9._0, _1: y + _p9._1}
-			});
-	});
-var _timjs$elm_collage$Collage$group = function (_p11) {
-	return _timjs$elm_collage$Collage_Core$collage(
-		_timjs$elm_collage$Collage_Core$Group(_p11));
-};
-var _timjs$elm_collage$Collage$opposite = function (_p12) {
-	var _p13 = _p12;
-	return {ctor: '_Tuple2', _0: 0 - _p13._0, _1: 0 - _p13._1};
-};
-var _timjs$elm_collage$Collage$LineStyle = F6(
-	function (a, b, c, d, e, f) {
-		return {fill: a, thickness: b, cap: c, join: d, dashPattern: e, dashPhase: f};
-	});
-var _timjs$elm_collage$Collage$Padded = {ctor: 'Padded'};
-var _timjs$elm_collage$Collage$Round = {ctor: 'Round'};
-var _timjs$elm_collage$Collage$Flat = {ctor: 'Flat'};
-var _timjs$elm_collage$Collage$Clipped = {ctor: 'Clipped'};
-var _timjs$elm_collage$Collage$Sharp = {ctor: 'Sharp'};
-var _timjs$elm_collage$Collage$defaultLineStyle = {
-	fill: _timjs$elm_collage$Collage$uniform(_elm_lang$core$Color$black),
-	thickness: _timjs$elm_collage$Collage$thin,
-	cap: _timjs$elm_collage$Collage$Flat,
-	join: _timjs$elm_collage$Collage$Sharp,
-	dashPattern: {ctor: '[]'},
-	dashPhase: 0
-};
-var _timjs$elm_collage$Collage$broken = F3(
-	function (dash, thickness, fill) {
-		return _elm_lang$core$Native_Utils.update(
-			_timjs$elm_collage$Collage$defaultLineStyle,
-			{fill: fill, thickness: thickness, dashPattern: dash});
-	});
-var _timjs$elm_collage$Collage$solid = _timjs$elm_collage$Collage$broken(
-	{ctor: '[]'});
-var _timjs$elm_collage$Collage$invisible = A2(_timjs$elm_collage$Collage$solid, 0, _timjs$elm_collage$Collage$transparent);
-var _timjs$elm_collage$Collage$filled = function (fill) {
-	return _timjs$elm_collage$Collage$styled(
-		{ctor: '_Tuple2', _0: fill, _1: _timjs$elm_collage$Collage$invisible});
-};
-var _timjs$elm_collage$Collage$dot = function (thickness) {
-	var d = _elm_lang$core$Basics$round(thickness);
-	return A2(
-		_timjs$elm_collage$Collage$broken,
-		{
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: d, _1: d},
-			_1: {ctor: '[]'}
-		},
-		thickness);
-};
-var _timjs$elm_collage$Collage$dash = function (thickness) {
-	var d = _elm_lang$core$Basics$round(thickness);
-	return A2(
-		_timjs$elm_collage$Collage$broken,
-		{
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: d * 5, _1: d * 2},
-			_1: {ctor: '[]'}
-		},
-		thickness);
-};
-var _timjs$elm_collage$Collage$longdash = function (thickness) {
-	var d = _elm_lang$core$Basics$round(thickness);
-	return A2(
-		_timjs$elm_collage$Collage$broken,
-		{
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: d * 12, _1: d * 6},
-			_1: {ctor: '[]'}
-		},
-		thickness);
-};
-var _timjs$elm_collage$Collage$dashdot = function (thickness) {
-	var d = _elm_lang$core$Basics$round(thickness);
-	return A2(
-		_timjs$elm_collage$Collage$broken,
-		{
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: d * 5, _1: d},
-			_1: {
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: d, _1: d},
-				_1: {ctor: '[]'}
-			}
-		},
-		thickness);
-};
-var _timjs$elm_collage$Collage$Smooth = {ctor: 'Smooth'};
-
-
-var _timjs$elm_collage$Collage_Layout$names = function () {
-	var recurse = F2(
-		function (collage, res) {
-			var _p0 = collage.name;
-			if (_p0.ctor === 'Just') {
-				return A3(_elm_lang$core$Dict$insert, _p0._0, collage, res);
+			var a = ls.a;
+			var r1 = ls.b;
+			if (!r1.b) {
+				return A2(fn, a, acc);
 			} else {
-				return res;
-			}
-		});
-	return A2(_timjs$elm_collage$Collage_Core$foldr, recurse, _elm_lang$core$Dict$empty);
-}();
-var _timjs$elm_collage$Collage_Layout$locate_ = F3(
-	function (string, anchor, $this) {
-		var visited = A2(_elm_lang$core$Debug$log, 'Elm Collage: visited', string);
-		var recurse = function (queue) {
-			recurse:
-			while (true) {
-				var _p1 = queue;
-				if (_p1.ctor === '[]') {
-					return _elm_lang$core$Maybe$Nothing;
+				var b = r1.a;
+				var r2 = r1.b;
+				if (!r2.b) {
+					return A2(
+						fn,
+						a,
+						A2(fn, b, acc));
 				} else {
-					var _p4 = _p1._1;
-					var _p3 = _p1._0;
-					var update = _elm_lang$core$List$map(
-						_timjs$elm_collage$Collage_Core$combine(_p3));
-					var match = A2(
-						_elm_community$maybe_extra$Maybe_Extra_ops['?'],
-						A2(
-							_elm_lang$core$Maybe$map,
-							F2(
-								function (x, y) {
-									return _elm_lang$core$Native_Utils.eq(x, y);
-								})(string),
-							_p3.name),
-						false);
-					if (match) {
-						return _elm_lang$core$Maybe$Just(
-							anchor(_p3));
+					var c = r2.a;
+					var r3 = r2.b;
+					if (!r3.b) {
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(fn, c, acc)));
 					} else {
-						var _p2 = _p3.basic;
-						switch (_p2.ctor) {
-							case 'Group':
-								var _v3 = A2(
-									_elm_lang$core$Basics_ops['++'],
-									_p4,
-									update(_p2._0));
-								queue = _v3;
-								continue recurse;
-							case 'Subcollage':
-								var _v4 = A2(
-									_elm_lang$core$Basics_ops['++'],
-									_p4,
-									update(
-										{
-											ctor: '::',
-											_0: _p2._0,
-											_1: {
-												ctor: '::',
-												_0: _p2._1,
-												_1: {ctor: '[]'}
-											}
-										}));
-								queue = _v4;
-								continue recurse;
-							default:
-								var _v5 = _p4;
-								queue = _v5;
-								continue recurse;
-						}
+						var d = r3.a;
+						var r4 = r3.b;
+						var res = (ctr > 500) ? A3(
+							elm$core$List$foldl,
+							fn,
+							acc,
+							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(
+									fn,
+									c,
+									A2(fn, d, res))));
 					}
 				}
 			}
-		};
-		return recurse(
-			{
-				ctor: '::',
-				_0: $this,
-				_1: {ctor: '[]'}
-			});
+		}
 	});
-var _timjs$elm_collage$Collage_Layout$locate = F3(
-	function (string, anchor, $this) {
-		var recurse = function (collage) {
-			var firstOf = A2(
-				_timjs$elm_collage$Helpers$foldrLazy,
-				function (_p5) {
-					return _elm_community$maybe_extra$Maybe_Extra$orLazy(
-						recurse(_p5));
-				},
-				_elm_lang$core$Maybe$Nothing);
-			var match = A2(
-				_elm_community$maybe_extra$Maybe_Extra_ops['?'],
-				A2(
-					_elm_lang$core$Maybe$map,
-					F2(
-						function (x, y) {
-							return _elm_lang$core$Native_Utils.eq(x, y);
-						})(string),
-					collage.name),
-				false);
-			return match ? _elm_lang$core$Maybe$Just(
-				anchor(collage)) : A2(
-				_elm_lang$core$Maybe$map,
-				_timjs$elm_collage$Collage_Core$apply(collage),
-				function () {
-					var _p6 = collage.basic;
-					switch (_p6.ctor) {
-						case 'Group':
-							return firstOf(_p6._0);
-						case 'Subcollage':
-							return firstOf(
-								{
-									ctor: '::',
-									_0: _p6._0,
-									_1: {
-										ctor: '::',
-										_0: _p6._1,
-										_1: {ctor: '[]'}
-									}
-								});
-						default:
-							return _elm_lang$core$Maybe$Nothing;
-					}
-				}());
-		};
-		var _p7 = recurse($this);
-		if (_p7.ctor === 'Nothing') {
-			return A2(
-				_elm_lang$core$Debug$log,
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'Elm Collage: could not find \'',
-					A2(_elm_lang$core$Basics_ops['++'], string, '\'')),
-				_elm_lang$core$Maybe$Nothing);
+var elm$core$List$foldr = F3(
+	function (fn, acc, ls) {
+		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
+	});
+var elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
 		} else {
-			return _p7;
+			return A3(elm$core$List$foldr, elm$core$List$cons, ys, xs);
 		}
 	});
-var _timjs$elm_collage$Collage_Layout$name = F2(
-	function (string, collage) {
-		return _elm_lang$core$Native_Utils.update(
-			collage,
-			{
-				name: _elm_lang$core$Maybe$Just(string)
-			});
-	});
-var _timjs$elm_collage$Collage_Layout$align = F2(
-	function (anchor, collage) {
-		return A2(
-			_timjs$elm_collage$Collage$shift,
-			_timjs$elm_collage$Collage$opposite(
-				anchor(collage)),
-			collage);
-	});
-var _timjs$elm_collage$Collage_Layout$impose = F2(
-	function (front, back) {
-		return _timjs$elm_collage$Collage_Core$collage(
-			A2(_timjs$elm_collage$Collage_Core$Subcollage, front, back));
-	});
-var _timjs$elm_collage$Collage_Layout$connect = F3(
-	function (locations, line, collage) {
-		var positions = _elm_community$maybe_extra$Maybe_Extra$values(
-			A2(
-				_elm_lang$core$List$map,
-				function (_p8) {
-					var _p9 = _p8;
-					return A3(_timjs$elm_collage$Collage_Layout$locate, _p9._0, _p9._1, collage);
-				},
-				locations));
-		return A2(
-			_timjs$elm_collage$Collage_Layout$impose,
-			A2(
-				_timjs$elm_collage$Collage$traced,
-				line,
-				_timjs$elm_collage$Collage$path(positions)),
-			collage);
-	});
-var _timjs$elm_collage$Collage_Layout$showOrigin = function (collage) {
-	var origin = A2(
-		_timjs$elm_collage$Collage_Layout$name,
-		'_origin_',
-		A2(
-			_timjs$elm_collage$Collage$filled,
-			_timjs$elm_collage$Collage$uniform(_elm_lang$core$Color$red),
-			_timjs$elm_collage$Collage$circle(3)));
-	return A2(_timjs$elm_collage$Collage_Layout$impose, origin, collage);
+var elm$core$List$concat = function (lists) {
+	return A3(elm$core$List$foldr, elm$core$List$append, _List_Nil, lists);
 };
-var _timjs$elm_collage$Collage_Layout$stack = _timjs$elm_collage$Collage$group;
-var _timjs$elm_collage$Collage_Layout$at = F3(
-	function (anchor, fore, back) {
-		return _timjs$elm_collage$Collage_Layout$stack(
-			{
-				ctor: '::',
-				_0: A2(
-					_timjs$elm_collage$Collage$shift,
-					anchor(back),
-					fore),
-				_1: {
-					ctor: '::',
-					_0: back,
-					_1: {ctor: '[]'}
-				}
-			});
+var elm$core$List$map = F2(
+	function (f, xs) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return A2(
+						elm$core$List$cons,
+						f(x),
+						acc);
+				}),
+			_List_Nil,
+			xs);
 	});
-var _timjs$elm_collage$Collage_Layout$spacer = F2(
-	function (w, h) {
-		return A2(
-			_timjs$elm_collage$Collage$styled,
-			{ctor: '_Tuple2', _0: _timjs$elm_collage$Collage$transparent, _1: _timjs$elm_collage$Collage$invisible},
-			A2(_timjs$elm_collage$Collage$rectangle, w, h));
+var elm$core$Basics$max = F2(
+	function (x, y) {
+		return (_Utils_cmp(x, y) > 0) ? x : y;
 	});
-var _timjs$elm_collage$Collage_Layout$empty = A2(_timjs$elm_collage$Collage_Layout$spacer, 0, 0);
-var _timjs$elm_collage$Collage_Layout$handlePoints = function (thickness) {
-	var thicken = function (_p10) {
-		var _p11 = _p10;
-		var _p13 = _p11._1;
-		var _p12 = _p11._0;
+var elm$core$List$maximum = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(
+			A3(elm$core$List$foldl, elm$core$Basics$max, x, xs));
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var elm$core$Basics$lt = _Utils_lt;
+var elm$core$Basics$min = F2(
+	function (x, y) {
+		return (_Utils_cmp(x, y) < 0) ? x : y;
+	});
+var elm$core$List$minimum = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(
+			A3(elm$core$List$foldl, elm$core$Basics$min, x, xs));
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var elm$core$List$unzip = function (pairs) {
+	var step = F2(
+		function (_n0, _n1) {
+			var x = _n0.a;
+			var y = _n0.b;
+			var xs = _n1.a;
+			var ys = _n1.b;
+			return _Utils_Tuple2(
+				A2(elm$core$List$cons, x, xs),
+				A2(elm$core$List$cons, y, ys));
+		});
+	return A3(
+		elm$core$List$foldr,
+		step,
+		_Utils_Tuple2(_List_Nil, _List_Nil),
+		pairs);
+};
+var elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var timjs$elm_collage$Collage$Flat = {$: 'Flat'};
+var timjs$elm_collage$Collage$Core$Path = F2(
+	function (a, b) {
+		return {$: 'Path', a: a, b: b};
+	});
+var elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var elm$core$Basics$cos = _Basics_cos;
+var elm$core$Basics$sin = _Basics_sin;
+var elm$core$Basics$sub = _Basics_sub;
+var timjs$elm_collage$Collage$Core$apply = function (_n0) {
+	var shift = _n0.shift;
+	var scale = _n0.scale;
+	var rotation = _n0.rotation;
+	var rotated = function (_n5) {
+		var x = _n5.a;
+		var y = _n5.b;
+		var s = elm$core$Basics$sin(rotation);
+		var c = elm$core$Basics$cos(rotation);
+		return _Utils_Tuple2((c * x) - (s * y), (s * x) + (c * y));
+	};
+	var _n1 = scale;
+	var sx = _n1.a;
+	var sy = _n1.b;
+	var scaled = function (_n4) {
+		var x = _n4.a;
+		var y = _n4.b;
+		return _Utils_Tuple2(sx * x, sy * y);
+	};
+	var _n2 = shift;
+	var dx = _n2.a;
+	var dy = _n2.b;
+	var shifted = function (_n3) {
+		var x = _n3.a;
+		var y = _n3.b;
+		return _Utils_Tuple2(x + dx, y + dy);
+	};
+	return A2(
+		elm$core$Basics$composeL,
+		A2(elm$core$Basics$composeL, shifted, scaled),
+		rotated);
+};
+var elm$core$Basics$fdiv = _Basics_fdiv;
+var timjs$elm_collage$Collage$Layout$handlePoints = function (thickness) {
+	var thicken = function (_n0) {
+		var x = _n0.a;
+		var y = _n0.b;
 		var t = thickness / 2;
-		return {
-			ctor: '_Tuple2',
-			_0: (_elm_lang$core$Native_Utils.cmp(_p12, 0) < 0) ? (_p12 - t) : (_p12 + t),
-			_1: (_elm_lang$core$Native_Utils.cmp(_p13, 0) < 0) ? (_p13 - t) : (_p13 + t)
-		};
+		return _Utils_Tuple2(
+			(x < 0) ? (x - t) : (x + t),
+			(y < 0) ? (y - t) : (y + t));
 	};
-	return _elm_lang$core$List$map(thicken);
+	return elm$core$List$map(thicken);
 };
-var _timjs$elm_collage$Collage_Layout$handleBox = F2(
-	function (thickness, _p14) {
-		var _p15 = _p14;
-		var y = _p15._1 / 2;
-		var x = _p15._0 / 2;
+var timjs$elm_collage$Collage$Layout$handleBox = F2(
+	function (thickness, _n0) {
+		var w = _n0.a;
+		var h = _n0.b;
+		var y = h / 2;
+		var x = w / 2;
 		return A2(
-			_timjs$elm_collage$Collage_Layout$handlePoints,
+			timjs$elm_collage$Collage$Layout$handlePoints,
 			thickness,
-			{
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 0 - x, _1: 0 - y},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: x, _1: 0 - y},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: x, _1: y},
-						_1: {
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 0 - x, _1: y},
-							_1: {ctor: '[]'}
-						}
-					}
-				}
-			});
+			_List_fromArray(
+				[
+					_Utils_Tuple2(-x, -y),
+					_Utils_Tuple2(x, -y),
+					_Utils_Tuple2(x, y),
+					_Utils_Tuple2(-x, y)
+				]));
 	});
-var _timjs$elm_collage$Collage_Layout$unpack = function (_p16) {
-	var _p17 = _p16;
-	var _p21 = _p17.up;
-	var _p20 = _p17.right;
-	var _p19 = _p17.left;
-	var _p18 = _p17.down;
+var timjs$elm_collage$Collage$Layout$unpack = function (_n0) {
+	var toTop = _n0.toTop;
+	var toBottom = _n0.toBottom;
+	var toRight = _n0.toRight;
+	var toLeft = _n0.toLeft;
+	return _List_fromArray(
+		[
+			_Utils_Tuple2(-toLeft, -toBottom),
+			_Utils_Tuple2(toRight, -toBottom),
+			_Utils_Tuple2(toRight, toTop),
+			_Utils_Tuple2(-toLeft, toTop)
+		]);
+};
+var timjs$elm_collage$Collage$Layout$distances = function (col) {
+	var points = timjs$elm_collage$Collage$Layout$handleBasic(col.basic);
+	var _n8 = elm$core$List$unzip(
+		A2(
+			elm$core$List$map,
+			timjs$elm_collage$Collage$Core$apply(col),
+			points));
+	var xs = _n8.a;
+	var ys = _n8.b;
 	return {
-		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 0 - _p19, _1: 0 - _p18},
-		_1: {
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: _p20, _1: 0 - _p18},
-			_1: {
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: _p20, _1: _p21},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 0 - _p19, _1: _p21},
-					_1: {ctor: '[]'}
-				}
-			}
-		}
+		toBottom: -A2(
+			elm$core$Maybe$withDefault,
+			0,
+			elm$core$List$minimum(ys)),
+		toLeft: -A2(
+			elm$core$Maybe$withDefault,
+			0,
+			elm$core$List$minimum(xs)),
+		toRight: A2(
+			elm$core$Maybe$withDefault,
+			0,
+			elm$core$List$maximum(xs)),
+		toTop: A2(
+			elm$core$Maybe$withDefault,
+			0,
+			elm$core$List$maximum(ys))
 	};
 };
-var _timjs$elm_collage$Collage_Layout$handleBasic = function (basic) {
+var timjs$elm_collage$Collage$Layout$handleBasic = function (basic) {
 	handleBasic:
 	while (true) {
-		var _p22 = basic;
-		switch (_p22.ctor) {
+		switch (basic.$) {
 			case 'Shape':
-				switch (_p22._1.ctor) {
+				switch (basic.b.$) {
 					case 'Circle':
-						var d = 2 * _p22._1._0;
+						var _n1 = basic.a;
+						var thickness = _n1.b.thickness;
+						var r = basic.b.a;
+						var d = 2 * r;
 						return A2(
-							_timjs$elm_collage$Collage_Layout$handleBox,
-							_p22._0._1.thickness,
-							{ctor: '_Tuple2', _0: d, _1: d});
+							timjs$elm_collage$Collage$Layout$handleBox,
+							thickness,
+							_Utils_Tuple2(d, d));
 					case 'Ellipse':
+						var _n2 = basic.a;
+						var thickness = _n2.b.thickness;
+						var _n3 = basic.b;
+						var rx = _n3.a;
+						var ry = _n3.b;
 						return A2(
-							_timjs$elm_collage$Collage_Layout$handleBox,
-							_p22._0._1.thickness,
-							{ctor: '_Tuple2', _0: 2 * _p22._1._0, _1: 2 * _p22._1._1});
+							timjs$elm_collage$Collage$Layout$handleBox,
+							thickness,
+							_Utils_Tuple2(2 * rx, 2 * ry));
 					case 'Rectangle':
+						var _n4 = basic.a;
+						var thickness = _n4.b.thickness;
+						var _n5 = basic.b;
+						var w = _n5.a;
+						var h = _n5.b;
 						return A2(
-							_timjs$elm_collage$Collage_Layout$handleBox,
-							_p22._0._1.thickness,
-							{ctor: '_Tuple2', _0: _p22._1._0, _1: _p22._1._1});
+							timjs$elm_collage$Collage$Layout$handleBox,
+							thickness,
+							_Utils_Tuple2(w, h));
 					case 'Polygon':
-						return A2(_timjs$elm_collage$Collage_Layout$handlePoints, _p22._0._1.thickness, _p22._1._0);
+						var _n6 = basic.a;
+						var thickness = _n6.b.thickness;
+						var ps = basic.b.a;
+						return A2(timjs$elm_collage$Collage$Layout$handlePoints, thickness, ps);
 					default:
-						var _v13 = A2(_timjs$elm_collage$Collage_Core$Path, _p22._0._1, _p22._1._0);
-						basic = _v13;
+						var _n7 = basic.a;
+						var line = _n7.b;
+						var path = basic.b.a;
+						var $temp$basic = A2(timjs$elm_collage$Collage$Core$Path, line, path);
+						basic = $temp$basic;
 						continue handleBasic;
 				}
 			case 'Path':
+				var thickness = basic.a.thickness;
+				var cap = basic.a.cap;
+				var ps = basic.b.a;
 				return A2(
-					_timjs$elm_collage$Collage_Layout$handlePoints,
-					_elm_lang$core$Native_Utils.eq(_p22._0.cap, _timjs$elm_collage$Collage$Flat) ? 0 : _p22._0.thickness,
-					_p22._1._0);
+					timjs$elm_collage$Collage$Layout$handlePoints,
+					_Utils_eq(cap, timjs$elm_collage$Collage$Flat) ? 0 : thickness,
+					ps);
 			case 'Text':
-				return A2(_timjs$elm_collage$Collage_Layout$handleBox, 0, _p22._0);
+				var dims = basic.a;
+				return A2(timjs$elm_collage$Collage$Layout$handleBox, 0, dims);
 			case 'Image':
-				return A2(_timjs$elm_collage$Collage_Layout$handleBox, 0, _p22._0);
+				var dims = basic.a;
+				return A2(timjs$elm_collage$Collage$Layout$handleBox, 0, dims);
 			case 'Html':
-				return A2(_timjs$elm_collage$Collage_Layout$handleBox, 0, _p22._0);
+				var dims = basic.a;
+				return A2(timjs$elm_collage$Collage$Layout$handleBox, 0, dims);
 			case 'Group':
+				var cols = basic.a;
 				return A2(
-					_timjs$elm_collage$Collage_Layout$handlePoints,
+					timjs$elm_collage$Collage$Layout$handlePoints,
 					0,
-					_elm_lang$core$List$concat(
+					elm$core$List$concat(
 						A2(
-							_elm_lang$core$List$map,
-							function (_p23) {
-								return _timjs$elm_collage$Collage_Layout$unpack(
-									_timjs$elm_collage$Collage_Layout$distances(_p23));
-							},
-							_p22._0)));
+							elm$core$List$map,
+							A2(elm$core$Basics$composeR, timjs$elm_collage$Collage$Layout$distances, timjs$elm_collage$Collage$Layout$unpack),
+							cols)));
 			default:
+				var back = basic.b;
 				return A2(
-					_timjs$elm_collage$Collage_Layout$handlePoints,
+					timjs$elm_collage$Collage$Layout$handlePoints,
 					0,
-					_timjs$elm_collage$Collage_Layout$unpack(
-						_timjs$elm_collage$Collage_Layout$distances(_p22._1)));
+					timjs$elm_collage$Collage$Layout$unpack(
+						timjs$elm_collage$Collage$Layout$distances(back)));
 		}
 	}
 };
-var _timjs$elm_collage$Collage_Layout$distances = function (collage) {
-	var points = _timjs$elm_collage$Collage_Layout$handleBasic(collage.basic);
-	var _p24 = _elm_lang$core$List$unzip(
-		A2(
-			_elm_lang$core$List$map,
-			_timjs$elm_collage$Collage_Core$apply(collage),
-			points));
-	var xs = _p24._0;
-	var ys = _p24._1;
+var timjs$elm_collage$Collage$Layout$bottom = function (col) {
+	var _n0 = timjs$elm_collage$Collage$Layout$distances(col);
+	var toBottom = _n0.toBottom;
+	return _Utils_Tuple2(0, -toBottom);
+};
+var elm$core$Basics$apL = F2(
+	function (f, x) {
+		return f(x);
+	});
+var elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return elm$core$Maybe$Nothing;
+		}
+	});
+var timjs$elm_collage$Helpers$foldrLazy = F3(
+	function (f, acc, list) {
+		if (!list.b) {
+			return acc;
+		} else {
+			var x = list.a;
+			var xs = list.b;
+			return A2(
+				f,
+				x,
+				function (_n1) {
+					return A3(timjs$elm_collage$Helpers$foldrLazy, f, acc, xs);
+				});
+		}
+	});
+var timjs$elm_collage$Helpers$orLazy = F2(
+	function (ma, fmb) {
+		if (ma.$ === 'Nothing') {
+			return fmb(_Utils_Tuple0);
+		} else {
+			return ma;
+		}
+	});
+var timjs$elm_collage$Collage$Layout$locate = F3(
+	function (string, anchor, _this) {
+		var recurse = function (col) {
+			var match = A2(
+				elm$core$Maybe$withDefault,
+				false,
+				A2(
+					elm$core$Maybe$map,
+					elm$core$Basics$eq(string),
+					col.name));
+			var firstOf = A2(
+				timjs$elm_collage$Helpers$foldrLazy,
+				A2(elm$core$Basics$composeL, timjs$elm_collage$Helpers$orLazy, recurse),
+				elm$core$Maybe$Nothing);
+			return match ? elm$core$Maybe$Just(
+				anchor(col)) : A2(
+				elm$core$Maybe$map,
+				timjs$elm_collage$Collage$Core$apply(col),
+				function () {
+					var _n0 = col.basic;
+					switch (_n0.$) {
+						case 'Group':
+							var cols = _n0.a;
+							return firstOf(cols);
+						case 'Subcollage':
+							var fore = _n0.a;
+							var back = _n0.b;
+							return firstOf(
+								_List_fromArray(
+									[fore, back]));
+						default:
+							return elm$core$Maybe$Nothing;
+					}
+				}());
+		};
+		return recurse(_this);
+	});
+var author$project$Diagram$getBlock = F3(
+	function (collage, level, i) {
+		return A3(
+			timjs$elm_collage$Collage$Layout$locate,
+			A3(author$project$Diagram$blockName, 'block', level, i),
+			timjs$elm_collage$Collage$Layout$bottom,
+			collage);
+	});
+var timjs$elm_collage$Collage$Layout$left = function (col) {
+	var _n0 = timjs$elm_collage$Collage$Layout$distances(col);
+	var toLeft = _n0.toLeft;
+	return _Utils_Tuple2(-toLeft, 0);
+};
+var author$project$Diagram$getDesc = F3(
+	function (collage, level, i) {
+		return A3(
+			timjs$elm_collage$Collage$Layout$locate,
+			A3(author$project$Diagram$blockName, 'desc', level, i),
+			timjs$elm_collage$Collage$Layout$left,
+			collage);
+	});
+var the_sett$elm_color$Color$Color = F4(
+	function (red, green, blue, alpha) {
+		return {alpha: alpha, blue: blue, green: green, red: red};
+	});
+var the_sett$elm_color$Color$rgba = the_sett$elm_color$Color$Color;
+var the_sett$elm_color$Color$blue = A4(the_sett$elm_color$Color$rgba, 52, 101, 164, 1);
+var timjs$elm_collage$Collage$Core$Shape = F2(
+	function (a, b) {
+		return {$: 'Shape', a: a, b: b};
+	});
+var timjs$elm_collage$Collage$Core$collage = function (basic) {
 	return {
-		up: A2(
-			_elm_community$maybe_extra$Maybe_Extra_ops['?'],
-			_elm_lang$core$List$maximum(ys),
-			0),
-		down: 0 - A2(
-			_elm_community$maybe_extra$Maybe_Extra_ops['?'],
-			_elm_lang$core$List$minimum(ys),
-			0),
-		right: A2(
-			_elm_community$maybe_extra$Maybe_Extra_ops['?'],
-			_elm_lang$core$List$maximum(xs),
-			0),
-		left: 0 - A2(
-			_elm_community$maybe_extra$Maybe_Extra_ops['?'],
-			_elm_lang$core$List$minimum(xs),
-			0)
+		basic: basic,
+		handlers: _List_Nil,
+		name: elm$core$Maybe$Nothing,
+		opacity: 1,
+		rotation: 0,
+		scale: _Utils_Tuple2(1, 1),
+		shift: _Utils_Tuple2(0, 0)
 	};
 };
-var _timjs$elm_collage$Collage_Layout$width = function (collage) {
-	var _p25 = _timjs$elm_collage$Collage_Layout$distances(collage);
-	var left = _p25.left;
-	var right = _p25.right;
-	return left + right;
+var timjs$elm_collage$Collage$styled = function (style) {
+	return A2(
+		elm$core$Basics$composeL,
+		timjs$elm_collage$Collage$Core$collage,
+		timjs$elm_collage$Collage$Core$Shape(style));
 };
-var _timjs$elm_collage$Collage_Layout$height = function (collage) {
-	var _p26 = _timjs$elm_collage$Collage_Layout$distances(collage);
-	var up = _p26.up;
-	var down = _p26.down;
-	return up + down;
+var timjs$elm_collage$Collage$Core$Transparent = {$: 'Transparent'};
+var timjs$elm_collage$Collage$transparent = timjs$elm_collage$Collage$Core$Transparent;
+var timjs$elm_collage$Collage$outlined = function (linestyle) {
+	return timjs$elm_collage$Collage$styled(
+		_Utils_Tuple2(timjs$elm_collage$Collage$transparent, linestyle));
 };
-var _timjs$elm_collage$Collage_Layout$top = function (collage) {
-	var _p27 = _timjs$elm_collage$Collage_Layout$distances(collage);
-	var up = _p27.up;
-	return {ctor: '_Tuple2', _0: 0, _1: up};
+var timjs$elm_collage$Collage$Core$Rectangle = F3(
+	function (a, b, c) {
+		return {$: 'Rectangle', a: a, b: b, c: c};
+	});
+var timjs$elm_collage$Collage$roundedRectangle = timjs$elm_collage$Collage$Core$Rectangle;
+var timjs$elm_collage$Collage$rectangle = F2(
+	function (w, h) {
+		return A3(timjs$elm_collage$Collage$roundedRectangle, w, h, 0);
+	});
+var timjs$elm_collage$Collage$Core$Text = F2(
+	function (a, b) {
+		return {$: 'Text', a: a, b: b};
+	});
+var elm$core$Basics$toFloat = _Basics_toFloat;
+var timjs$elm_collage$Collage$Text$height = function (_n0) {
+	var sty = _n0.a;
+	return sty.size;
 };
-var _timjs$elm_collage$Collage_Layout$topRight = function (collage) {
-	var _p28 = _timjs$elm_collage$Collage_Layout$distances(collage);
-	var right = _p28.right;
-	var up = _p28.up;
-	return {ctor: '_Tuple2', _0: right, _1: up};
+var elm$core$String$length = _String_length;
+var timjs$elm_collage$Collage$Text$width = function (text) {
+	var sty = text.a;
+	var str = text.b;
+	return (timjs$elm_collage$Collage$Text$height(text) / 2) * elm$core$String$length(str);
 };
-var _timjs$elm_collage$Collage_Layout$right = function (collage) {
-	var _p29 = _timjs$elm_collage$Collage_Layout$distances(collage);
-	var right = _p29.right;
-	return {ctor: '_Tuple2', _0: right, _1: 0};
-};
-var _timjs$elm_collage$Collage_Layout$bottomRight = function (collage) {
-	var _p30 = _timjs$elm_collage$Collage_Layout$distances(collage);
-	var right = _p30.right;
-	var down = _p30.down;
-	return {ctor: '_Tuple2', _0: right, _1: 0 - down};
-};
-var _timjs$elm_collage$Collage_Layout$bottom = function (collage) {
-	var _p31 = _timjs$elm_collage$Collage_Layout$distances(collage);
-	var down = _p31.down;
-	return {ctor: '_Tuple2', _0: 0, _1: 0 - down};
-};
-var _timjs$elm_collage$Collage_Layout$bottomLeft = function (collage) {
-	var _p32 = _timjs$elm_collage$Collage_Layout$distances(collage);
-	var left = _p32.left;
-	var down = _p32.down;
-	return {ctor: '_Tuple2', _0: 0 - left, _1: 0 - down};
-};
-var _timjs$elm_collage$Collage_Layout$left = function (collage) {
-	var _p33 = _timjs$elm_collage$Collage_Layout$distances(collage);
-	var left = _p33.left;
-	return {ctor: '_Tuple2', _0: 0 - left, _1: 0};
-};
-var _timjs$elm_collage$Collage_Layout$topLeft = function (collage) {
-	var _p34 = _timjs$elm_collage$Collage_Layout$distances(collage);
-	var left = _p34.left;
-	var up = _p34.up;
-	return {ctor: '_Tuple2', _0: 0 - left, _1: up};
-};
-var _timjs$elm_collage$Collage_Layout$base = function (collage) {
-	var _p35 = _timjs$elm_collage$Collage_Layout$distances(collage);
-	var up = _p35.up;
-	var down = _p35.down;
-	var left = _p35.left;
-	var right = _p35.right;
-	var tx = (right - left) / 2;
-	var ty = (up - down) / 2;
-	return {ctor: '_Tuple2', _0: tx, _1: ty};
-};
-var _timjs$elm_collage$Collage_Layout$center = _timjs$elm_collage$Collage_Layout$align(_timjs$elm_collage$Collage_Layout$base);
-var _timjs$elm_collage$Collage_Layout$showEnvelope = function (collage) {
-	var outline = A2(
-		_timjs$elm_collage$Collage_Layout$name,
-		'_envelope_',
+var timjs$elm_collage$Collage$rendered = function (text) {
+	return timjs$elm_collage$Collage$Core$collage(
 		A2(
-			_timjs$elm_collage$Collage$shift,
-			_timjs$elm_collage$Collage_Layout$base(collage),
+			timjs$elm_collage$Collage$Core$Text,
+			_Utils_Tuple2(
+				timjs$elm_collage$Collage$Text$width(text),
+				timjs$elm_collage$Collage$Text$height(text)),
+			text));
+};
+var the_sett$elm_color$Color$black = A4(the_sett$elm_color$Color$rgba, 0, 0, 0, 1);
+var timjs$elm_collage$Collage$Sharp = {$: 'Sharp'};
+var timjs$elm_collage$Collage$thin = 2.0;
+var timjs$elm_collage$Collage$Core$Uniform = function (a) {
+	return {$: 'Uniform', a: a};
+};
+var timjs$elm_collage$Collage$uniform = timjs$elm_collage$Collage$Core$Uniform;
+var timjs$elm_collage$Collage$defaultLineStyle = {
+	cap: timjs$elm_collage$Collage$Flat,
+	dashPattern: _List_Nil,
+	dashPhase: 0,
+	fill: timjs$elm_collage$Collage$uniform(the_sett$elm_color$Color$black),
+	join: timjs$elm_collage$Collage$Sharp,
+	thickness: timjs$elm_collage$Collage$thin
+};
+var timjs$elm_collage$Collage$broken = F3(
+	function (dashes, thickness, fill) {
+		return _Utils_update(
+			timjs$elm_collage$Collage$defaultLineStyle,
+			{dashPattern: dashes, fill: fill, thickness: thickness});
+	});
+var timjs$elm_collage$Collage$solid = timjs$elm_collage$Collage$broken(_List_Nil);
+var timjs$elm_collage$Collage$Layout$height = function (col) {
+	var _n0 = timjs$elm_collage$Collage$Layout$distances(col);
+	var toTop = _n0.toTop;
+	var toBottom = _n0.toBottom;
+	return toTop + toBottom;
+};
+var timjs$elm_collage$Collage$Core$Subcollage = F2(
+	function (a, b) {
+		return {$: 'Subcollage', a: a, b: b};
+	});
+var timjs$elm_collage$Collage$Layout$impose = F2(
+	function (front, back) {
+		return timjs$elm_collage$Collage$Core$collage(
+			A2(timjs$elm_collage$Collage$Core$Subcollage, front, back));
+	});
+var timjs$elm_collage$Collage$Layout$width = function (col) {
+	var _n0 = timjs$elm_collage$Collage$Layout$distances(col);
+	var toLeft = _n0.toLeft;
+	var toRight = _n0.toRight;
+	return toLeft + toRight;
+};
+var timjs$elm_collage$Collage$Core$Chunk = F2(
+	function (a, b) {
+		return {$: 'Chunk', a: a, b: b};
+	});
+var timjs$elm_collage$Collage$Text$None = {$: 'None'};
+var timjs$elm_collage$Collage$Text$Regular = {$: 'Regular'};
+var timjs$elm_collage$Collage$Text$Sansserif = {$: 'Sansserif'};
+var timjs$elm_collage$Collage$Text$Upright = {$: 'Upright'};
+var timjs$elm_collage$Collage$Text$normal = 16;
+var timjs$elm_collage$Collage$Text$defaultStyle = {color: the_sett$elm_color$Color$black, line: timjs$elm_collage$Collage$Text$None, shape: timjs$elm_collage$Collage$Text$Upright, size: timjs$elm_collage$Collage$Text$normal, typeface: timjs$elm_collage$Collage$Text$Sansserif, weight: timjs$elm_collage$Collage$Text$Regular};
+var timjs$elm_collage$Collage$Text$fromString = timjs$elm_collage$Collage$Core$Chunk(timjs$elm_collage$Collage$Text$defaultStyle);
+var author$project$Diagram$makeBox = function (content) {
+	var str = timjs$elm_collage$Collage$rendered(
+		timjs$elm_collage$Collage$Text$fromString(content));
+	var w = timjs$elm_collage$Collage$Layout$width(str) + 10;
+	var h = timjs$elm_collage$Collage$Layout$height(str) + 10;
+	return A2(
+		timjs$elm_collage$Collage$Layout$impose,
+		str,
+		A2(
+			timjs$elm_collage$Collage$outlined,
 			A2(
-				_timjs$elm_collage$Collage$outlined,
-				A2(
-					_timjs$elm_collage$Collage$dot,
-					2,
-					_timjs$elm_collage$Collage$uniform(_elm_lang$core$Color$red)),
-				A2(
-					_timjs$elm_collage$Collage$rectangle,
-					_timjs$elm_collage$Collage_Layout$width(collage),
-					_timjs$elm_collage$Collage_Layout$height(collage)))));
-	return A2(_timjs$elm_collage$Collage_Layout$impose, outline, collage);
+				timjs$elm_collage$Collage$solid,
+				timjs$elm_collage$Collage$thin,
+				timjs$elm_collage$Collage$uniform(the_sett$elm_color$Color$blue)),
+			A2(timjs$elm_collage$Collage$rectangle, w, h)));
 };
-var _timjs$elm_collage$Collage_Layout$debug = function (_p36) {
-	return _timjs$elm_collage$Collage_Layout$showOrigin(
-		_timjs$elm_collage$Collage_Layout$showEnvelope(_p36));
+var elm$core$Array$Array_elm_builtin = F4(
+	function (a, b, c, d) {
+		return {$: 'Array_elm_builtin', a: a, b: b, c: c, d: d};
+	});
+var elm$core$Array$branchFactor = 32;
+var elm$core$Basics$ceiling = _Basics_ceiling;
+var elm$core$Basics$logBase = F2(
+	function (base, number) {
+		return _Basics_log(number) / _Basics_log(base);
+	});
+var elm$core$Array$shiftStep = elm$core$Basics$ceiling(
+	A2(elm$core$Basics$logBase, 2, elm$core$Array$branchFactor));
+var elm$core$Elm$JsArray$empty = _JsArray_empty;
+var elm$core$Array$empty = A4(elm$core$Array$Array_elm_builtin, 0, elm$core$Array$shiftStep, elm$core$Elm$JsArray$empty, elm$core$Elm$JsArray$empty);
+var elm$core$Array$Leaf = function (a) {
+	return {$: 'Leaf', a: a};
 };
-var _timjs$elm_collage$Collage_Layout$envelope = F2(
-	function (dir, collage) {
-		var _p37 = _timjs$elm_collage$Collage_Layout$distances(collage);
-		var up = _p37.up;
-		var down = _p37.down;
-		var left = _p37.left;
-		var right = _p37.right;
-		var _p38 = dir;
-		switch (_p38.ctor) {
-			case 'Up':
-				return up;
-			case 'Down':
-				return down;
-			case 'Right':
-				return right;
-			default:
-				return left;
+var elm$core$Array$SubTree = function (a) {
+	return {$: 'SubTree', a: a};
+};
+var elm$core$Elm$JsArray$initializeFromList = _JsArray_initializeFromList;
+var elm$core$Array$compressNodes = F2(
+	function (nodes, acc) {
+		compressNodes:
+		while (true) {
+			var _n0 = A2(elm$core$Elm$JsArray$initializeFromList, elm$core$Array$branchFactor, nodes);
+			var node = _n0.a;
+			var remainingNodes = _n0.b;
+			var newAcc = A2(
+				elm$core$List$cons,
+				elm$core$Array$SubTree(node),
+				acc);
+			if (!remainingNodes.b) {
+				return elm$core$List$reverse(newAcc);
+			} else {
+				var $temp$nodes = remainingNodes,
+					$temp$acc = newAcc;
+				nodes = $temp$nodes;
+				acc = $temp$acc;
+				continue compressNodes;
+			}
 		}
 	});
-var _timjs$elm_collage$Collage_Layout$Distances = F4(
-	function (a, b, c, d) {
-		return {up: a, down: b, right: c, left: d};
+var elm$core$Tuple$first = function (_n0) {
+	var x = _n0.a;
+	return x;
+};
+var elm$core$Array$treeFromBuilder = F2(
+	function (nodeList, nodeListSize) {
+		treeFromBuilder:
+		while (true) {
+			var newNodeSize = elm$core$Basics$ceiling(nodeListSize / elm$core$Array$branchFactor);
+			if (newNodeSize === 1) {
+				return A2(elm$core$Elm$JsArray$initializeFromList, elm$core$Array$branchFactor, nodeList).a;
+			} else {
+				var $temp$nodeList = A2(elm$core$Array$compressNodes, nodeList, _List_Nil),
+					$temp$nodeListSize = newNodeSize;
+				nodeList = $temp$nodeList;
+				nodeListSize = $temp$nodeListSize;
+				continue treeFromBuilder;
+			}
+		}
 	});
-var _timjs$elm_collage$Collage_Layout$Left = {ctor: 'Left'};
-var _timjs$elm_collage$Collage_Layout$Right = {ctor: 'Right'};
-var _timjs$elm_collage$Collage_Layout$Down = {ctor: 'Down'};
-var _timjs$elm_collage$Collage_Layout$Up = {ctor: 'Up'};
-var _timjs$elm_collage$Collage_Layout$facing = function (dir) {
-	var _p39 = dir;
-	switch (_p39.ctor) {
-		case 'Up':
-			return _timjs$elm_collage$Collage_Layout$Down;
-		case 'Down':
-			return _timjs$elm_collage$Collage_Layout$Up;
-		case 'Right':
-			return _timjs$elm_collage$Collage_Layout$Left;
-		default:
-			return _timjs$elm_collage$Collage_Layout$Right;
+var elm$core$Basics$floor = _Basics_floor;
+var elm$core$Elm$JsArray$length = _JsArray_length;
+var elm$core$Array$builderToArray = F2(
+	function (reverseNodeList, builder) {
+		if (!builder.nodeListSize) {
+			return A4(
+				elm$core$Array$Array_elm_builtin,
+				elm$core$Elm$JsArray$length(builder.tail),
+				elm$core$Array$shiftStep,
+				elm$core$Elm$JsArray$empty,
+				builder.tail);
+		} else {
+			var treeLen = builder.nodeListSize * elm$core$Array$branchFactor;
+			var depth = elm$core$Basics$floor(
+				A2(elm$core$Basics$logBase, elm$core$Array$branchFactor, treeLen - 1));
+			var correctNodeList = reverseNodeList ? elm$core$List$reverse(builder.nodeList) : builder.nodeList;
+			var tree = A2(elm$core$Array$treeFromBuilder, correctNodeList, builder.nodeListSize);
+			return A4(
+				elm$core$Array$Array_elm_builtin,
+				elm$core$Elm$JsArray$length(builder.tail) + treeLen,
+				A2(elm$core$Basics$max, 5, depth * elm$core$Array$shiftStep),
+				tree,
+				builder.tail);
+		}
+	});
+var elm$core$Array$fromListHelp = F3(
+	function (list, nodeList, nodeListSize) {
+		fromListHelp:
+		while (true) {
+			var _n0 = A2(elm$core$Elm$JsArray$initializeFromList, elm$core$Array$branchFactor, list);
+			var jsArray = _n0.a;
+			var remainingItems = _n0.b;
+			if (_Utils_cmp(
+				elm$core$Elm$JsArray$length(jsArray),
+				elm$core$Array$branchFactor) < 0) {
+				return A2(
+					elm$core$Array$builderToArray,
+					true,
+					{nodeList: nodeList, nodeListSize: nodeListSize, tail: jsArray});
+			} else {
+				var $temp$list = remainingItems,
+					$temp$nodeList = A2(
+					elm$core$List$cons,
+					elm$core$Array$Leaf(jsArray),
+					nodeList),
+					$temp$nodeListSize = nodeListSize + 1;
+				list = $temp$list;
+				nodeList = $temp$nodeList;
+				nodeListSize = $temp$nodeListSize;
+				continue fromListHelp;
+			}
+		}
+	});
+var elm$core$Array$fromList = function (list) {
+	if (!list.b) {
+		return elm$core$Array$empty;
+	} else {
+		return A3(elm$core$Array$fromListHelp, list, _List_Nil, 0);
 	}
 };
-var _timjs$elm_collage$Collage_Layout$opposite = _timjs$elm_collage$Collage_Layout$facing;
-var _timjs$elm_collage$Collage_Layout$place = F3(
+var elm$core$Bitwise$shiftLeftBy = _Bitwise_shiftLeftBy;
+var elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
+var elm$core$Array$tailIndex = function (len) {
+	return (len >>> 5) << 5;
+};
+var elm$core$Elm$JsArray$foldl = _JsArray_foldl;
+var elm$core$Elm$JsArray$indexedMap = _JsArray_indexedMap;
+var elm$core$Array$indexedMap = F2(
+	function (func, _n0) {
+		var len = _n0.a;
+		var tree = _n0.c;
+		var tail = _n0.d;
+		var initialBuilder = {
+			nodeList: _List_Nil,
+			nodeListSize: 0,
+			tail: A3(
+				elm$core$Elm$JsArray$indexedMap,
+				func,
+				elm$core$Array$tailIndex(len),
+				tail)
+		};
+		var helper = F2(
+			function (node, builder) {
+				if (node.$ === 'SubTree') {
+					var subTree = node.a;
+					return A3(elm$core$Elm$JsArray$foldl, helper, builder, subTree);
+				} else {
+					var leaf = node.a;
+					var offset = builder.nodeListSize * elm$core$Array$branchFactor;
+					var mappedLeaf = elm$core$Array$Leaf(
+						A3(elm$core$Elm$JsArray$indexedMap, func, offset, leaf));
+					return {
+						nodeList: A2(elm$core$List$cons, mappedLeaf, builder.nodeList),
+						nodeListSize: builder.nodeListSize + 1,
+						tail: builder.tail
+					};
+				}
+			});
+		return A2(
+			elm$core$Array$builderToArray,
+			true,
+			A3(elm$core$Elm$JsArray$foldl, helper, initialBuilder, tree));
+	});
+var elm$core$Basics$idiv = _Basics_idiv;
+var elm$core$Elm$JsArray$initialize = _JsArray_initialize;
+var elm$core$Array$initializeHelp = F5(
+	function (fn, fromIndex, len, nodeList, tail) {
+		initializeHelp:
+		while (true) {
+			if (fromIndex < 0) {
+				return A2(
+					elm$core$Array$builderToArray,
+					false,
+					{nodeList: nodeList, nodeListSize: (len / elm$core$Array$branchFactor) | 0, tail: tail});
+			} else {
+				var leaf = elm$core$Array$Leaf(
+					A3(elm$core$Elm$JsArray$initialize, elm$core$Array$branchFactor, fromIndex, fn));
+				var $temp$fn = fn,
+					$temp$fromIndex = fromIndex - elm$core$Array$branchFactor,
+					$temp$len = len,
+					$temp$nodeList = A2(elm$core$List$cons, leaf, nodeList),
+					$temp$tail = tail;
+				fn = $temp$fn;
+				fromIndex = $temp$fromIndex;
+				len = $temp$len;
+				nodeList = $temp$nodeList;
+				tail = $temp$tail;
+				continue initializeHelp;
+			}
+		}
+	});
+var elm$core$Basics$le = _Utils_le;
+var elm$core$Basics$remainderBy = _Basics_remainderBy;
+var elm$core$Array$initialize = F2(
+	function (len, fn) {
+		if (len <= 0) {
+			return elm$core$Array$empty;
+		} else {
+			var tailLen = len % elm$core$Array$branchFactor;
+			var tail = A3(elm$core$Elm$JsArray$initialize, tailLen, len - tailLen, fn);
+			var initialFromIndex = (len - tailLen) - elm$core$Array$branchFactor;
+			return A5(elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
+		}
+	});
+var elm$core$Basics$identity = function (x) {
+	return x;
+};
+var elm$core$List$maybeCons = F3(
+	function (f, mx, xs) {
+		var _n0 = f(mx);
+		if (_n0.$ === 'Just') {
+			var x = _n0.a;
+			return A2(elm$core$List$cons, x, xs);
+		} else {
+			return xs;
+		}
+	});
+var elm$core$List$filterMap = F2(
+	function (f, xs) {
+		return A3(
+			elm$core$List$foldr,
+			elm$core$List$maybeCons(f),
+			_List_Nil,
+			xs);
+	});
+var elm$core$List$intersperse = F2(
+	function (sep, xs) {
+		if (!xs.b) {
+			return _List_Nil;
+		} else {
+			var hd = xs.a;
+			var tl = xs.b;
+			var step = F2(
+				function (x, rest) {
+					return A2(
+						elm$core$List$cons,
+						sep,
+						A2(elm$core$List$cons, x, rest));
+				});
+			var spersed = A3(elm$core$List$foldr, step, _List_Nil, tl);
+			return A2(elm$core$List$cons, hd, spersed);
+		}
+	});
+var elm$core$List$length = function (xs) {
+	return A3(
+		elm$core$List$foldl,
+		F2(
+			function (_n0, i) {
+				return i + 1;
+			}),
+		0,
+		xs);
+};
+var the_sett$elm_color$Color$green = A4(the_sett$elm_color$Color$rgba, 115, 210, 22, 1);
+var timjs$elm_collage$Collage$Core$Polyline = function (a) {
+	return {$: 'Polyline', a: a};
+};
+var timjs$elm_collage$Collage$path = timjs$elm_collage$Collage$Core$Polyline;
+var timjs$elm_collage$Collage$semithick = 3.0;
+var timjs$elm_collage$Collage$traced = F2(
+	function (linestyle, p) {
+		return timjs$elm_collage$Collage$Core$collage(
+			A2(timjs$elm_collage$Collage$Core$Path, linestyle, p));
+	});
+var timjs$elm_collage$Collage$Layout$Down = {$: 'Down'};
+var timjs$elm_collage$Collage$Layout$Right = {$: 'Right'};
+var timjs$elm_collage$Collage$opposite = function (_n0) {
+	var x = _n0.a;
+	var y = _n0.b;
+	return _Utils_Tuple2(-x, -y);
+};
+var timjs$elm_collage$Collage$shift = F2(
+	function (_n0, collage) {
+		var dx = _n0.a;
+		var dy = _n0.b;
+		var _n1 = collage.shift;
+		var x = _n1.a;
+		var y = _n1.b;
+		return _Utils_update(
+			collage,
+			{
+				shift: _Utils_Tuple2(x + dx, y + dy)
+			});
+	});
+var timjs$elm_collage$Collage$Layout$align = F2(
+	function (anchor, col) {
+		return A2(
+			timjs$elm_collage$Collage$shift,
+			timjs$elm_collage$Collage$opposite(
+				anchor(col)),
+			col);
+	});
+var timjs$elm_collage$Collage$Layout$envelope = F2(
+	function (dir, col) {
+		var _n0 = timjs$elm_collage$Collage$Layout$distances(col);
+		var toTop = _n0.toTop;
+		var toBottom = _n0.toBottom;
+		var toLeft = _n0.toLeft;
+		var toRight = _n0.toRight;
+		switch (dir.$) {
+			case 'Up':
+				return toTop;
+			case 'Down':
+				return toBottom;
+			case 'Right':
+				return toRight;
+			default:
+				return toLeft;
+		}
+	});
+var timjs$elm_collage$Collage$Layout$Left = {$: 'Left'};
+var timjs$elm_collage$Collage$Layout$Up = {$: 'Up'};
+var timjs$elm_collage$Collage$Layout$facing = function (dir) {
+	switch (dir.$) {
+		case 'Up':
+			return timjs$elm_collage$Collage$Layout$Down;
+		case 'Down':
+			return timjs$elm_collage$Collage$Layout$Up;
+		case 'Right':
+			return timjs$elm_collage$Collage$Layout$Left;
+		default:
+			return timjs$elm_collage$Collage$Layout$Right;
+	}
+};
+var timjs$elm_collage$Collage$Layout$place = F3(
 	function (dir, a, b) {
-		var len = A2(_timjs$elm_collage$Collage_Layout$envelope, dir, a) + A2(
-			_timjs$elm_collage$Collage_Layout$envelope,
-			_timjs$elm_collage$Collage_Layout$facing(dir),
+		var len = A2(timjs$elm_collage$Collage$Layout$envelope, dir, a) + A2(
+			timjs$elm_collage$Collage$Layout$envelope,
+			timjs$elm_collage$Collage$Layout$facing(dir),
 			b);
 		var move = function () {
-			var _p40 = dir;
-			switch (_p40.ctor) {
+			switch (dir.$) {
 				case 'Up':
-					return {ctor: '_Tuple2', _0: 0, _1: len};
+					return _Utils_Tuple2(0, len);
 				case 'Down':
-					return {ctor: '_Tuple2', _0: 0, _1: 0 - len};
+					return _Utils_Tuple2(0, -len);
 				case 'Right':
-					return {ctor: '_Tuple2', _0: len, _1: 0};
+					return _Utils_Tuple2(len, 0);
 				default:
-					return {ctor: '_Tuple2', _0: 0 - len, _1: 0};
+					return _Utils_Tuple2(-len, 0);
 			}
 		}();
-		return A2(_timjs$elm_collage$Collage$shift, move, b);
+		return A2(timjs$elm_collage$Collage$shift, move, b);
 	});
-var _timjs$elm_collage$Collage_Layout$beside = F3(
+var timjs$elm_collage$Collage$Core$Group = function (a) {
+	return {$: 'Group', a: a};
+};
+var timjs$elm_collage$Collage$group = A2(elm$core$Basics$composeL, timjs$elm_collage$Collage$Core$collage, timjs$elm_collage$Collage$Core$Group);
+var timjs$elm_collage$Collage$Layout$stack = timjs$elm_collage$Collage$group;
+var timjs$elm_collage$Collage$Layout$beside = F3(
 	function (dir, a, b) {
-		return _timjs$elm_collage$Collage_Layout$stack(
+		return timjs$elm_collage$Collage$Layout$stack(
+			_List_fromArray(
+				[
+					a,
+					A3(timjs$elm_collage$Collage$Layout$place, dir, a, b)
+				]));
+	});
+var timjs$elm_collage$Collage$invisible = A2(timjs$elm_collage$Collage$solid, 0, timjs$elm_collage$Collage$transparent);
+var timjs$elm_collage$Collage$Layout$spacer = F2(
+	function (w, h) {
+		return A2(
+			timjs$elm_collage$Collage$styled,
+			_Utils_Tuple2(timjs$elm_collage$Collage$transparent, timjs$elm_collage$Collage$invisible),
+			A2(timjs$elm_collage$Collage$rectangle, w, h));
+	});
+var timjs$elm_collage$Collage$Layout$empty = A2(timjs$elm_collage$Collage$Layout$spacer, 0, 0);
+var timjs$elm_collage$Collage$Layout$horizontal = A2(
+	elm$core$List$foldr,
+	timjs$elm_collage$Collage$Layout$beside(timjs$elm_collage$Collage$Layout$Right),
+	timjs$elm_collage$Collage$Layout$empty);
+var timjs$elm_collage$Collage$Layout$name = F2(
+	function (string, col) {
+		return _Utils_update(
+			col,
 			{
-				ctor: '::',
-				_0: a,
-				_1: {
-					ctor: '::',
-					_0: A3(_timjs$elm_collage$Collage_Layout$place, dir, a, b),
-					_1: {ctor: '[]'}
-				}
+				name: elm$core$Maybe$Just(string)
 			});
 	});
-var _timjs$elm_collage$Collage_Layout$horizontal = A2(
-	_elm_lang$core$List$foldr,
-	_timjs$elm_collage$Collage_Layout$beside(_timjs$elm_collage$Collage_Layout$Right),
-	_timjs$elm_collage$Collage_Layout$empty);
-var _timjs$elm_collage$Collage_Layout$vertical = A2(
-	_elm_lang$core$List$foldr,
-	_timjs$elm_collage$Collage_Layout$beside(_timjs$elm_collage$Collage_Layout$Down),
-	_timjs$elm_collage$Collage_Layout$empty);
-
-var _timjs$elm_collage$Collage_Render$decodeDashing = function (ds) {
-	var decodeOnOff = function (_p0) {
-		var _p1 = _p0;
-		return A2(
-			_elm_lang$core$String$join,
-			',',
-			{
-				ctor: '::',
-				_0: _elm_lang$core$Basics$toString(_p1._0),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$core$Basics$toString(_p1._1),
-					_1: {ctor: '[]'}
+var timjs$elm_collage$Collage$Layout$vertical = A2(
+	elm$core$List$foldr,
+	timjs$elm_collage$Collage$Layout$beside(timjs$elm_collage$Collage$Layout$Down),
+	timjs$elm_collage$Collage$Layout$empty);
+var author$project$Diagram$drawDiagram = F2(
+	function (level, data) {
+		var _n3 = A2(author$project$Diagram$makeBlocks, data, level);
+		var bl = _n3.a;
+		var ds = _n3.b;
+		var collage = timjs$elm_collage$Collage$Layout$stack(
+			_List_fromArray(
+				[
+					bl,
+					A3(
+					timjs$elm_collage$Collage$Layout$place,
+					timjs$elm_collage$Collage$Layout$Down,
+					bl,
+					A3(timjs$elm_collage$Collage$Layout$place, timjs$elm_collage$Collage$Layout$Right, bl, ds))
+				]));
+		var lines = A2(
+			elm$core$List$filterMap,
+			function (i) {
+				var _n4 = _Utils_Tuple2(
+					A3(author$project$Diagram$getBlock, collage, level, i),
+					A3(author$project$Diagram$getDesc, collage, level, i));
+				if ((_n4.a.$ === 'Just') && (_n4.b.$ === 'Just')) {
+					var f = _n4.a.a;
+					var x1 = f.a;
+					var y1 = f.b;
+					var t = _n4.b.a;
+					var x2 = t.a;
+					var y2 = t.b;
+					return elm$core$Maybe$Just(
+						A2(
+							timjs$elm_collage$Collage$traced,
+							A2(
+								timjs$elm_collage$Collage$solid,
+								timjs$elm_collage$Collage$semithick,
+								timjs$elm_collage$Collage$uniform(the_sett$elm_color$Color$green)),
+							timjs$elm_collage$Collage$path(
+								_List_fromArray(
+									[
+										f,
+										_Utils_Tuple2(x1, y2),
+										t
+									]))));
+				} else {
+					return elm$core$Maybe$Nothing;
 				}
-			});
-	};
-	return A2(
-		_elm_lang$core$String$join,
-		' ',
-		A2(_elm_lang$core$List$map, decodeOnOff, ds));
-};
-var _timjs$elm_collage$Collage_Render$decodeOpacity = function (c) {
-	var _p2 = _elm_lang$core$Color$toRgb(c);
-	var alpha = _p2.alpha;
-	return _elm_lang$core$Basics$toString(alpha);
-};
-var _timjs$elm_collage$Collage_Render$decodeColor = function (c) {
-	var _p3 = _elm_lang$core$Color$toRgb(c);
-	var red = _p3.red;
-	var green = _p3.green;
-	var blue = _p3.blue;
-	var r = _elm_lang$core$Basics$toString(red);
-	var g = _elm_lang$core$Basics$toString(green);
-	var b = _elm_lang$core$Basics$toString(blue);
-	return _elm_lang$core$String$concat(
-		{
-			ctor: '::',
-			_0: 'rgb(',
-			_1: {
-				ctor: '::',
-				_0: r,
-				_1: {
-					ctor: '::',
-					_0: ',',
-					_1: {
-						ctor: '::',
-						_0: g,
-						_1: {
-							ctor: '::',
-							_0: ',',
-							_1: {
-								ctor: '::',
-								_0: b,
-								_1: {
-									ctor: '::',
-									_0: ')',
-									_1: {ctor: '[]'}
-								}
-							}
-						}
-					}
-				}
-			}
-		});
-};
-var _timjs$elm_collage$Collage_Render$decodeFillOpacity = function (fs) {
-	var _p4 = fs;
-	if (_p4.ctor === 'Uniform') {
-		return _timjs$elm_collage$Collage_Render$decodeOpacity(_p4._0);
-	} else {
-		return '0';
-	}
-};
-var _timjs$elm_collage$Collage_Render$decodeFill = function (fs) {
-	var _p5 = fs;
-	if (_p5.ctor === 'Uniform') {
-		return _timjs$elm_collage$Collage_Render$decodeColor(_p5._0);
-	} else {
-		return 'none';
-	}
-};
-var _timjs$elm_collage$Collage_Render$decodeTransform = function (collage) {
-	var sy = _elm_lang$core$Basics$toString(
-		_elm_lang$core$Tuple$second(collage.scale));
-	var sx = _elm_lang$core$Basics$toString(
-		_elm_lang$core$Tuple$first(collage.scale));
-	var r = _elm_lang$core$Basics$toString((((0 - collage.rotation) / 2) / _elm_lang$core$Basics$pi) * 360);
-	var dy = _elm_lang$core$Basics$toString(
-		0 - _elm_lang$core$Tuple$second(collage.shift));
-	var dx = _elm_lang$core$Basics$toString(
-		_elm_lang$core$Tuple$first(collage.shift));
-	return _elm_lang$core$String$concat(
-		{
-			ctor: '::',
-			_0: 'translate(',
-			_1: {
-				ctor: '::',
-				_0: dx,
-				_1: {
-					ctor: '::',
-					_0: ',',
-					_1: {
-						ctor: '::',
-						_0: dy,
-						_1: {
-							ctor: '::',
-							_0: ') scale(',
-							_1: {
-								ctor: '::',
-								_0: sx,
-								_1: {
-									ctor: '::',
-									_0: ',',
-									_1: {
-										ctor: '::',
-										_0: sy,
-										_1: {
-											ctor: '::',
-											_0: ') rotate(',
-											_1: {
-												ctor: '::',
-												_0: r,
-												_1: {
-													ctor: '::',
-													_0: ')',
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		});
-};
-var _timjs$elm_collage$Collage_Render$decodePoints = function (ps) {
-	return A2(
-		_elm_lang$core$String$join,
-		' ',
-		A2(
-			_elm_lang$core$List$map,
-			function (_p6) {
-				var _p7 = _p6;
-				return A2(
-					_elm_lang$core$String$join,
-					',',
-					{
-						ctor: '::',
-						_0: _elm_lang$core$Basics$toString(_p7._0),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$core$Basics$toString(0 - _p7._1),
-							_1: {ctor: '[]'}
-						}
-					});
 			},
-			ps));
+			elm$core$Array$toList(
+				A2(
+					elm$core$Array$initialize,
+					elm$core$List$length(data),
+					elm$core$Basics$identity)));
+		return timjs$elm_collage$Collage$Layout$stack(
+			A2(elm$core$List$cons, collage, lines));
+	});
+var author$project$Diagram$makeBlockAndDesc = F3(
+	function (level, i, _n2) {
+		var label = _n2.a;
+		var element = _n2.b;
+		return _Utils_Tuple2(
+			A2(
+				timjs$elm_collage$Collage$Layout$name,
+				A3(author$project$Diagram$blockName, 'block', level, i),
+				author$project$Diagram$makeBox(label)),
+			A2(
+				timjs$elm_collage$Collage$Layout$align,
+				timjs$elm_collage$Collage$Layout$left,
+				timjs$elm_collage$Collage$Layout$vertical(
+					_List_fromArray(
+						[
+							A2(timjs$elm_collage$Collage$Layout$spacer, 0, 10),
+							A2(
+							timjs$elm_collage$Collage$Layout$name,
+							A3(author$project$Diagram$blockName, 'desc', level, i),
+							timjs$elm_collage$Collage$Layout$horizontal(
+								_List_fromArray(
+									[
+										A2(timjs$elm_collage$Collage$Layout$spacer, 10, 0),
+										A2(author$project$Diagram$makeDesc, element, level + 1)
+									])))
+						]))));
+	});
+var author$project$Diagram$makeBlocks = F2(
+	function (data, level) {
+		var _n1 = elm$core$List$unzip(
+			elm$core$Array$toList(
+				A2(
+					elm$core$Array$indexedMap,
+					author$project$Diagram$makeBlockAndDesc(level),
+					elm$core$Array$fromList(data))));
+		var blocks = _n1.a;
+		var descs = _n1.b;
+		return _Utils_Tuple2(
+			timjs$elm_collage$Collage$Layout$horizontal(
+				A2(
+					elm$core$List$intersperse,
+					A2(timjs$elm_collage$Collage$Layout$spacer, 10, 0),
+					blocks)),
+			timjs$elm_collage$Collage$Layout$vertical(
+				elm$core$List$reverse(
+					A2(
+						elm$core$List$intersperse,
+						A2(timjs$elm_collage$Collage$Layout$spacer, 0, 10),
+						descs))));
+	});
+var author$project$Diagram$makeDesc = F2(
+	function (element, level) {
+		if (element.$ === 'Leaf') {
+			var label = element.a;
+			return timjs$elm_collage$Collage$rendered(
+				timjs$elm_collage$Collage$Text$fromString(label));
+		} else {
+			var label = element.a;
+			var data = element.b;
+			return timjs$elm_collage$Collage$Layout$horizontal(
+				_List_fromArray(
+					[
+						timjs$elm_collage$Collage$rendered(
+						timjs$elm_collage$Collage$Text$fromString(label)),
+						A2(timjs$elm_collage$Collage$Layout$spacer, 10, 0),
+						A2(author$project$Diagram$drawDiagram, level, data)
+					]));
+		}
+	});
+var timjs$elm_collage$Collage$Layout$topLeft = function (col) {
+	var _n0 = timjs$elm_collage$Collage$Layout$distances(col);
+	var toLeft = _n0.toLeft;
+	var toTop = _n0.toTop;
+	return _Utils_Tuple2(-toLeft, toTop);
 };
-var _timjs$elm_collage$Collage_Render$decodeJoin = function (join) {
-	var _p8 = join;
-	switch (_p8.ctor) {
-		case 'Smooth':
-			return 'round';
-		case 'Sharp':
-			return 'miter';
-		default:
-			return 'bevel';
+var elm$core$String$fromFloat = _String_fromNumber;
+var elm$core$Result$isOk = function (result) {
+	if (result.$ === 'Ok') {
+		return true;
+	} else {
+		return false;
 	}
 };
-var _timjs$elm_collage$Collage_Render$decodeCap = function (cap) {
-	var _p9 = cap;
-	switch (_p9.ctor) {
+var elm$core$Result$Err = function (a) {
+	return {$: 'Err', a: a};
+};
+var elm$core$Result$Ok = function (a) {
+	return {$: 'Ok', a: a};
+};
+var elm$json$Json$Decode$Failure = F2(
+	function (a, b) {
+		return {$: 'Failure', a: a, b: b};
+	});
+var elm$json$Json$Decode$Field = F2(
+	function (a, b) {
+		return {$: 'Field', a: a, b: b};
+	});
+var elm$json$Json$Decode$Index = F2(
+	function (a, b) {
+		return {$: 'Index', a: a, b: b};
+	});
+var elm$json$Json$Decode$OneOf = function (a) {
+	return {$: 'OneOf', a: a};
+};
+var elm$core$Basics$and = _Basics_and;
+var elm$core$Basics$append = _Utils_append;
+var elm$core$Basics$or = _Basics_or;
+var elm$core$Char$toCode = _Char_toCode;
+var elm$core$Char$isLower = function (_char) {
+	var code = elm$core$Char$toCode(_char);
+	return (97 <= code) && (code <= 122);
+};
+var elm$core$Char$isUpper = function (_char) {
+	var code = elm$core$Char$toCode(_char);
+	return (code <= 90) && (65 <= code);
+};
+var elm$core$Char$isAlpha = function (_char) {
+	return elm$core$Char$isLower(_char) || elm$core$Char$isUpper(_char);
+};
+var elm$core$Char$isDigit = function (_char) {
+	var code = elm$core$Char$toCode(_char);
+	return (code <= 57) && (48 <= code);
+};
+var elm$core$Char$isAlphaNum = function (_char) {
+	return elm$core$Char$isLower(_char) || (elm$core$Char$isUpper(_char) || elm$core$Char$isDigit(_char));
+};
+var elm$core$List$map2 = _List_map2;
+var elm$core$List$rangeHelp = F3(
+	function (lo, hi, list) {
+		rangeHelp:
+		while (true) {
+			if (_Utils_cmp(lo, hi) < 1) {
+				var $temp$lo = lo,
+					$temp$hi = hi - 1,
+					$temp$list = A2(elm$core$List$cons, hi, list);
+				lo = $temp$lo;
+				hi = $temp$hi;
+				list = $temp$list;
+				continue rangeHelp;
+			} else {
+				return list;
+			}
+		}
+	});
+var elm$core$List$range = F2(
+	function (lo, hi) {
+		return A3(elm$core$List$rangeHelp, lo, hi, _List_Nil);
+	});
+var elm$core$List$indexedMap = F2(
+	function (f, xs) {
+		return A3(
+			elm$core$List$map2,
+			f,
+			A2(
+				elm$core$List$range,
+				0,
+				elm$core$List$length(xs) - 1),
+			xs);
+	});
+var elm$core$String$all = _String_all;
+var elm$core$String$uncons = _String_uncons;
+var elm$core$String$split = F2(
+	function (sep, string) {
+		return _List_fromArray(
+			A2(_String_split, sep, string));
+	});
+var elm$json$Json$Decode$indent = function (str) {
+	return A2(
+		elm$core$String$join,
+		'\n    ',
+		A2(elm$core$String$split, '\n', str));
+};
+var elm$json$Json$Encode$encode = _Json_encode;
+var elm$json$Json$Decode$errorOneOf = F2(
+	function (i, error) {
+		return '\n\n(' + (elm$core$String$fromInt(i + 1) + (') ' + elm$json$Json$Decode$indent(
+			elm$json$Json$Decode$errorToString(error))));
+	});
+var elm$json$Json$Decode$errorToString = function (error) {
+	return A2(elm$json$Json$Decode$errorToStringHelp, error, _List_Nil);
+};
+var elm$json$Json$Decode$errorToStringHelp = F2(
+	function (error, context) {
+		errorToStringHelp:
+		while (true) {
+			switch (error.$) {
+				case 'Field':
+					var f = error.a;
+					var err = error.b;
+					var isSimple = function () {
+						var _n1 = elm$core$String$uncons(f);
+						if (_n1.$ === 'Nothing') {
+							return false;
+						} else {
+							var _n2 = _n1.a;
+							var _char = _n2.a;
+							var rest = _n2.b;
+							return elm$core$Char$isAlpha(_char) && A2(elm$core$String$all, elm$core$Char$isAlphaNum, rest);
+						}
+					}();
+					var fieldName = isSimple ? ('.' + f) : ('[\'' + (f + '\']'));
+					var $temp$error = err,
+						$temp$context = A2(elm$core$List$cons, fieldName, context);
+					error = $temp$error;
+					context = $temp$context;
+					continue errorToStringHelp;
+				case 'Index':
+					var i = error.a;
+					var err = error.b;
+					var indexName = '[' + (elm$core$String$fromInt(i) + ']');
+					var $temp$error = err,
+						$temp$context = A2(elm$core$List$cons, indexName, context);
+					error = $temp$error;
+					context = $temp$context;
+					continue errorToStringHelp;
+				case 'OneOf':
+					var errors = error.a;
+					if (!errors.b) {
+						return 'Ran into a Json.Decode.oneOf with no possibilities' + function () {
+							if (!context.b) {
+								return '!';
+							} else {
+								return ' at json' + A2(
+									elm$core$String$join,
+									'',
+									elm$core$List$reverse(context));
+							}
+						}();
+					} else {
+						if (!errors.b.b) {
+							var err = errors.a;
+							var $temp$error = err,
+								$temp$context = context;
+							error = $temp$error;
+							context = $temp$context;
+							continue errorToStringHelp;
+						} else {
+							var starter = function () {
+								if (!context.b) {
+									return 'Json.Decode.oneOf';
+								} else {
+									return 'The Json.Decode.oneOf at json' + A2(
+										elm$core$String$join,
+										'',
+										elm$core$List$reverse(context));
+								}
+							}();
+							var introduction = starter + (' failed in the following ' + (elm$core$String$fromInt(
+								elm$core$List$length(errors)) + ' ways:'));
+							return A2(
+								elm$core$String$join,
+								'\n\n',
+								A2(
+									elm$core$List$cons,
+									introduction,
+									A2(elm$core$List$indexedMap, elm$json$Json$Decode$errorOneOf, errors)));
+						}
+					}
+				default:
+					var msg = error.a;
+					var json = error.b;
+					var introduction = function () {
+						if (!context.b) {
+							return 'Problem with the given value:\n\n';
+						} else {
+							return 'Problem with the value at json' + (A2(
+								elm$core$String$join,
+								'',
+								elm$core$List$reverse(context)) + ':\n\n    ');
+						}
+					}();
+					return introduction + (elm$json$Json$Decode$indent(
+						A2(elm$json$Json$Encode$encode, 4, json)) + ('\n\n' + msg));
+			}
+		}
+	});
+var elm$json$Json$Decode$map = _Json_map1;
+var elm$json$Json$Decode$map2 = _Json_map2;
+var elm$json$Json$Decode$succeed = _Json_succeed;
+var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
+	switch (handler.$) {
+		case 'Normal':
+			return 0;
+		case 'MayStopPropagation':
+			return 1;
+		case 'MayPreventDefault':
+			return 2;
+		default:
+			return 3;
+	}
+};
+var elm$html$Html$div = _VirtualDom_node('div');
+var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
+var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
+var elm$svg$Svg$Attributes$version = _VirtualDom_attribute('version');
+var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
+var elm$svg$Svg$circle = elm$svg$Svg$trustedNode('circle');
+var elm$svg$Svg$ellipse = elm$svg$Svg$trustedNode('ellipse');
+var elm$svg$Svg$foreignObject = elm$svg$Svg$trustedNode('foreignObject');
+var elm$svg$Svg$g = elm$svg$Svg$trustedNode('g');
+var elm$svg$Svg$image = elm$svg$Svg$trustedNode('image');
+var elm$svg$Svg$polygon = elm$svg$Svg$trustedNode('polygon');
+var elm$svg$Svg$polyline = elm$svg$Svg$trustedNode('polyline');
+var elm$svg$Svg$rect = elm$svg$Svg$trustedNode('rect');
+var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var elm$svg$Svg$text = elm$virtual_dom$VirtualDom$text;
+var elm$svg$Svg$text_ = elm$svg$Svg$trustedNode('text');
+var elm$svg$Svg$Attributes$id = _VirtualDom_attribute('id');
+var elm$svg$Svg$Attributes$points = _VirtualDom_attribute('points');
+var elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
+var elm$svg$Svg$Attributes$rx = _VirtualDom_attribute('rx');
+var elm$svg$Svg$Attributes$ry = _VirtualDom_attribute('ry');
+var elm$svg$Svg$Attributes$xlinkHref = function (value) {
+	return A3(
+		_VirtualDom_attributeNS,
+		'http://www.w3.org/1999/xlink',
+		'xlink:href',
+		_VirtualDom_noJavaScriptUri(value));
+};
+var elm$svg$Svg$Attributes$dominantBaseline = _VirtualDom_attribute('dominant-baseline');
+var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
+var elm$svg$Svg$Attributes$fillOpacity = _VirtualDom_attribute('fill-opacity');
+var elm$svg$Svg$Attributes$fontFamily = _VirtualDom_attribute('font-family');
+var elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
+var elm$svg$Svg$Attributes$fontStyle = _VirtualDom_attribute('font-style');
+var elm$svg$Svg$Attributes$fontVariant = _VirtualDom_attribute('font-variant');
+var elm$svg$Svg$Attributes$fontWeight = _VirtualDom_attribute('font-weight');
+var elm$svg$Svg$Attributes$opacity = _VirtualDom_attribute('opacity');
+var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
+var elm$svg$Svg$Attributes$strokeDasharray = _VirtualDom_attribute('stroke-dasharray');
+var elm$svg$Svg$Attributes$strokeDashoffset = _VirtualDom_attribute('stroke-dashoffset');
+var elm$svg$Svg$Attributes$strokeLinecap = _VirtualDom_attribute('stroke-linecap');
+var elm$svg$Svg$Attributes$strokeLinejoin = _VirtualDom_attribute('stroke-linejoin');
+var elm$svg$Svg$Attributes$strokeOpacity = _VirtualDom_attribute('stroke-opacity');
+var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
+var elm$svg$Svg$Attributes$textAnchor = _VirtualDom_attribute('text-anchor');
+var elm$svg$Svg$Attributes$textDecoration = _VirtualDom_attribute('text-decoration');
+var elm$svg$Svg$Attributes$transform = _VirtualDom_attribute('transform');
+var timjs$elm_collage$Collage$Render$decodeCap = function (cap) {
+	switch (cap.$) {
 		case 'Round':
 			return 'round';
 		case 'Padded':
@@ -10589,4255 +5850,540 @@ var _timjs$elm_collage$Collage_Render$decodeCap = function (cap) {
 			return 'butt';
 	}
 };
-var _timjs$elm_collage$Collage_Render$attrs = function (collage) {
-	var _p10 = collage.basic;
-	_v6_3:
-	do {
-		switch (_p10.ctor) {
-			case 'Path':
-				var _p11 = _p10._0;
-				return {
-					ctor: '::',
-					_0: _elm_lang$svg$Svg_Attributes$stroke(
-						_timjs$elm_collage$Collage_Render$decodeFill(_p11.fill)),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$svg$Svg_Attributes$strokeOpacity(
-							_timjs$elm_collage$Collage_Render$decodeFillOpacity(_p11.fill)),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$strokeWidth(
-								_elm_lang$core$Basics$toString(_p11.thickness)),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$strokeLinecap(
-									_timjs$elm_collage$Collage_Render$decodeCap(_p11.cap)),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$strokeLinejoin(
-										_timjs$elm_collage$Collage_Render$decodeJoin(_p11.join)),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$svg$Svg_Attributes$fill('none'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$svg$Svg_Attributes$opacity(
-												_elm_lang$core$Basics$toString(collage.opacity)),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$svg$Svg_Attributes$transform(
-													_timjs$elm_collage$Collage_Render$decodeTransform(collage)),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$svg$Svg_Attributes$strokeDashoffset(
-														_elm_lang$core$Basics$toString(_p11.dashPhase)),
-													_1: {
-														ctor: '::',
-														_0: _elm_lang$svg$Svg_Attributes$strokeDasharray(
-															_timjs$elm_collage$Collage_Render$decodeDashing(_p11.dashPattern)),
-														_1: {ctor: '[]'}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				};
-			case 'Shape':
-				if (_p10._0.ctor === '_Tuple2') {
-					var _p13 = _p10._0._1;
-					var _p12 = _p10._0._0;
-					return {
-						ctor: '::',
-						_0: _elm_lang$svg$Svg_Attributes$fill(
-							_timjs$elm_collage$Collage_Render$decodeFill(_p12)),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$fillOpacity(
-								_timjs$elm_collage$Collage_Render$decodeFillOpacity(_p12)),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$stroke(
-									_timjs$elm_collage$Collage_Render$decodeFill(_p13.fill)),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$strokeOpacity(
-										_timjs$elm_collage$Collage_Render$decodeFillOpacity(_p13.fill)),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$svg$Svg_Attributes$strokeWidth(
-											_elm_lang$core$Basics$toString(_p13.thickness)),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$svg$Svg_Attributes$strokeLinecap(
-												_timjs$elm_collage$Collage_Render$decodeCap(_p13.cap)),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$svg$Svg_Attributes$strokeLinejoin(
-													_timjs$elm_collage$Collage_Render$decodeJoin(_p13.join)),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$svg$Svg_Attributes$opacity(
-														_elm_lang$core$Basics$toString(collage.opacity)),
-													_1: {
-														ctor: '::',
-														_0: _elm_lang$svg$Svg_Attributes$transform(
-															_timjs$elm_collage$Collage_Render$decodeTransform(collage)),
-														_1: {
-															ctor: '::',
-															_0: _elm_lang$svg$Svg_Attributes$strokeDashoffset(
-																_elm_lang$core$Basics$toString(_p13.dashPhase)),
-															_1: {
-																ctor: '::',
-																_0: _elm_lang$svg$Svg_Attributes$strokeDasharray(
-																	_timjs$elm_collage$Collage_Render$decodeDashing(_p13.dashPattern)),
-																_1: {ctor: '[]'}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					};
-				} else {
-					break _v6_3;
-				}
-			case 'Text':
-				var _p19 = _p10._1._0;
-				return {
-					ctor: '::',
-					_0: _elm_lang$svg$Svg_Attributes$fill(
-						_timjs$elm_collage$Collage_Render$decodeFill(
-							_timjs$elm_collage$Collage_Core$Uniform(_p19.color))),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$svg$Svg_Attributes$fontFamily(
-							function () {
-								var _p14 = _p19.typeface;
-								switch (_p14.ctor) {
-									case 'Serif':
-										return 'serif';
-									case 'Sansserif':
-										return 'sans-serif';
-									case 'Monospace':
-										return 'monospace';
-									default:
-										return _p14._0;
-								}
-							}()),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$fontSize(
-								_elm_lang$core$Basics$toString(_p19.size)),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$fontWeight(
-									function () {
-										var _p15 = _p19.weight;
-										switch (_p15.ctor) {
-											case 'Thin':
-												return '200';
-											case 'Light':
-												return '300';
-											case 'Regular':
-												return 'normal';
-											case 'Medium':
-												return '500';
-											case 'SemiBold':
-												return '600';
-											case 'Bold':
-												return 'bold';
-											default:
-												return '800';
-										}
-									}()),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$fontStyle(
-										function () {
-											var _p16 = _p19.shape;
-											switch (_p16.ctor) {
-												case 'Upright':
-													return 'normal';
-												case 'SmallCaps':
-													return 'normal';
-												case 'Slanted':
-													return 'oblique';
-												default:
-													return 'italic';
-											}
-										}()),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$svg$Svg_Attributes$fontVariant(
-											function () {
-												var _p17 = _p19.shape;
-												if (_p17.ctor === 'SmallCaps') {
-													return 'small-caps';
-												} else {
-													return 'normal';
-												}
-											}()),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$svg$Svg_Attributes$textDecoration(
-												function () {
-													var _p18 = _p19.line;
-													switch (_p18.ctor) {
-														case 'None':
-															return 'none';
-														case 'Under':
-															return 'underline';
-														case 'Over':
-															return 'overline';
-														default:
-															return 'line-through';
-													}
-												}()),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$svg$Svg_Attributes$textAnchor('middle'),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$svg$Svg_Attributes$dominantBaseline('middle'),
-													_1: {
-														ctor: '::',
-														_0: _elm_lang$svg$Svg_Attributes$transform(
-															_timjs$elm_collage$Collage_Render$decodeTransform(collage)),
-														_1: {ctor: '[]'}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				};
-			default:
-				break _v6_3;
-		}
-	} while(false);
-	return {
-		ctor: '::',
-		_0: _elm_lang$svg$Svg_Attributes$transform(
-			_timjs$elm_collage$Collage_Render$decodeTransform(collage)),
-		_1: {ctor: '[]'}
+var timjs$elm_collage$Collage$Render$decodeDashing = function (ds) {
+	var decodeOnOff = function (_n0) {
+		var x = _n0.a;
+		var y = _n0.b;
+		return A2(
+			elm$core$String$join,
+			',',
+			_List_fromArray(
+				[
+					elm$core$String$fromInt(x),
+					elm$core$String$fromInt(y)
+				]));
 	};
-};
-var _timjs$elm_collage$Collage_Render$events = function (handlers) {
 	return A2(
-		_elm_lang$core$List$map,
-		_elm_lang$core$Basics$uncurry(_elm_lang$svg$Svg_Events$on),
+		elm$core$String$join,
+		' ',
+		A2(elm$core$List$map, decodeOnOff, ds));
+};
+var elm$core$String$concat = function (strings) {
+	return A2(elm$core$String$join, '', strings);
+};
+var the_sett$elm_color$Color$toRgb = elm$core$Basics$identity;
+var timjs$elm_collage$Collage$Render$decodeColor = function (c) {
+	var _n0 = the_sett$elm_color$Color$toRgb(c);
+	var red = _n0.red;
+	var green = _n0.green;
+	var blue = _n0.blue;
+	var b = elm$core$String$fromInt(blue);
+	var g = elm$core$String$fromInt(green);
+	var r = elm$core$String$fromInt(red);
+	return elm$core$String$concat(
+		_List_fromArray(
+			['rgb(', r, ',', g, ',', b, ')']));
+};
+var timjs$elm_collage$Collage$Render$decodeFill = function (fs) {
+	if (fs.$ === 'Uniform') {
+		var c = fs.a;
+		return timjs$elm_collage$Collage$Render$decodeColor(c);
+	} else {
+		return 'none';
+	}
+};
+var timjs$elm_collage$Collage$Render$decodeOpacity = function (c) {
+	var _n0 = the_sett$elm_color$Color$toRgb(c);
+	var alpha = _n0.alpha;
+	return elm$core$String$fromFloat(alpha);
+};
+var timjs$elm_collage$Collage$Render$decodeFillOpacity = function (fs) {
+	if (fs.$ === 'Uniform') {
+		var c = fs.a;
+		return timjs$elm_collage$Collage$Render$decodeOpacity(c);
+	} else {
+		return '0';
+	}
+};
+var timjs$elm_collage$Collage$Render$decodeJoin = function (join) {
+	switch (join.$) {
+		case 'Smooth':
+			return 'round';
+		case 'Sharp':
+			return 'miter';
+		default:
+			return 'bevel';
+	}
+};
+var elm$core$Basics$pi = _Basics_pi;
+var elm$core$Tuple$second = function (_n0) {
+	var y = _n0.b;
+	return y;
+};
+var timjs$elm_collage$Collage$Render$decodeTransform = function (collage) {
+	var sy = elm$core$String$fromFloat(collage.scale.b);
+	var sx = elm$core$String$fromFloat(collage.scale.a);
+	var r = elm$core$String$fromFloat((((-collage.rotation) / 2) / elm$core$Basics$pi) * 360);
+	var dy = elm$core$String$fromFloat(-collage.shift.b);
+	var dx = elm$core$String$fromFloat(collage.shift.a);
+	return elm$core$String$concat(
+		_List_fromArray(
+			['translate(', dx, ',', dy, ') scale(', sx, ',', sy, ') rotate(', r, ')']));
+};
+var timjs$elm_collage$Collage$Render$attrs = function (collage) {
+	var _n0 = collage.basic;
+	switch (_n0.$) {
+		case 'Path':
+			var line = _n0.a;
+			return _List_fromArray(
+				[
+					elm$svg$Svg$Attributes$stroke(
+					timjs$elm_collage$Collage$Render$decodeFill(line.fill)),
+					elm$svg$Svg$Attributes$strokeOpacity(
+					timjs$elm_collage$Collage$Render$decodeFillOpacity(line.fill)),
+					elm$svg$Svg$Attributes$strokeWidth(
+					elm$core$String$fromFloat(line.thickness)),
+					elm$svg$Svg$Attributes$strokeLinecap(
+					timjs$elm_collage$Collage$Render$decodeCap(line.cap)),
+					elm$svg$Svg$Attributes$strokeLinejoin(
+					timjs$elm_collage$Collage$Render$decodeJoin(line.join)),
+					elm$svg$Svg$Attributes$fill('none'),
+					elm$svg$Svg$Attributes$opacity(
+					elm$core$String$fromFloat(collage.opacity)),
+					elm$svg$Svg$Attributes$transform(
+					timjs$elm_collage$Collage$Render$decodeTransform(collage)),
+					elm$svg$Svg$Attributes$strokeDashoffset(
+					elm$core$String$fromInt(line.dashPhase)),
+					elm$svg$Svg$Attributes$strokeDasharray(
+					timjs$elm_collage$Collage$Render$decodeDashing(line.dashPattern))
+				]);
+		case 'Shape':
+			var _n1 = _n0.a;
+			var fill = _n1.a;
+			var line = _n1.b;
+			return _List_fromArray(
+				[
+					elm$svg$Svg$Attributes$fill(
+					timjs$elm_collage$Collage$Render$decodeFill(fill)),
+					elm$svg$Svg$Attributes$fillOpacity(
+					timjs$elm_collage$Collage$Render$decodeFillOpacity(fill)),
+					elm$svg$Svg$Attributes$stroke(
+					timjs$elm_collage$Collage$Render$decodeFill(line.fill)),
+					elm$svg$Svg$Attributes$strokeOpacity(
+					timjs$elm_collage$Collage$Render$decodeFillOpacity(line.fill)),
+					elm$svg$Svg$Attributes$strokeWidth(
+					elm$core$String$fromFloat(line.thickness)),
+					elm$svg$Svg$Attributes$strokeLinecap(
+					timjs$elm_collage$Collage$Render$decodeCap(line.cap)),
+					elm$svg$Svg$Attributes$strokeLinejoin(
+					timjs$elm_collage$Collage$Render$decodeJoin(line.join)),
+					elm$svg$Svg$Attributes$opacity(
+					elm$core$String$fromFloat(collage.opacity)),
+					elm$svg$Svg$Attributes$transform(
+					timjs$elm_collage$Collage$Render$decodeTransform(collage)),
+					elm$svg$Svg$Attributes$strokeDashoffset(
+					elm$core$String$fromInt(line.dashPhase)),
+					elm$svg$Svg$Attributes$strokeDasharray(
+					timjs$elm_collage$Collage$Render$decodeDashing(line.dashPattern))
+				]);
+		case 'Text':
+			var _n2 = _n0.b;
+			var style = _n2.a;
+			var str = _n2.b;
+			return _List_fromArray(
+				[
+					elm$svg$Svg$Attributes$fill(
+					timjs$elm_collage$Collage$Render$decodeFill(
+						timjs$elm_collage$Collage$Core$Uniform(style.color))),
+					elm$svg$Svg$Attributes$fontFamily(
+					function () {
+						var _n3 = style.typeface;
+						switch (_n3.$) {
+							case 'Serif':
+								return 'serif';
+							case 'Sansserif':
+								return 'sans-serif';
+							case 'Monospace':
+								return 'monospace';
+							default:
+								var name = _n3.a;
+								return name;
+						}
+					}()),
+					elm$svg$Svg$Attributes$fontSize(
+					elm$core$String$fromInt(style.size)),
+					elm$svg$Svg$Attributes$fontWeight(
+					function () {
+						var _n4 = style.weight;
+						switch (_n4.$) {
+							case 'Thin':
+								return '200';
+							case 'Light':
+								return '300';
+							case 'Regular':
+								return 'normal';
+							case 'Medium':
+								return '500';
+							case 'SemiBold':
+								return '600';
+							case 'Bold':
+								return 'bold';
+							default:
+								return '800';
+						}
+					}()),
+					elm$svg$Svg$Attributes$fontStyle(
+					function () {
+						var _n5 = style.shape;
+						switch (_n5.$) {
+							case 'Upright':
+								return 'normal';
+							case 'SmallCaps':
+								return 'normal';
+							case 'Slanted':
+								return 'oblique';
+							default:
+								return 'italic';
+						}
+					}()),
+					elm$svg$Svg$Attributes$fontVariant(
+					function () {
+						var _n6 = style.shape;
+						if (_n6.$ === 'SmallCaps') {
+							return 'small-caps';
+						} else {
+							return 'normal';
+						}
+					}()),
+					elm$svg$Svg$Attributes$textDecoration(
+					function () {
+						var _n7 = style.line;
+						switch (_n7.$) {
+							case 'None':
+								return 'none';
+							case 'Under':
+								return 'underline';
+							case 'Over':
+								return 'overline';
+							default:
+								return 'line-through';
+						}
+					}()),
+					elm$svg$Svg$Attributes$textAnchor('middle'),
+					elm$svg$Svg$Attributes$dominantBaseline('middle'),
+					elm$svg$Svg$Attributes$transform(
+					timjs$elm_collage$Collage$Render$decodeTransform(collage))
+				]);
+		default:
+			return _List_fromArray(
+				[
+					elm$svg$Svg$Attributes$transform(
+					timjs$elm_collage$Collage$Render$decodeTransform(collage))
+				]);
+	}
+};
+var elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
+var elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
+var timjs$elm_collage$Collage$Render$box = F2(
+	function (w, h) {
+		return _List_fromArray(
+			[
+				elm$svg$Svg$Attributes$width(
+				elm$core$String$fromFloat(w)),
+				elm$svg$Svg$Attributes$height(
+				elm$core$String$fromFloat(h)),
+				elm$svg$Svg$Attributes$x(
+				elm$core$String$fromFloat((-w) / 2)),
+				elm$svg$Svg$Attributes$y(
+				elm$core$String$fromFloat((-h) / 2))
+			]);
+	});
+var timjs$elm_collage$Collage$Render$decodePoints = function (ps) {
+	return A2(
+		elm$core$String$join,
+		' ',
+		A2(
+			elm$core$List$map,
+			function (_n0) {
+				var x = _n0.a;
+				var y = _n0.b;
+				return A2(
+					elm$core$String$join,
+					',',
+					_List_fromArray(
+						[
+							elm$core$String$fromFloat(x),
+							elm$core$String$fromFloat(-y)
+						]));
+			},
+			ps));
+};
+var elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			elm$virtual_dom$VirtualDom$on,
+			event,
+			elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var elm$svg$Svg$Events$on = elm$html$Html$Events$on;
+var timjs$elm_collage$Helpers$uncurry = F2(
+	function (f, _n0) {
+		var a = _n0.a;
+		var b = _n0.b;
+		return A2(f, a, b);
+	});
+var timjs$elm_collage$Collage$Render$events = function (handlers) {
+	return A2(
+		elm$core$List$map,
+		timjs$elm_collage$Helpers$uncurry(elm$svg$Svg$Events$on),
 		handlers);
 };
-var _timjs$elm_collage$Collage_Render$box = F2(
-	function (w, h) {
-		return {
-			ctor: '::',
-			_0: _elm_lang$svg$Svg_Attributes$width(
-				_elm_lang$core$Basics$toString(w)),
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$svg$Svg_Attributes$height(
-					_elm_lang$core$Basics$toString(h)),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$svg$Svg_Attributes$x(
-						_elm_lang$core$Basics$toString((0 - w) / 2)),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$svg$Svg_Attributes$y(
-							_elm_lang$core$Basics$toString((0 - h) / 2)),
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		};
-	});
-var _timjs$elm_collage$Collage_Render$render = function (collage) {
+var timjs$elm_collage$Collage$Render$render = function (collage) {
 	render:
 	while (true) {
-		var name = A2(_elm_community$maybe_extra$Maybe_Extra_ops['?'], collage.name, '_unnamed_');
-		var _p20 = collage.basic;
-		switch (_p20.ctor) {
+		var name = A2(elm$core$Maybe$withDefault, '_unnamed_', collage.name);
+		var _n0 = collage.basic;
+		switch (_n0.$) {
 			case 'Path':
-				var _p21 = _p20._1;
+				var style = _n0.a;
+				var path = _n0.b;
+				var ps = path.a;
 				return A2(
-					_elm_lang$svg$Svg$polyline,
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						{
-							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$id(name),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$points(
-									_timjs$elm_collage$Collage_Render$decodePoints(_p21._0)),
-								_1: {ctor: '[]'}
-							}
-						},
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							_timjs$elm_collage$Collage_Render$attrs(collage),
-							_timjs$elm_collage$Collage_Render$events(collage.handlers))),
-					{ctor: '[]'});
+					elm$svg$Svg$polyline,
+					_Utils_ap(
+						_List_fromArray(
+							[
+								elm$svg$Svg$Attributes$id(name),
+								elm$svg$Svg$Attributes$points(
+								timjs$elm_collage$Collage$Render$decodePoints(ps))
+							]),
+						_Utils_ap(
+							timjs$elm_collage$Collage$Render$attrs(collage),
+							timjs$elm_collage$Collage$Render$events(collage.handlers))),
+					_List_Nil);
 			case 'Shape':
-				var _p22 = _p20._1;
-				switch (_p22.ctor) {
+				var _n2 = _n0.a;
+				var fill = _n2.a;
+				var line = _n2.b;
+				var shape = _n0.b;
+				switch (shape.$) {
 					case 'Polygon':
+						var ps = shape.a;
 						return A2(
-							_elm_lang$svg$Svg$polygon,
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								{
-									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$id(name),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$svg$Svg_Attributes$points(
-											_timjs$elm_collage$Collage_Render$decodePoints(_p22._0)),
-										_1: {ctor: '[]'}
-									}
-								},
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									_timjs$elm_collage$Collage_Render$attrs(collage),
-									_timjs$elm_collage$Collage_Render$events(collage.handlers))),
-							{ctor: '[]'});
+							elm$svg$Svg$polygon,
+							_Utils_ap(
+								_List_fromArray(
+									[
+										elm$svg$Svg$Attributes$id(name),
+										elm$svg$Svg$Attributes$points(
+										timjs$elm_collage$Collage$Render$decodePoints(ps))
+									]),
+								_Utils_ap(
+									timjs$elm_collage$Collage$Render$attrs(collage),
+									timjs$elm_collage$Collage$Render$events(collage.handlers))),
+							_List_Nil);
 					case 'Circle':
+						var r = shape.a;
 						return A2(
-							_elm_lang$svg$Svg$circle,
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								{
-									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$id(name),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$svg$Svg_Attributes$r(
-											_elm_lang$core$Basics$toString(_p22._0)),
-										_1: {ctor: '[]'}
-									}
-								},
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									_timjs$elm_collage$Collage_Render$attrs(collage),
-									_timjs$elm_collage$Collage_Render$events(collage.handlers))),
-							{ctor: '[]'});
+							elm$svg$Svg$circle,
+							_Utils_ap(
+								_List_fromArray(
+									[
+										elm$svg$Svg$Attributes$id(name),
+										elm$svg$Svg$Attributes$r(
+										elm$core$String$fromFloat(r))
+									]),
+								_Utils_ap(
+									timjs$elm_collage$Collage$Render$attrs(collage),
+									timjs$elm_collage$Collage$Render$events(collage.handlers))),
+							_List_Nil);
 					case 'Ellipse':
+						var rx = shape.a;
+						var ry = shape.b;
 						return A2(
-							_elm_lang$svg$Svg$ellipse,
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								{
-									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$id(name),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$svg$Svg_Attributes$rx(
-											_elm_lang$core$Basics$toString(_p22._0)),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$svg$Svg_Attributes$ry(
-												_elm_lang$core$Basics$toString(_p22._1)),
-											_1: {ctor: '[]'}
-										}
-									}
-								},
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									_timjs$elm_collage$Collage_Render$attrs(collage),
-									_timjs$elm_collage$Collage_Render$events(collage.handlers))),
-							{ctor: '[]'});
+							elm$svg$Svg$ellipse,
+							_Utils_ap(
+								_List_fromArray(
+									[
+										elm$svg$Svg$Attributes$id(name),
+										elm$svg$Svg$Attributes$rx(
+										elm$core$String$fromFloat(rx)),
+										elm$svg$Svg$Attributes$ry(
+										elm$core$String$fromFloat(ry))
+									]),
+								_Utils_ap(
+									timjs$elm_collage$Collage$Render$attrs(collage),
+									timjs$elm_collage$Collage$Render$events(collage.handlers))),
+							_List_Nil);
 					case 'Rectangle':
-						var _p23 = _p22._2;
+						var w = shape.a;
+						var h = shape.b;
+						var r = shape.c;
 						return A2(
-							_elm_lang$svg$Svg$rect,
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								{
-									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$id(name),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$svg$Svg_Attributes$rx(
-											_elm_lang$core$Basics$toString(_p23)),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$svg$Svg_Attributes$ry(
-												_elm_lang$core$Basics$toString(_p23)),
-											_1: {ctor: '[]'}
-										}
-									}
-								},
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									A2(_timjs$elm_collage$Collage_Render$box, _p22._0, _p22._1),
-									A2(
-										_elm_lang$core$Basics_ops['++'],
-										_timjs$elm_collage$Collage_Render$attrs(collage),
-										_timjs$elm_collage$Collage_Render$events(collage.handlers)))),
-							{ctor: '[]'});
+							elm$svg$Svg$rect,
+							_Utils_ap(
+								_List_fromArray(
+									[
+										elm$svg$Svg$Attributes$id(name),
+										elm$svg$Svg$Attributes$rx(
+										elm$core$String$fromFloat(r)),
+										elm$svg$Svg$Attributes$ry(
+										elm$core$String$fromFloat(r))
+									]),
+								_Utils_ap(
+									A2(timjs$elm_collage$Collage$Render$box, w, h),
+									_Utils_ap(
+										timjs$elm_collage$Collage$Render$attrs(collage),
+										timjs$elm_collage$Collage$Render$events(collage.handlers)))),
+							_List_Nil);
 					default:
-						var _v15 = _elm_lang$core$Native_Utils.update(
+						var path = shape.a;
+						var $temp$collage = _Utils_update(
 							collage,
 							{
-								basic: A2(_timjs$elm_collage$Collage_Core$Path, _p20._0._1, _p22._0)
+								basic: A2(timjs$elm_collage$Collage$Core$Path, line, path)
 							});
-						collage = _v15;
+						collage = $temp$collage;
 						continue render;
 				}
 			case 'Text':
+				var _n4 = _n0.b;
+				var style = _n4.a;
+				var str = _n4.b;
 				return A2(
-					_elm_lang$svg$Svg$text_,
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						{
-							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$id(name),
-							_1: {ctor: '[]'}
-						},
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							_timjs$elm_collage$Collage_Render$attrs(collage),
-							_timjs$elm_collage$Collage_Render$events(collage.handlers))),
-					{
-						ctor: '::',
-						_0: _elm_lang$svg$Svg$text(_p20._1._1),
-						_1: {ctor: '[]'}
-					});
+					elm$svg$Svg$text_,
+					_Utils_ap(
+						_List_fromArray(
+							[
+								elm$svg$Svg$Attributes$id(name)
+							]),
+						_Utils_ap(
+							timjs$elm_collage$Collage$Render$attrs(collage),
+							timjs$elm_collage$Collage$Render$events(collage.handlers))),
+					_List_fromArray(
+						[
+							elm$svg$Svg$text(str)
+						]));
 			case 'Image':
+				var _n5 = _n0.a;
+				var w = _n5.a;
+				var h = _n5.b;
+				var url = _n0.b;
 				return A2(
-					_elm_lang$svg$Svg$image,
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						{
-							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$id(name),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$xlinkHref(_p20._1),
-								_1: {ctor: '[]'}
-							}
-						},
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							A2(_timjs$elm_collage$Collage_Render$box, _p20._0._0, _p20._0._1),
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								_timjs$elm_collage$Collage_Render$attrs(collage),
-								_timjs$elm_collage$Collage_Render$events(collage.handlers)))),
-					{ctor: '[]'});
+					elm$svg$Svg$image,
+					_Utils_ap(
+						_List_fromArray(
+							[
+								elm$svg$Svg$Attributes$id(name),
+								elm$svg$Svg$Attributes$xlinkHref(url)
+							]),
+						_Utils_ap(
+							A2(timjs$elm_collage$Collage$Render$box, w, h),
+							_Utils_ap(
+								timjs$elm_collage$Collage$Render$attrs(collage),
+								timjs$elm_collage$Collage$Render$events(collage.handlers)))),
+					_List_Nil);
 			case 'Html':
+				var _n6 = _n0.a;
+				var w = _n6.a;
+				var h = _n6.b;
+				var html = _n0.b;
 				return A2(
-					_elm_lang$svg$Svg$foreignObject,
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						{
-							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$id(name),
-							_1: {ctor: '[]'}
-						},
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							A2(_timjs$elm_collage$Collage_Render$box, _p20._0._0, _p20._0._1),
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								_timjs$elm_collage$Collage_Render$attrs(collage),
-								_timjs$elm_collage$Collage_Render$events(collage.handlers)))),
-					{
-						ctor: '::',
-						_0: _p20._1,
-						_1: {ctor: '[]'}
-					});
+					elm$svg$Svg$foreignObject,
+					_Utils_ap(
+						_List_fromArray(
+							[
+								elm$svg$Svg$Attributes$id(name)
+							]),
+						_Utils_ap(
+							A2(timjs$elm_collage$Collage$Render$box, w, h),
+							_Utils_ap(
+								timjs$elm_collage$Collage$Render$attrs(collage),
+								timjs$elm_collage$Collage$Render$events(collage.handlers)))),
+					_List_fromArray(
+						[html]));
 			case 'Group':
+				var collages = _n0.a;
 				return A2(
-					_elm_lang$svg$Svg$g,
-					{
-						ctor: '::',
-						_0: _elm_lang$svg$Svg_Attributes$id(name),
-						_1: A2(
-							_elm_lang$core$Basics_ops['++'],
-							_timjs$elm_collage$Collage_Render$attrs(collage),
-							_timjs$elm_collage$Collage_Render$events(collage.handlers))
-					},
+					elm$svg$Svg$g,
+					A2(
+						elm$core$List$cons,
+						elm$svg$Svg$Attributes$id(name),
+						_Utils_ap(
+							timjs$elm_collage$Collage$Render$attrs(collage),
+							timjs$elm_collage$Collage$Render$events(collage.handlers))),
 					A3(
-						_elm_lang$core$List$foldl,
+						elm$core$List$foldl,
 						F2(
 							function (col, res) {
-								return {
-									ctor: '::',
-									_0: _timjs$elm_collage$Collage_Render$render(col),
-									_1: res
-								};
+								return A2(
+									elm$core$List$cons,
+									timjs$elm_collage$Collage$Render$render(col),
+									res);
 							}),
-						{ctor: '[]'},
-						_p20._0));
+						_List_Nil,
+						collages));
 			default:
-				var _v16 = _elm_lang$core$Native_Utils.update(
+				var fore = _n0.a;
+				var back = _n0.b;
+				var $temp$collage = _Utils_update(
 					collage,
 					{
-						basic: _timjs$elm_collage$Collage_Core$Group(
-							{
-								ctor: '::',
-								_0: _p20._0,
-								_1: {
-									ctor: '::',
-									_0: _p20._1,
-									_1: {ctor: '[]'}
-								}
-							})
+						basic: timjs$elm_collage$Collage$Core$Group(
+							_List_fromArray(
+								[fore, back]))
 					});
-				collage = _v16;
+				collage = $temp$collage;
 				continue render;
 		}
 	}
 };
-var _timjs$elm_collage$Collage_Render$svgAbsolute = F2(
-	function (_p24, collage) {
-		var _p25 = _p24;
-		var h = _elm_lang$core$Basics$toString(_p25._1);
-		var w = _elm_lang$core$Basics$toString(_p25._0);
+var timjs$elm_collage$Collage$Render$svgAbsolute = F2(
+	function (_n0, collage) {
+		var width = _n0.a;
+		var height = _n0.b;
+		var w = elm$core$String$fromFloat(width);
+		var h = elm$core$String$fromFloat(height);
 		return A2(
-			_elm_lang$html$Html$div,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$svg$Svg$svg,
-					{
-						ctor: '::',
-						_0: _elm_lang$svg$Svg_Attributes$width(w),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$height(h),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$version('1.1'),
-								_1: {ctor: '[]'}
-							}
-						}
-					},
-					{
-						ctor: '::',
-						_0: _timjs$elm_collage$Collage_Render$render(collage),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			});
-	});
-var _timjs$elm_collage$Collage_Render$svgExplicit = F2(
-	function (attributes, collage) {
-		return A2(
-			_elm_lang$svg$Svg$svg,
-			attributes,
-			{
-				ctor: '::',
-				_0: _timjs$elm_collage$Collage_Render$render(collage),
-				_1: {ctor: '[]'}
-			});
-	});
-var _timjs$elm_collage$Collage_Render$svg = function (collage) {
-	return A2(
-		_timjs$elm_collage$Collage_Render$svgAbsolute,
-		{
-			ctor: '_Tuple2',
-			_0: _timjs$elm_collage$Collage_Layout$width(collage),
-			_1: _timjs$elm_collage$Collage_Layout$height(collage)
-		},
-		A2(_timjs$elm_collage$Collage_Layout$align, _timjs$elm_collage$Collage_Layout$topLeft, collage));
-};
-var _timjs$elm_collage$Collage_Render$svgBox = F2(
-	function (_p26, collage) {
-		var _p27 = _p26;
-		var _p29 = _p27._0;
-		var _p28 = _p27._1;
-		return A2(
-			_timjs$elm_collage$Collage_Render$svgAbsolute,
-			{ctor: '_Tuple2', _0: _p29, _1: _p28},
-			A2(
-				_timjs$elm_collage$Collage$shift,
-				{ctor: '_Tuple2', _0: _p29 / 2, _1: (0 - _p28) / 2},
-				collage));
-	});
-
-var _madbrain$x86project$Diagram$makeBox = function (content) {
-	var str = _timjs$elm_collage$Collage$rendered(
-		_timjs$elm_collage$Collage_Text$fromString(content));
-	var w = _timjs$elm_collage$Collage_Layout$width(str) + 10;
-	var h = _timjs$elm_collage$Collage_Layout$height(str) + 10;
-	return A2(
-		_timjs$elm_collage$Collage_Layout$impose,
-		str,
-		A2(
-			_timjs$elm_collage$Collage$outlined,
-			A2(
-				_timjs$elm_collage$Collage$solid,
-				_timjs$elm_collage$Collage$thin,
-				_timjs$elm_collage$Collage$uniform(_elm_lang$core$Color$blue)),
-			A2(_timjs$elm_collage$Collage$rectangle, w, h)));
-};
-var _madbrain$x86project$Diagram$blockName = F3(
-	function (prefix, level, i) {
-		return A2(
-			_elm_lang$core$String$join,
-			'_',
-			{
-				ctor: '::',
-				_0: prefix,
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$core$Basics$toString(level),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$core$Basics$toString(i),
-						_1: {ctor: '[]'}
-					}
-				}
-			});
-	});
-var _madbrain$x86project$Diagram$getBlock = F3(
-	function (collage, level, i) {
-		return A3(
-			_timjs$elm_collage$Collage_Layout$locate,
-			A3(_madbrain$x86project$Diagram$blockName, 'block', level, i),
-			_timjs$elm_collage$Collage_Layout$bottom,
-			collage);
-	});
-var _madbrain$x86project$Diagram$getDesc = F3(
-	function (collage, level, i) {
-		return A3(
-			_timjs$elm_collage$Collage_Layout$locate,
-			A3(_madbrain$x86project$Diagram$blockName, 'desc', level, i),
-			_timjs$elm_collage$Collage_Layout$left,
-			collage);
-	});
-var _madbrain$x86project$Diagram$drawDiagram = F2(
-	function (level, data) {
-		var _p0 = A2(_madbrain$x86project$Diagram$makeBlocks, data, level);
-		var bl = _p0._0;
-		var ds = _p0._1;
-		var collage = _timjs$elm_collage$Collage_Layout$stack(
-			{
-				ctor: '::',
-				_0: bl,
-				_1: {
-					ctor: '::',
-					_0: A3(
-						_timjs$elm_collage$Collage_Layout$place,
-						_timjs$elm_collage$Collage_Layout$Down,
-						bl,
-						A3(_timjs$elm_collage$Collage_Layout$place, _timjs$elm_collage$Collage_Layout$Right, bl, ds)),
-					_1: {ctor: '[]'}
-				}
-			});
-		var lines = A2(
-			_elm_lang$core$List$filterMap,
-			function (i) {
-				var _p1 = {
-					ctor: '_Tuple2',
-					_0: A3(_madbrain$x86project$Diagram$getBlock, collage, level, i),
-					_1: A3(_madbrain$x86project$Diagram$getDesc, collage, level, i)
-				};
-				if (((((_p1.ctor === '_Tuple2') && (_p1._0.ctor === 'Just')) && (_p1._0._0.ctor === '_Tuple2')) && (_p1._1.ctor === 'Just')) && (_p1._1._0.ctor === '_Tuple2')) {
-					return _elm_lang$core$Maybe$Just(
-						A2(
-							_timjs$elm_collage$Collage$traced,
-							A2(
-								_timjs$elm_collage$Collage$solid,
-								_timjs$elm_collage$Collage$semithick,
-								_timjs$elm_collage$Collage$uniform(_elm_lang$core$Color$green)),
-							_timjs$elm_collage$Collage$path(
-								{
-									ctor: '::',
-									_0: _p1._0._0,
-									_1: {
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: _p1._0._0._0, _1: _p1._1._0._1},
-										_1: {
-											ctor: '::',
-											_0: _p1._1._0,
-											_1: {ctor: '[]'}
-										}
-									}
-								})));
-				} else {
-					return _elm_lang$core$Maybe$Nothing;
-				}
-			},
-			_elm_lang$core$Array$toList(
-				A2(
-					_elm_lang$core$Array$initialize,
-					_elm_lang$core$List$length(data),
-					_elm_lang$core$Basics$identity)));
-		return _timjs$elm_collage$Collage_Layout$stack(
-			{ctor: '::', _0: collage, _1: lines});
-	});
-var _madbrain$x86project$Diagram$makeBlocks = F2(
-	function (data, level) {
-		var _p2 = _elm_lang$core$List$unzip(
-			_elm_lang$core$Array$toList(
-				A2(
-					_elm_lang$core$Array$indexedMap,
-					_madbrain$x86project$Diagram$makeBlockAndDesc(level),
-					_elm_lang$core$Array$fromList(data))));
-		var blocks = _p2._0;
-		var descs = _p2._1;
-		return {
-			ctor: '_Tuple2',
-			_0: _timjs$elm_collage$Collage_Layout$horizontal(
-				A2(
-					_elm_lang$core$List$intersperse,
-					A2(_timjs$elm_collage$Collage_Layout$spacer, 10, 0),
-					blocks)),
-			_1: _timjs$elm_collage$Collage_Layout$vertical(
-				_elm_lang$core$List$reverse(
+			elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
 					A2(
-						_elm_lang$core$List$intersperse,
-						A2(_timjs$elm_collage$Collage_Layout$spacer, 0, 10),
-						descs)))
-		};
+					elm$svg$Svg$svg,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$width(w),
+							elm$svg$Svg$Attributes$height(h),
+							elm$svg$Svg$Attributes$version('1.1')
+						]),
+					_List_fromArray(
+						[
+							timjs$elm_collage$Collage$Render$render(collage)
+						]))
+				]));
 	});
-var _madbrain$x86project$Diagram$makeBlockAndDesc = F3(
-	function (level, i, _p3) {
-		var _p4 = _p3;
-		return {
-			ctor: '_Tuple2',
-			_0: A2(
-				_timjs$elm_collage$Collage_Layout$name,
-				A3(_madbrain$x86project$Diagram$blockName, 'block', level, i),
-				_madbrain$x86project$Diagram$makeBox(_p4._0)),
-			_1: A2(
-				_timjs$elm_collage$Collage_Layout$align,
-				_timjs$elm_collage$Collage_Layout$left,
-				_timjs$elm_collage$Collage_Layout$vertical(
-					{
-						ctor: '::',
-						_0: A2(_timjs$elm_collage$Collage_Layout$spacer, 0, 10),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_timjs$elm_collage$Collage_Layout$name,
-								A3(_madbrain$x86project$Diagram$blockName, 'desc', level, i),
-								_timjs$elm_collage$Collage_Layout$horizontal(
-									{
-										ctor: '::',
-										_0: A2(_timjs$elm_collage$Collage_Layout$spacer, 10, 0),
-										_1: {
-											ctor: '::',
-											_0: A2(_madbrain$x86project$Diagram$makeDesc, _p4._1, level + 1),
-											_1: {ctor: '[]'}
-										}
-									})),
-							_1: {ctor: '[]'}
-						}
-					}))
-		};
-	});
-var _madbrain$x86project$Diagram$makeDesc = F2(
-	function (element, level) {
-		var _p5 = element;
-		if (_p5.ctor === 'Leaf') {
-			return _timjs$elm_collage$Collage$rendered(
-				_timjs$elm_collage$Collage_Text$fromString(_p5._0));
-		} else {
-			return _timjs$elm_collage$Collage_Layout$horizontal(
-				{
-					ctor: '::',
-					_0: _timjs$elm_collage$Collage$rendered(
-						_timjs$elm_collage$Collage_Text$fromString(_p5._0)),
-					_1: {
-						ctor: '::',
-						_0: A2(_timjs$elm_collage$Collage_Layout$spacer, 10, 0),
-						_1: {
-							ctor: '::',
-							_0: A2(_madbrain$x86project$Diagram$drawDiagram, level, _p5._1),
-							_1: {ctor: '[]'}
-						}
-					}
-				});
-		}
-	});
-var _madbrain$x86project$Diagram$draw = function (data) {
-	return _timjs$elm_collage$Collage_Render$svg(
-		A2(_madbrain$x86project$Diagram$drawDiagram, 0, data));
-};
-var _madbrain$x86project$Diagram$Leaf = function (a) {
-	return {ctor: 'Leaf', _0: a};
-};
-var _madbrain$x86project$Diagram$Node = F2(
-	function (a, b) {
-		return {ctor: 'Node', _0: a, _1: b};
-	});
-var _madbrain$x86project$Diagram$test = {
-	ctor: '::',
-	_0: {
-		ctor: '_Tuple2',
-		_0: '01 00',
-		_1: _madbrain$x86project$Diagram$Leaf('A')
-	},
-	_1: {
-		ctor: '::',
-		_0: {
-			ctor: '_Tuple2',
-			_0: '98',
-			_1: A2(
-				_madbrain$x86project$Diagram$Node,
-				'B',
-				{
-					ctor: '::',
-					_0: {
-						ctor: '_Tuple2',
-						_0: '000',
-						_1: _madbrain$x86project$Diagram$Leaf('D')
-					},
-					_1: {
-						ctor: '::',
-						_0: {
-							ctor: '_Tuple2',
-							_0: '01010',
-							_1: _madbrain$x86project$Diagram$Leaf('E')
-						},
-						_1: {ctor: '[]'}
-					}
-				})
-		},
-		_1: {
-			ctor: '::',
-			_0: {
-				ctor: '_Tuple2',
-				_0: '45',
-				_1: _madbrain$x86project$Diagram$Leaf('C')
-			},
-			_1: {ctor: '[]'}
-		}
-	}
-};
-var _madbrain$x86project$Diagram$main = _elm_lang$virtual_dom$Native_VirtualDom.staticProgram(
-	A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: _madbrain$x86project$Diagram$draw(_madbrain$x86project$Diagram$test),
-			_1: {ctor: '[]'}
-		}));
-
-var _madbrain$x86project$Utils$groupBy = F2(
-	function (func, list) {
-		var addToList = F2(
-			function (element, previous) {
-				var _p0 = previous;
-				if (_p0.ctor === 'Just') {
-					return _elm_lang$core$Maybe$Just(
-						{ctor: '::', _0: element, _1: _p0._0});
-				} else {
-					return _elm_lang$core$Maybe$Just(
-						{
-							ctor: '::',
-							_0: element,
-							_1: {ctor: '[]'}
-						});
-				}
-			});
-		var process = F2(
-			function (element, dict) {
-				return A3(
-					_elm_lang$core$Dict$update,
-					func(element),
-					addToList(element),
-					dict);
-			});
-		return A3(_elm_lang$core$List$foldl, process, _elm_lang$core$Dict$empty, list);
-	});
-
-var _madbrain$x86project$X86$regName = function (reg) {
-	var _p0 = reg;
-	switch (_p0.ctor) {
-		case 'EAX':
-			return 'EAX';
-		case 'AX':
-			return 'AX';
-		default:
-			return 'AL';
-	}
-};
-var _madbrain$x86project$X86$operandString = function (op) {
-	var _p1 = op;
-	switch (_p1.ctor) {
-		case 'RM':
-			return A2(
-				_elm_lang$core$Basics_ops['++'],
-				'r/m',
-				_elm_lang$core$Basics$toString(_p1._0));
-		case 'R':
-			return A2(
-				_elm_lang$core$Basics_ops['++'],
-				'r',
-				_elm_lang$core$Basics$toString(_p1._0));
-		case 'I':
-			return A2(
-				_elm_lang$core$Basics_ops['++'],
-				'imm',
-				_elm_lang$core$Basics$toString(_p1._0));
-		case 'Register':
-			return _madbrain$x86project$X86$regName(_p1._0);
-		default:
-			return '<error>';
-	}
-};
-var _madbrain$x86project$X86$instrToString = function (_p2) {
-	var _p3 = _p2;
+var timjs$elm_collage$Collage$Render$svg = function (collage) {
 	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		_p3._0._1,
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			' ',
-			A2(
-				_elm_lang$core$String$join,
-				', ',
-				A2(_elm_lang$core$List$map, _madbrain$x86project$X86$operandString, _p3._0._2))));
+		timjs$elm_collage$Collage$Render$svgAbsolute,
+		_Utils_Tuple2(
+			timjs$elm_collage$Collage$Layout$width(collage),
+			timjs$elm_collage$Collage$Layout$height(collage)),
+		A2(timjs$elm_collage$Collage$Layout$align, timjs$elm_collage$Collage$Layout$topLeft, collage));
 };
-var _madbrain$x86project$X86$templateSize = function (s) {
-	var _p4 = _elm_lang$core$String$toInt(s);
-	_v3_3:
-	do {
-		if (_p4.ctor === 'Ok') {
-			switch (_p4._0) {
-				case 32:
-					return _elm_lang$core$Maybe$Just(32);
-				case 16:
-					return _elm_lang$core$Maybe$Just(16);
-				case 8:
-					return _elm_lang$core$Maybe$Just(8);
-				default:
-					break _v3_3;
-			}
-		} else {
-			break _v3_3;
-		}
-	} while(false);
-	return _elm_lang$core$Maybe$Nothing;
+var author$project$Diagram$draw = function (data) {
+	return timjs$elm_collage$Collage$Render$svg(
+		A2(author$project$Diagram$drawDiagram, 0, data));
 };
-var _madbrain$x86project$X86$Instr = function (a) {
-	return {ctor: 'Instr', _0: a};
+var author$project$Diagram$Leaf = function (a) {
+	return {$: 'Leaf', a: a};
 };
-var _madbrain$x86project$X86$AL = {ctor: 'AL'};
-var _madbrain$x86project$X86$AX = {ctor: 'AX'};
-var _madbrain$x86project$X86$EAX = {ctor: 'EAX'};
-var _madbrain$x86project$X86$makeReg = function (tpl) {
-	var _p5 = tpl;
-	switch (_p5) {
-		case 'EAX':
-			return _elm_lang$core$Maybe$Just(_madbrain$x86project$X86$EAX);
-		case 'AX':
-			return _elm_lang$core$Maybe$Just(_madbrain$x86project$X86$AX);
-		case 'AL':
-			return _elm_lang$core$Maybe$Just(_madbrain$x86project$X86$AL);
-		default:
-			return _elm_lang$core$Maybe$Nothing;
-	}
-};
-var _madbrain$x86project$X86$MODRM = {ctor: 'MODRM'};
-var _madbrain$x86project$X86$O_R = function (a) {
-	return {ctor: 'O_R', _0: a};
-};
-var _madbrain$x86project$X86$E = function (a) {
-	return {ctor: 'E', _0: a};
-};
-var _madbrain$x86project$X86$O = function (a) {
-	return {ctor: 'O', _0: a};
-};
-var _madbrain$x86project$X86$Error = {ctor: 'Error'};
-var _madbrain$x86project$X86$I = function (a) {
-	return {ctor: 'I', _0: a};
-};
-var _madbrain$x86project$X86$RM = function (a) {
-	return {ctor: 'RM', _0: a};
-};
-var _madbrain$x86project$X86$Register = function (a) {
-	return {ctor: 'Register', _0: a};
-};
-var _madbrain$x86project$X86$R = function (a) {
-	return {ctor: 'R', _0: a};
-};
-var _madbrain$x86project$X86$templatePattern = function (tpl) {
-	if (A2(_elm_lang$core$String$startsWith, 'r/m', tpl)) {
-		return A2(
-			_elm_lang$core$Maybe$withDefault,
-			_madbrain$x86project$X86$Error,
-			A2(
-				_elm_lang$core$Maybe$map,
-				_madbrain$x86project$X86$RM,
-				_madbrain$x86project$X86$templateSize(
-					A3(
-						_elm_lang$core$String$slice,
-						3,
-						_elm_lang$core$String$length(tpl),
-						tpl))));
-	} else {
-		if (A2(_elm_lang$core$String$startsWith, 'r', tpl)) {
-			return A2(
-				_elm_lang$core$Maybe$withDefault,
-				_madbrain$x86project$X86$Error,
-				A2(
-					_elm_lang$core$Maybe$map,
-					_madbrain$x86project$X86$R,
-					_madbrain$x86project$X86$templateSize(
-						A3(
-							_elm_lang$core$String$slice,
-							1,
-							_elm_lang$core$String$length(tpl),
-							tpl))));
-		} else {
-			if (A2(_elm_lang$core$String$startsWith, 'imm', tpl)) {
-				return A2(
-					_elm_lang$core$Maybe$withDefault,
-					_madbrain$x86project$X86$Error,
-					A2(
-						_elm_lang$core$Maybe$map,
-						_madbrain$x86project$X86$I,
-						_madbrain$x86project$X86$templateSize(
-							A3(
-								_elm_lang$core$String$slice,
-								3,
-								_elm_lang$core$String$length(tpl),
-								tpl))));
-			} else {
-				var _p6 = _madbrain$x86project$X86$makeReg(tpl);
-				if (_p6.ctor === 'Just') {
-					return _madbrain$x86project$X86$Register(_p6._0);
-				} else {
-					return _madbrain$x86project$X86$Error;
-				}
-			}
-		}
-	}
-};
-var _madbrain$x86project$X86$ops = function (operands) {
-	var _p7 = operands;
-	if (_p7.ctor === '[]') {
-		return {ctor: '[]'};
-	} else {
-		return {
-			ctor: '::',
-			_0: _madbrain$x86project$X86$templatePattern(_p7._0),
-			_1: _madbrain$x86project$X86$ops(_p7._1)
-		};
-	}
-};
-var _madbrain$x86project$X86$instructions = {
-	ctor: '::',
-	_0: _madbrain$x86project$X86$Instr(
-		{
-			ctor: '_Tuple3',
-			_0: {
-				ctor: '::',
-				_0: _madbrain$x86project$X86$O(4),
-				_1: {ctor: '[]'}
-			},
-			_1: 'ADD',
-			_2: _madbrain$x86project$X86$ops(
-				{
-					ctor: '::',
-					_0: 'AL',
-					_1: {
-						ctor: '::',
-						_0: 'imm8',
-						_1: {ctor: '[]'}
-					}
-				})
-		}),
-	_1: {
-		ctor: '::',
-		_0: _madbrain$x86project$X86$Instr(
-			{
-				ctor: '_Tuple3',
-				_0: {
-					ctor: '::',
-					_0: _madbrain$x86project$X86$O(5),
-					_1: {ctor: '[]'}
-				},
-				_1: 'ADD',
-				_2: _madbrain$x86project$X86$ops(
-					{
-						ctor: '::',
-						_0: 'AX',
-						_1: {
-							ctor: '::',
-							_0: 'imm16',
-							_1: {ctor: '[]'}
-						}
-					})
-			}),
-		_1: {
-			ctor: '::',
-			_0: _madbrain$x86project$X86$Instr(
-				{
-					ctor: '_Tuple3',
-					_0: {
-						ctor: '::',
-						_0: _madbrain$x86project$X86$O(5),
-						_1: {ctor: '[]'}
-					},
-					_1: 'ADD',
-					_2: _madbrain$x86project$X86$ops(
-						{
-							ctor: '::',
-							_0: 'EAX',
-							_1: {
-								ctor: '::',
-								_0: 'imm32',
-								_1: {ctor: '[]'}
-							}
-						})
-				}),
-			_1: {
-				ctor: '::',
-				_0: _madbrain$x86project$X86$Instr(
-					{
-						ctor: '_Tuple3',
-						_0: {
-							ctor: '::',
-							_0: _madbrain$x86project$X86$O(128),
-							_1: {
-								ctor: '::',
-								_0: _madbrain$x86project$X86$E(0),
-								_1: {ctor: '[]'}
-							}
-						},
-						_1: 'ADD',
-						_2: _madbrain$x86project$X86$ops(
-							{
-								ctor: '::',
-								_0: 'r/m8',
-								_1: {
-									ctor: '::',
-									_0: 'imm8',
-									_1: {ctor: '[]'}
-								}
-							})
-					}),
-				_1: {
-					ctor: '::',
-					_0: _madbrain$x86project$X86$Instr(
-						{
-							ctor: '_Tuple3',
-							_0: {
-								ctor: '::',
-								_0: _madbrain$x86project$X86$O(129),
-								_1: {
-									ctor: '::',
-									_0: _madbrain$x86project$X86$E(0),
-									_1: {ctor: '[]'}
-								}
-							},
-							_1: 'ADD',
-							_2: _madbrain$x86project$X86$ops(
-								{
-									ctor: '::',
-									_0: 'r/m16',
-									_1: {
-										ctor: '::',
-										_0: 'imm16',
-										_1: {ctor: '[]'}
-									}
-								})
-						}),
-					_1: {
-						ctor: '::',
-						_0: _madbrain$x86project$X86$Instr(
-							{
-								ctor: '_Tuple3',
-								_0: {
-									ctor: '::',
-									_0: _madbrain$x86project$X86$O(129),
-									_1: {
-										ctor: '::',
-										_0: _madbrain$x86project$X86$E(0),
-										_1: {ctor: '[]'}
-									}
-								},
-								_1: 'ADD',
-								_2: _madbrain$x86project$X86$ops(
-									{
-										ctor: '::',
-										_0: 'r/m32',
-										_1: {
-											ctor: '::',
-											_0: 'imm32',
-											_1: {ctor: '[]'}
-										}
-									})
-							}),
-						_1: {
-							ctor: '::',
-							_0: _madbrain$x86project$X86$Instr(
-								{
-									ctor: '_Tuple3',
-									_0: {
-										ctor: '::',
-										_0: _madbrain$x86project$X86$O(131),
-										_1: {
-											ctor: '::',
-											_0: _madbrain$x86project$X86$E(0),
-											_1: {ctor: '[]'}
-										}
-									},
-									_1: 'ADD',
-									_2: _madbrain$x86project$X86$ops(
-										{
-											ctor: '::',
-											_0: 'r/m16',
-											_1: {
-												ctor: '::',
-												_0: 'imm8',
-												_1: {ctor: '[]'}
-											}
-										})
-								}),
-							_1: {
-								ctor: '::',
-								_0: _madbrain$x86project$X86$Instr(
-									{
-										ctor: '_Tuple3',
-										_0: {
-											ctor: '::',
-											_0: _madbrain$x86project$X86$O(131),
-											_1: {
-												ctor: '::',
-												_0: _madbrain$x86project$X86$E(0),
-												_1: {ctor: '[]'}
-											}
-										},
-										_1: 'ADD',
-										_2: _madbrain$x86project$X86$ops(
-											{
-												ctor: '::',
-												_0: 'r/m32',
-												_1: {
-													ctor: '::',
-													_0: 'imm8',
-													_1: {ctor: '[]'}
-												}
-											})
-									}),
-								_1: {
-									ctor: '::',
-									_0: _madbrain$x86project$X86$Instr(
-										{
-											ctor: '_Tuple3',
-											_0: {
-												ctor: '::',
-												_0: _madbrain$x86project$X86$O(0),
-												_1: {
-													ctor: '::',
-													_0: _madbrain$x86project$X86$MODRM,
-													_1: {ctor: '[]'}
-												}
-											},
-											_1: 'ADD',
-											_2: _madbrain$x86project$X86$ops(
-												{
-													ctor: '::',
-													_0: 'r/m8',
-													_1: {
-														ctor: '::',
-														_0: 'r8',
-														_1: {ctor: '[]'}
-													}
-												})
-										}),
-									_1: {
-										ctor: '::',
-										_0: _madbrain$x86project$X86$Instr(
-											{
-												ctor: '_Tuple3',
-												_0: {
-													ctor: '::',
-													_0: _madbrain$x86project$X86$O(1),
-													_1: {
-														ctor: '::',
-														_0: _madbrain$x86project$X86$MODRM,
-														_1: {ctor: '[]'}
-													}
-												},
-												_1: 'ADD',
-												_2: _madbrain$x86project$X86$ops(
-													{
-														ctor: '::',
-														_0: 'r/m16',
-														_1: {
-															ctor: '::',
-															_0: 'r16',
-															_1: {ctor: '[]'}
-														}
-													})
-											}),
-										_1: {
-											ctor: '::',
-											_0: _madbrain$x86project$X86$Instr(
-												{
-													ctor: '_Tuple3',
-													_0: {
-														ctor: '::',
-														_0: _madbrain$x86project$X86$O(1),
-														_1: {
-															ctor: '::',
-															_0: _madbrain$x86project$X86$MODRM,
-															_1: {ctor: '[]'}
-														}
-													},
-													_1: 'ADD',
-													_2: _madbrain$x86project$X86$ops(
-														{
-															ctor: '::',
-															_0: 'r/m32',
-															_1: {
-																ctor: '::',
-																_0: 'r32',
-																_1: {ctor: '[]'}
-															}
-														})
-												}),
-											_1: {
-												ctor: '::',
-												_0: _madbrain$x86project$X86$Instr(
-													{
-														ctor: '_Tuple3',
-														_0: {
-															ctor: '::',
-															_0: _madbrain$x86project$X86$O(2),
-															_1: {
-																ctor: '::',
-																_0: _madbrain$x86project$X86$MODRM,
-																_1: {ctor: '[]'}
-															}
-														},
-														_1: 'ADD',
-														_2: _madbrain$x86project$X86$ops(
-															{
-																ctor: '::',
-																_0: 'r8',
-																_1: {
-																	ctor: '::',
-																	_0: 'r/m8',
-																	_1: {ctor: '[]'}
-																}
-															})
-													}),
-												_1: {
-													ctor: '::',
-													_0: _madbrain$x86project$X86$Instr(
-														{
-															ctor: '_Tuple3',
-															_0: {
-																ctor: '::',
-																_0: _madbrain$x86project$X86$O(3),
-																_1: {
-																	ctor: '::',
-																	_0: _madbrain$x86project$X86$MODRM,
-																	_1: {ctor: '[]'}
-																}
-															},
-															_1: 'ADD',
-															_2: _madbrain$x86project$X86$ops(
-																{
-																	ctor: '::',
-																	_0: 'r16',
-																	_1: {
-																		ctor: '::',
-																		_0: 'r/m16',
-																		_1: {ctor: '[]'}
-																	}
-																})
-														}),
-													_1: {
-														ctor: '::',
-														_0: _madbrain$x86project$X86$Instr(
-															{
-																ctor: '_Tuple3',
-																_0: {
-																	ctor: '::',
-																	_0: _madbrain$x86project$X86$O(3),
-																	_1: {
-																		ctor: '::',
-																		_0: _madbrain$x86project$X86$MODRM,
-																		_1: {ctor: '[]'}
-																	}
-																},
-																_1: 'ADD',
-																_2: _madbrain$x86project$X86$ops(
-																	{
-																		ctor: '::',
-																		_0: 'r32',
-																		_1: {
-																			ctor: '::',
-																			_0: 'r/m32',
-																			_1: {ctor: '[]'}
-																		}
-																	})
-															}),
-														_1: {
-															ctor: '::',
-															_0: _madbrain$x86project$X86$Instr(
-																{
-																	ctor: '_Tuple3',
-																	_0: {
-																		ctor: '::',
-																		_0: _madbrain$x86project$X86$O(254),
-																		_1: {
-																			ctor: '::',
-																			_0: _madbrain$x86project$X86$E(1),
-																			_1: {ctor: '[]'}
-																		}
-																	},
-																	_1: 'DEC',
-																	_2: _madbrain$x86project$X86$ops(
-																		{
-																			ctor: '::',
-																			_0: 'r/m8',
-																			_1: {ctor: '[]'}
-																		})
-																}),
-															_1: {
-																ctor: '::',
-																_0: _madbrain$x86project$X86$Instr(
-																	{
-																		ctor: '_Tuple3',
-																		_0: {
-																			ctor: '::',
-																			_0: _madbrain$x86project$X86$O(255),
-																			_1: {
-																				ctor: '::',
-																				_0: _madbrain$x86project$X86$E(1),
-																				_1: {ctor: '[]'}
-																			}
-																		},
-																		_1: 'DEC',
-																		_2: _madbrain$x86project$X86$ops(
-																			{
-																				ctor: '::',
-																				_0: 'r/m16',
-																				_1: {ctor: '[]'}
-																			})
-																	}),
-																_1: {
-																	ctor: '::',
-																	_0: _madbrain$x86project$X86$Instr(
-																		{
-																			ctor: '_Tuple3',
-																			_0: {
-																				ctor: '::',
-																				_0: _madbrain$x86project$X86$O(255),
-																				_1: {
-																					ctor: '::',
-																					_0: _madbrain$x86project$X86$E(1),
-																					_1: {ctor: '[]'}
-																				}
-																			},
-																			_1: 'DEC',
-																			_2: _madbrain$x86project$X86$ops(
-																				{
-																					ctor: '::',
-																					_0: 'r/m32',
-																					_1: {ctor: '[]'}
-																				})
-																		}),
-																	_1: {
-																		ctor: '::',
-																		_0: _madbrain$x86project$X86$Instr(
-																			{
-																				ctor: '_Tuple3',
-																				_0: {
-																					ctor: '::',
-																					_0: _madbrain$x86project$X86$O_R(72),
-																					_1: {ctor: '[]'}
-																				},
-																				_1: 'DEC',
-																				_2: _madbrain$x86project$X86$ops(
-																					{
-																						ctor: '::',
-																						_0: 'r16',
-																						_1: {ctor: '[]'}
-																					})
-																			}),
-																		_1: {
-																			ctor: '::',
-																			_0: _madbrain$x86project$X86$Instr(
-																				{
-																					ctor: '_Tuple3',
-																					_0: {
-																						ctor: '::',
-																						_0: _madbrain$x86project$X86$O_R(72),
-																						_1: {ctor: '[]'}
-																					},
-																					_1: 'DEC',
-																					_2: _madbrain$x86project$X86$ops(
-																						{
-																							ctor: '::',
-																							_0: 'r32',
-																							_1: {ctor: '[]'}
-																						})
-																				}),
-																			_1: {
-																				ctor: '::',
-																				_0: _madbrain$x86project$X86$Instr(
-																					{
-																						ctor: '_Tuple3',
-																						_0: {
-																							ctor: '::',
-																							_0: _madbrain$x86project$X86$O(246),
-																							_1: {
-																								ctor: '::',
-																								_0: _madbrain$x86project$X86$E(6),
-																								_1: {ctor: '[]'}
-																							}
-																						},
-																						_1: 'DIV',
-																						_2: _madbrain$x86project$X86$ops(
-																							{
-																								ctor: '::',
-																								_0: 'r/m8',
-																								_1: {ctor: '[]'}
-																							})
-																					}),
-																				_1: {
-																					ctor: '::',
-																					_0: _madbrain$x86project$X86$Instr(
-																						{
-																							ctor: '_Tuple3',
-																							_0: {
-																								ctor: '::',
-																								_0: _madbrain$x86project$X86$O(247),
-																								_1: {
-																									ctor: '::',
-																									_0: _madbrain$x86project$X86$E(6),
-																									_1: {ctor: '[]'}
-																								}
-																							},
-																							_1: 'DIV',
-																							_2: _madbrain$x86project$X86$ops(
-																								{
-																									ctor: '::',
-																									_0: 'r/m16',
-																									_1: {ctor: '[]'}
-																								})
-																						}),
-																					_1: {
-																						ctor: '::',
-																						_0: _madbrain$x86project$X86$Instr(
-																							{
-																								ctor: '_Tuple3',
-																								_0: {
-																									ctor: '::',
-																									_0: _madbrain$x86project$X86$O(247),
-																									_1: {
-																										ctor: '::',
-																										_0: _madbrain$x86project$X86$E(6),
-																										_1: {ctor: '[]'}
-																									}
-																								},
-																								_1: 'DIV',
-																								_2: _madbrain$x86project$X86$ops(
-																									{
-																										ctor: '::',
-																										_0: 'r/m32',
-																										_1: {ctor: '[]'}
-																									})
-																							}),
-																						_1: {
-																							ctor: '::',
-																							_0: _madbrain$x86project$X86$Instr(
-																								{
-																									ctor: '_Tuple3',
-																									_0: {
-																										ctor: '::',
-																										_0: _madbrain$x86project$X86$O(246),
-																										_1: {
-																											ctor: '::',
-																											_0: _madbrain$x86project$X86$E(7),
-																											_1: {ctor: '[]'}
-																										}
-																									},
-																									_1: 'IDIV',
-																									_2: _madbrain$x86project$X86$ops(
-																										{
-																											ctor: '::',
-																											_0: 'r/m8',
-																											_1: {ctor: '[]'}
-																										})
-																								}),
-																							_1: {
-																								ctor: '::',
-																								_0: _madbrain$x86project$X86$Instr(
-																									{
-																										ctor: '_Tuple3',
-																										_0: {
-																											ctor: '::',
-																											_0: _madbrain$x86project$X86$O(247),
-																											_1: {
-																												ctor: '::',
-																												_0: _madbrain$x86project$X86$E(7),
-																												_1: {ctor: '[]'}
-																											}
-																										},
-																										_1: 'IDIV',
-																										_2: _madbrain$x86project$X86$ops(
-																											{
-																												ctor: '::',
-																												_0: 'r/m16',
-																												_1: {ctor: '[]'}
-																											})
-																									}),
-																								_1: {
-																									ctor: '::',
-																									_0: _madbrain$x86project$X86$Instr(
-																										{
-																											ctor: '_Tuple3',
-																											_0: {
-																												ctor: '::',
-																												_0: _madbrain$x86project$X86$O(247),
-																												_1: {
-																													ctor: '::',
-																													_0: _madbrain$x86project$X86$E(7),
-																													_1: {ctor: '[]'}
-																												}
-																											},
-																											_1: 'IDIV',
-																											_2: _madbrain$x86project$X86$ops(
-																												{
-																													ctor: '::',
-																													_0: 'r/m32',
-																													_1: {ctor: '[]'}
-																												})
-																										}),
-																									_1: {
-																										ctor: '::',
-																										_0: _madbrain$x86project$X86$Instr(
-																											{
-																												ctor: '_Tuple3',
-																												_0: {
-																													ctor: '::',
-																													_0: _madbrain$x86project$X86$O(246),
-																													_1: {
-																														ctor: '::',
-																														_0: _madbrain$x86project$X86$E(5),
-																														_1: {ctor: '[]'}
-																													}
-																												},
-																												_1: 'IMUL',
-																												_2: _madbrain$x86project$X86$ops(
-																													{
-																														ctor: '::',
-																														_0: 'r/m8',
-																														_1: {ctor: '[]'}
-																													})
-																											}),
-																										_1: {
-																											ctor: '::',
-																											_0: _madbrain$x86project$X86$Instr(
-																												{
-																													ctor: '_Tuple3',
-																													_0: {
-																														ctor: '::',
-																														_0: _madbrain$x86project$X86$O(247),
-																														_1: {
-																															ctor: '::',
-																															_0: _madbrain$x86project$X86$E(5),
-																															_1: {ctor: '[]'}
-																														}
-																													},
-																													_1: 'IMUL',
-																													_2: _madbrain$x86project$X86$ops(
-																														{
-																															ctor: '::',
-																															_0: 'r/m16',
-																															_1: {ctor: '[]'}
-																														})
-																												}),
-																											_1: {
-																												ctor: '::',
-																												_0: _madbrain$x86project$X86$Instr(
-																													{
-																														ctor: '_Tuple3',
-																														_0: {
-																															ctor: '::',
-																															_0: _madbrain$x86project$X86$O(247),
-																															_1: {
-																																ctor: '::',
-																																_0: _madbrain$x86project$X86$E(5),
-																																_1: {ctor: '[]'}
-																															}
-																														},
-																														_1: 'IMUL',
-																														_2: _madbrain$x86project$X86$ops(
-																															{
-																																ctor: '::',
-																																_0: 'r/m32',
-																																_1: {ctor: '[]'}
-																															})
-																													}),
-																												_1: {
-																													ctor: '::',
-																													_0: _madbrain$x86project$X86$Instr(
-																														{
-																															ctor: '_Tuple3',
-																															_0: {
-																																ctor: '::',
-																																_0: _madbrain$x86project$X86$O(7),
-																																_1: {
-																																	ctor: '::',
-																																	_0: _madbrain$x86project$X86$O(175),
-																																	_1: {
-																																		ctor: '::',
-																																		_0: _madbrain$x86project$X86$MODRM,
-																																		_1: {ctor: '[]'}
-																																	}
-																																}
-																															},
-																															_1: 'IMUL',
-																															_2: _madbrain$x86project$X86$ops(
-																																{
-																																	ctor: '::',
-																																	_0: 'r16',
-																																	_1: {
-																																		ctor: '::',
-																																		_0: 'r/m16',
-																																		_1: {ctor: '[]'}
-																																	}
-																																})
-																														}),
-																													_1: {
-																														ctor: '::',
-																														_0: _madbrain$x86project$X86$Instr(
-																															{
-																																ctor: '_Tuple3',
-																																_0: {
-																																	ctor: '::',
-																																	_0: _madbrain$x86project$X86$O(7),
-																																	_1: {
-																																		ctor: '::',
-																																		_0: _madbrain$x86project$X86$O(175),
-																																		_1: {
-																																			ctor: '::',
-																																			_0: _madbrain$x86project$X86$MODRM,
-																																			_1: {ctor: '[]'}
-																																		}
-																																	}
-																																},
-																																_1: 'IMUL',
-																																_2: _madbrain$x86project$X86$ops(
-																																	{
-																																		ctor: '::',
-																																		_0: 'r32',
-																																		_1: {
-																																			ctor: '::',
-																																			_0: 'r/m32',
-																																			_1: {ctor: '[]'}
-																																		}
-																																	})
-																															}),
-																														_1: {
-																															ctor: '::',
-																															_0: _madbrain$x86project$X86$Instr(
-																																{
-																																	ctor: '_Tuple3',
-																																	_0: {
-																																		ctor: '::',
-																																		_0: _madbrain$x86project$X86$O(107),
-																																		_1: {
-																																			ctor: '::',
-																																			_0: _madbrain$x86project$X86$MODRM,
-																																			_1: {ctor: '[]'}
-																																		}
-																																	},
-																																	_1: 'IMUL',
-																																	_2: _madbrain$x86project$X86$ops(
-																																		{
-																																			ctor: '::',
-																																			_0: 'r16',
-																																			_1: {
-																																				ctor: '::',
-																																				_0: 'r/m16',
-																																				_1: {
-																																					ctor: '::',
-																																					_0: 'imm8',
-																																					_1: {ctor: '[]'}
-																																				}
-																																			}
-																																		})
-																																}),
-																															_1: {
-																																ctor: '::',
-																																_0: _madbrain$x86project$X86$Instr(
-																																	{
-																																		ctor: '_Tuple3',
-																																		_0: {
-																																			ctor: '::',
-																																			_0: _madbrain$x86project$X86$O(107),
-																																			_1: {
-																																				ctor: '::',
-																																				_0: _madbrain$x86project$X86$MODRM,
-																																				_1: {ctor: '[]'}
-																																			}
-																																		},
-																																		_1: 'IMUL',
-																																		_2: _madbrain$x86project$X86$ops(
-																																			{
-																																				ctor: '::',
-																																				_0: 'r32',
-																																				_1: {
-																																					ctor: '::',
-																																					_0: 'r/m32',
-																																					_1: {
-																																						ctor: '::',
-																																						_0: 'imm8',
-																																						_1: {ctor: '[]'}
-																																					}
-																																				}
-																																			})
-																																	}),
-																																_1: {
-																																	ctor: '::',
-																																	_0: _madbrain$x86project$X86$Instr(
-																																		{
-																																			ctor: '_Tuple3',
-																																			_0: {
-																																				ctor: '::',
-																																				_0: _madbrain$x86project$X86$O(105),
-																																				_1: {
-																																					ctor: '::',
-																																					_0: _madbrain$x86project$X86$MODRM,
-																																					_1: {ctor: '[]'}
-																																				}
-																																			},
-																																			_1: 'IMUL',
-																																			_2: _madbrain$x86project$X86$ops(
-																																				{
-																																					ctor: '::',
-																																					_0: 'r16',
-																																					_1: {
-																																						ctor: '::',
-																																						_0: 'r/m16',
-																																						_1: {
-																																							ctor: '::',
-																																							_0: 'imm16',
-																																							_1: {ctor: '[]'}
-																																						}
-																																					}
-																																				})
-																																		}),
-																																	_1: {
-																																		ctor: '::',
-																																		_0: _madbrain$x86project$X86$Instr(
-																																			{
-																																				ctor: '_Tuple3',
-																																				_0: {
-																																					ctor: '::',
-																																					_0: _madbrain$x86project$X86$O(105),
-																																					_1: {
-																																						ctor: '::',
-																																						_0: _madbrain$x86project$X86$MODRM,
-																																						_1: {ctor: '[]'}
-																																					}
-																																				},
-																																				_1: 'IMUL',
-																																				_2: _madbrain$x86project$X86$ops(
-																																					{
-																																						ctor: '::',
-																																						_0: 'r32',
-																																						_1: {
-																																							ctor: '::',
-																																							_0: 'r/m32',
-																																							_1: {
-																																								ctor: '::',
-																																								_0: 'imm32',
-																																								_1: {ctor: '[]'}
-																																							}
-																																						}
-																																					})
-																																			}),
-																																		_1: {
-																																			ctor: '::',
-																																			_0: _madbrain$x86project$X86$Instr(
-																																				{
-																																					ctor: '_Tuple3',
-																																					_0: {
-																																						ctor: '::',
-																																						_0: _madbrain$x86project$X86$O(254),
-																																						_1: {
-																																							ctor: '::',
-																																							_0: _madbrain$x86project$X86$E(0),
-																																							_1: {ctor: '[]'}
-																																						}
-																																					},
-																																					_1: 'INC',
-																																					_2: _madbrain$x86project$X86$ops(
-																																						{
-																																							ctor: '::',
-																																							_0: 'r/m8',
-																																							_1: {ctor: '[]'}
-																																						})
-																																				}),
-																																			_1: {
-																																				ctor: '::',
-																																				_0: _madbrain$x86project$X86$Instr(
-																																					{
-																																						ctor: '_Tuple3',
-																																						_0: {
-																																							ctor: '::',
-																																							_0: _madbrain$x86project$X86$O(255),
-																																							_1: {
-																																								ctor: '::',
-																																								_0: _madbrain$x86project$X86$E(0),
-																																								_1: {ctor: '[]'}
-																																							}
-																																						},
-																																						_1: 'INC',
-																																						_2: _madbrain$x86project$X86$ops(
-																																							{
-																																								ctor: '::',
-																																								_0: 'r/m16',
-																																								_1: {ctor: '[]'}
-																																							})
-																																					}),
-																																				_1: {
-																																					ctor: '::',
-																																					_0: _madbrain$x86project$X86$Instr(
-																																						{
-																																							ctor: '_Tuple3',
-																																							_0: {
-																																								ctor: '::',
-																																								_0: _madbrain$x86project$X86$O(255),
-																																								_1: {
-																																									ctor: '::',
-																																									_0: _madbrain$x86project$X86$E(0),
-																																									_1: {ctor: '[]'}
-																																								}
-																																							},
-																																							_1: 'INC',
-																																							_2: _madbrain$x86project$X86$ops(
-																																								{
-																																									ctor: '::',
-																																									_0: 'r/m32',
-																																									_1: {ctor: '[]'}
-																																								})
-																																						}),
-																																					_1: {
-																																						ctor: '::',
-																																						_0: _madbrain$x86project$X86$Instr(
-																																							{
-																																								ctor: '_Tuple3',
-																																								_0: {
-																																									ctor: '::',
-																																									_0: _madbrain$x86project$X86$O_R(64),
-																																									_1: {ctor: '[]'}
-																																								},
-																																								_1: 'INC',
-																																								_2: _madbrain$x86project$X86$ops(
-																																									{
-																																										ctor: '::',
-																																										_0: 'r16',
-																																										_1: {ctor: '[]'}
-																																									})
-																																							}),
-																																						_1: {
-																																							ctor: '::',
-																																							_0: _madbrain$x86project$X86$Instr(
-																																								{
-																																									ctor: '_Tuple3',
-																																									_0: {
-																																										ctor: '::',
-																																										_0: _madbrain$x86project$X86$O_R(64),
-																																										_1: {ctor: '[]'}
-																																									},
-																																									_1: 'INC',
-																																									_2: _madbrain$x86project$X86$ops(
-																																										{
-																																											ctor: '::',
-																																											_0: 'r32',
-																																											_1: {ctor: '[]'}
-																																										})
-																																								}),
-																																							_1: {
-																																								ctor: '::',
-																																								_0: _madbrain$x86project$X86$Instr(
-																																									{
-																																										ctor: '_Tuple3',
-																																										_0: {
-																																											ctor: '::',
-																																											_0: _madbrain$x86project$X86$O(204),
-																																											_1: {ctor: '[]'}
-																																										},
-																																										_1: 'INT3',
-																																										_2: {ctor: '[]'}
-																																									}),
-																																								_1: {
-																																									ctor: '::',
-																																									_0: _madbrain$x86project$X86$Instr(
-																																										{
-																																											ctor: '_Tuple3',
-																																											_0: {
-																																												ctor: '::',
-																																												_0: _madbrain$x86project$X86$O(205),
-																																												_1: {ctor: '[]'}
-																																											},
-																																											_1: 'INT',
-																																											_2: _madbrain$x86project$X86$ops(
-																																												{
-																																													ctor: '::',
-																																													_0: 'imm8',
-																																													_1: {ctor: '[]'}
-																																												})
-																																										}),
-																																									_1: {
-																																										ctor: '::',
-																																										_0: _madbrain$x86project$X86$Instr(
-																																											{
-																																												ctor: '_Tuple3',
-																																												_0: {
-																																													ctor: '::',
-																																													_0: _madbrain$x86project$X86$O(141),
-																																													_1: {
-																																														ctor: '::',
-																																														_0: _madbrain$x86project$X86$MODRM,
-																																														_1: {ctor: '[]'}
-																																													}
-																																												},
-																																												_1: 'LEA',
-																																												_2: _madbrain$x86project$X86$ops(
-																																													{
-																																														ctor: '::',
-																																														_0: 'r16',
-																																														_1: {
-																																															ctor: '::',
-																																															_0: 'm',
-																																															_1: {ctor: '[]'}
-																																														}
-																																													})
-																																											}),
-																																										_1: {
-																																											ctor: '::',
-																																											_0: _madbrain$x86project$X86$Instr(
-																																												{
-																																													ctor: '_Tuple3',
-																																													_0: {
-																																														ctor: '::',
-																																														_0: _madbrain$x86project$X86$O(141),
-																																														_1: {
-																																															ctor: '::',
-																																															_0: _madbrain$x86project$X86$MODRM,
-																																															_1: {ctor: '[]'}
-																																														}
-																																													},
-																																													_1: 'LEA',
-																																													_2: _madbrain$x86project$X86$ops(
-																																														{
-																																															ctor: '::',
-																																															_0: 'r32',
-																																															_1: {
-																																																ctor: '::',
-																																																_0: 'm',
-																																																_1: {ctor: '[]'}
-																																															}
-																																														})
-																																												}),
-																																											_1: {
-																																												ctor: '::',
-																																												_0: _madbrain$x86project$X86$Instr(
-																																													{
-																																														ctor: '_Tuple3',
-																																														_0: {
-																																															ctor: '::',
-																																															_0: _madbrain$x86project$X86$O(136),
-																																															_1: {
-																																																ctor: '::',
-																																																_0: _madbrain$x86project$X86$MODRM,
-																																																_1: {ctor: '[]'}
-																																															}
-																																														},
-																																														_1: 'MOV',
-																																														_2: _madbrain$x86project$X86$ops(
-																																															{
-																																																ctor: '::',
-																																																_0: 'r/m8',
-																																																_1: {
-																																																	ctor: '::',
-																																																	_0: 'r8',
-																																																	_1: {ctor: '[]'}
-																																																}
-																																															})
-																																													}),
-																																												_1: {
-																																													ctor: '::',
-																																													_0: _madbrain$x86project$X86$Instr(
-																																														{
-																																															ctor: '_Tuple3',
-																																															_0: {
-																																																ctor: '::',
-																																																_0: _madbrain$x86project$X86$O(137),
-																																																_1: {
-																																																	ctor: '::',
-																																																	_0: _madbrain$x86project$X86$MODRM,
-																																																	_1: {ctor: '[]'}
-																																																}
-																																															},
-																																															_1: 'MOV',
-																																															_2: _madbrain$x86project$X86$ops(
-																																																{
-																																																	ctor: '::',
-																																																	_0: 'r/m16',
-																																																	_1: {
-																																																		ctor: '::',
-																																																		_0: 'r16',
-																																																		_1: {ctor: '[]'}
-																																																	}
-																																																})
-																																														}),
-																																													_1: {
-																																														ctor: '::',
-																																														_0: _madbrain$x86project$X86$Instr(
-																																															{
-																																																ctor: '_Tuple3',
-																																																_0: {
-																																																	ctor: '::',
-																																																	_0: _madbrain$x86project$X86$O(137),
-																																																	_1: {
-																																																		ctor: '::',
-																																																		_0: _madbrain$x86project$X86$MODRM,
-																																																		_1: {ctor: '[]'}
-																																																	}
-																																																},
-																																																_1: 'MOV',
-																																																_2: _madbrain$x86project$X86$ops(
-																																																	{
-																																																		ctor: '::',
-																																																		_0: 'r/m32',
-																																																		_1: {
-																																																			ctor: '::',
-																																																			_0: 'r32',
-																																																			_1: {ctor: '[]'}
-																																																		}
-																																																	})
-																																															}),
-																																														_1: {
-																																															ctor: '::',
-																																															_0: _madbrain$x86project$X86$Instr(
-																																																{
-																																																	ctor: '_Tuple3',
-																																																	_0: {
-																																																		ctor: '::',
-																																																		_0: _madbrain$x86project$X86$O(138),
-																																																		_1: {
-																																																			ctor: '::',
-																																																			_0: _madbrain$x86project$X86$MODRM,
-																																																			_1: {ctor: '[]'}
-																																																		}
-																																																	},
-																																																	_1: 'MOV',
-																																																	_2: _madbrain$x86project$X86$ops(
-																																																		{
-																																																			ctor: '::',
-																																																			_0: 'r8',
-																																																			_1: {
-																																																				ctor: '::',
-																																																				_0: 'r/m8',
-																																																				_1: {ctor: '[]'}
-																																																			}
-																																																		})
-																																																}),
-																																															_1: {
-																																																ctor: '::',
-																																																_0: _madbrain$x86project$X86$Instr(
-																																																	{
-																																																		ctor: '_Tuple3',
-																																																		_0: {
-																																																			ctor: '::',
-																																																			_0: _madbrain$x86project$X86$O(139),
-																																																			_1: {
-																																																				ctor: '::',
-																																																				_0: _madbrain$x86project$X86$MODRM,
-																																																				_1: {ctor: '[]'}
-																																																			}
-																																																		},
-																																																		_1: 'MOV',
-																																																		_2: _madbrain$x86project$X86$ops(
-																																																			{
-																																																				ctor: '::',
-																																																				_0: 'r16',
-																																																				_1: {
-																																																					ctor: '::',
-																																																					_0: 'r/m16',
-																																																					_1: {ctor: '[]'}
-																																																				}
-																																																			})
-																																																	}),
-																																																_1: {
-																																																	ctor: '::',
-																																																	_0: _madbrain$x86project$X86$Instr(
-																																																		{
-																																																			ctor: '_Tuple3',
-																																																			_0: {
-																																																				ctor: '::',
-																																																				_0: _madbrain$x86project$X86$O(139),
-																																																				_1: {
-																																																					ctor: '::',
-																																																					_0: _madbrain$x86project$X86$MODRM,
-																																																					_1: {ctor: '[]'}
-																																																				}
-																																																			},
-																																																			_1: 'MOV',
-																																																			_2: _madbrain$x86project$X86$ops(
-																																																				{
-																																																					ctor: '::',
-																																																					_0: 'r32',
-																																																					_1: {
-																																																						ctor: '::',
-																																																						_0: 'r/m32',
-																																																						_1: {ctor: '[]'}
-																																																					}
-																																																				})
-																																																		}),
-																																																	_1: {
-																																																		ctor: '::',
-																																																		_0: _madbrain$x86project$X86$Instr(
-																																																			{
-																																																				ctor: '_Tuple3',
-																																																				_0: {
-																																																					ctor: '::',
-																																																					_0: _madbrain$x86project$X86$O(140),
-																																																					_1: {
-																																																						ctor: '::',
-																																																						_0: _madbrain$x86project$X86$MODRM,
-																																																						_1: {ctor: '[]'}
-																																																					}
-																																																				},
-																																																				_1: 'MOV',
-																																																				_2: _madbrain$x86project$X86$ops(
-																																																					{
-																																																						ctor: '::',
-																																																						_0: 'r/m16',
-																																																						_1: {
-																																																							ctor: '::',
-																																																							_0: 'sreg',
-																																																							_1: {ctor: '[]'}
-																																																						}
-																																																					})
-																																																			}),
-																																																		_1: {
-																																																			ctor: '::',
-																																																			_0: _madbrain$x86project$X86$Instr(
-																																																				{
-																																																					ctor: '_Tuple3',
-																																																					_0: {
-																																																						ctor: '::',
-																																																						_0: _madbrain$x86project$X86$O(142),
-																																																						_1: {
-																																																							ctor: '::',
-																																																							_0: _madbrain$x86project$X86$MODRM,
-																																																							_1: {ctor: '[]'}
-																																																						}
-																																																					},
-																																																					_1: 'MOV',
-																																																					_2: _madbrain$x86project$X86$ops(
-																																																						{
-																																																							ctor: '::',
-																																																							_0: 'sreg',
-																																																							_1: {
-																																																								ctor: '::',
-																																																								_0: 'r/m16',
-																																																								_1: {ctor: '[]'}
-																																																							}
-																																																						})
-																																																				}),
-																																																			_1: {
-																																																				ctor: '::',
-																																																				_0: _madbrain$x86project$X86$Instr(
-																																																					{
-																																																						ctor: '_Tuple3',
-																																																						_0: {
-																																																							ctor: '::',
-																																																							_0: _madbrain$x86project$X86$O(160),
-																																																							_1: {ctor: '[]'}
-																																																						},
-																																																						_1: 'MOV',
-																																																						_2: _madbrain$x86project$X86$ops(
-																																																							{
-																																																								ctor: '::',
-																																																								_0: 'AL',
-																																																								_1: {
-																																																									ctor: '::',
-																																																									_0: 'moffs8',
-																																																									_1: {ctor: '[]'}
-																																																								}
-																																																							})
-																																																					}),
-																																																				_1: {
-																																																					ctor: '::',
-																																																					_0: _madbrain$x86project$X86$Instr(
-																																																						{
-																																																							ctor: '_Tuple3',
-																																																							_0: {
-																																																								ctor: '::',
-																																																								_0: _madbrain$x86project$X86$O(161),
-																																																								_1: {ctor: '[]'}
-																																																							},
-																																																							_1: 'MOV',
-																																																							_2: _madbrain$x86project$X86$ops(
-																																																								{
-																																																									ctor: '::',
-																																																									_0: 'AX',
-																																																									_1: {
-																																																										ctor: '::',
-																																																										_0: 'moffs16',
-																																																										_1: {ctor: '[]'}
-																																																									}
-																																																								})
-																																																						}),
-																																																					_1: {
-																																																						ctor: '::',
-																																																						_0: _madbrain$x86project$X86$Instr(
-																																																							{
-																																																								ctor: '_Tuple3',
-																																																								_0: {
-																																																									ctor: '::',
-																																																									_0: _madbrain$x86project$X86$O(161),
-																																																									_1: {ctor: '[]'}
-																																																								},
-																																																								_1: 'MOV',
-																																																								_2: _madbrain$x86project$X86$ops(
-																																																									{
-																																																										ctor: '::',
-																																																										_0: 'EAX',
-																																																										_1: {
-																																																											ctor: '::',
-																																																											_0: 'moffs32',
-																																																											_1: {ctor: '[]'}
-																																																										}
-																																																									})
-																																																							}),
-																																																						_1: {
-																																																							ctor: '::',
-																																																							_0: _madbrain$x86project$X86$Instr(
-																																																								{
-																																																									ctor: '_Tuple3',
-																																																									_0: {
-																																																										ctor: '::',
-																																																										_0: _madbrain$x86project$X86$O(162),
-																																																										_1: {ctor: '[]'}
-																																																									},
-																																																									_1: 'MOV',
-																																																									_2: _madbrain$x86project$X86$ops(
-																																																										{
-																																																											ctor: '::',
-																																																											_0: 'moffs8',
-																																																											_1: {
-																																																												ctor: '::',
-																																																												_0: 'AL',
-																																																												_1: {ctor: '[]'}
-																																																											}
-																																																										})
-																																																								}),
-																																																							_1: {
-																																																								ctor: '::',
-																																																								_0: _madbrain$x86project$X86$Instr(
-																																																									{
-																																																										ctor: '_Tuple3',
-																																																										_0: {
-																																																											ctor: '::',
-																																																											_0: _madbrain$x86project$X86$O(163),
-																																																											_1: {ctor: '[]'}
-																																																										},
-																																																										_1: 'MOV',
-																																																										_2: _madbrain$x86project$X86$ops(
-																																																											{
-																																																												ctor: '::',
-																																																												_0: 'moffs16',
-																																																												_1: {
-																																																													ctor: '::',
-																																																													_0: 'AX',
-																																																													_1: {ctor: '[]'}
-																																																												}
-																																																											})
-																																																									}),
-																																																								_1: {
-																																																									ctor: '::',
-																																																									_0: _madbrain$x86project$X86$Instr(
-																																																										{
-																																																											ctor: '_Tuple3',
-																																																											_0: {
-																																																												ctor: '::',
-																																																												_0: _madbrain$x86project$X86$O(163),
-																																																												_1: {ctor: '[]'}
-																																																											},
-																																																											_1: 'MOV',
-																																																											_2: _madbrain$x86project$X86$ops(
-																																																												{
-																																																													ctor: '::',
-																																																													_0: 'moffs32',
-																																																													_1: {
-																																																														ctor: '::',
-																																																														_0: 'EAX',
-																																																														_1: {ctor: '[]'}
-																																																													}
-																																																												})
-																																																										}),
-																																																									_1: {
-																																																										ctor: '::',
-																																																										_0: _madbrain$x86project$X86$Instr(
-																																																											{
-																																																												ctor: '_Tuple3',
-																																																												_0: {
-																																																													ctor: '::',
-																																																													_0: _madbrain$x86project$X86$O_R(176),
-																																																													_1: {ctor: '[]'}
-																																																												},
-																																																												_1: 'MOV',
-																																																												_2: _madbrain$x86project$X86$ops(
-																																																													{
-																																																														ctor: '::',
-																																																														_0: 'r8',
-																																																														_1: {
-																																																															ctor: '::',
-																																																															_0: 'imm8',
-																																																															_1: {ctor: '[]'}
-																																																														}
-																																																													})
-																																																											}),
-																																																										_1: {
-																																																											ctor: '::',
-																																																											_0: _madbrain$x86project$X86$Instr(
-																																																												{
-																																																													ctor: '_Tuple3',
-																																																													_0: {
-																																																														ctor: '::',
-																																																														_0: _madbrain$x86project$X86$O_R(184),
-																																																														_1: {ctor: '[]'}
-																																																													},
-																																																													_1: 'MOV',
-																																																													_2: _madbrain$x86project$X86$ops(
-																																																														{
-																																																															ctor: '::',
-																																																															_0: 'r16',
-																																																															_1: {
-																																																																ctor: '::',
-																																																																_0: 'imm16',
-																																																																_1: {ctor: '[]'}
-																																																															}
-																																																														})
-																																																												}),
-																																																											_1: {
-																																																												ctor: '::',
-																																																												_0: _madbrain$x86project$X86$Instr(
-																																																													{
-																																																														ctor: '_Tuple3',
-																																																														_0: {
-																																																															ctor: '::',
-																																																															_0: _madbrain$x86project$X86$O_R(184),
-																																																															_1: {ctor: '[]'}
-																																																														},
-																																																														_1: 'MOV',
-																																																														_2: _madbrain$x86project$X86$ops(
-																																																															{
-																																																																ctor: '::',
-																																																																_0: 'r32',
-																																																																_1: {
-																																																																	ctor: '::',
-																																																																	_0: 'imm32',
-																																																																	_1: {ctor: '[]'}
-																																																																}
-																																																															})
-																																																													}),
-																																																												_1: {
-																																																													ctor: '::',
-																																																													_0: _madbrain$x86project$X86$Instr(
-																																																														{
-																																																															ctor: '_Tuple3',
-																																																															_0: {
-																																																																ctor: '::',
-																																																																_0: _madbrain$x86project$X86$O(198),
-																																																																_1: {
-																																																																	ctor: '::',
-																																																																	_0: _madbrain$x86project$X86$E(0),
-																																																																	_1: {ctor: '[]'}
-																																																																}
-																																																															},
-																																																															_1: 'MOV',
-																																																															_2: _madbrain$x86project$X86$ops(
-																																																																{
-																																																																	ctor: '::',
-																																																																	_0: 'r/m8',
-																																																																	_1: {
-																																																																		ctor: '::',
-																																																																		_0: 'imm8',
-																																																																		_1: {ctor: '[]'}
-																																																																	}
-																																																																})
-																																																														}),
-																																																													_1: {
-																																																														ctor: '::',
-																																																														_0: _madbrain$x86project$X86$Instr(
-																																																															{
-																																																																ctor: '_Tuple3',
-																																																																_0: {
-																																																																	ctor: '::',
-																																																																	_0: _madbrain$x86project$X86$O(199),
-																																																																	_1: {
-																																																																		ctor: '::',
-																																																																		_0: _madbrain$x86project$X86$E(0),
-																																																																		_1: {ctor: '[]'}
-																																																																	}
-																																																																},
-																																																																_1: 'MOV',
-																																																																_2: _madbrain$x86project$X86$ops(
-																																																																	{
-																																																																		ctor: '::',
-																																																																		_0: 'r/m16',
-																																																																		_1: {
-																																																																			ctor: '::',
-																																																																			_0: 'imm16',
-																																																																			_1: {ctor: '[]'}
-																																																																		}
-																																																																	})
-																																																															}),
-																																																														_1: {
-																																																															ctor: '::',
-																																																															_0: _madbrain$x86project$X86$Instr(
-																																																																{
-																																																																	ctor: '_Tuple3',
-																																																																	_0: {
-																																																																		ctor: '::',
-																																																																		_0: _madbrain$x86project$X86$O(199),
-																																																																		_1: {
-																																																																			ctor: '::',
-																																																																			_0: _madbrain$x86project$X86$E(0),
-																																																																			_1: {ctor: '[]'}
-																																																																		}
-																																																																	},
-																																																																	_1: 'MOV',
-																																																																	_2: _madbrain$x86project$X86$ops(
-																																																																		{
-																																																																			ctor: '::',
-																																																																			_0: 'r/m32',
-																																																																			_1: {
-																																																																				ctor: '::',
-																																																																				_0: 'imm32',
-																																																																				_1: {ctor: '[]'}
-																																																																			}
-																																																																		})
-																																																																}),
-																																																															_1: {
-																																																																ctor: '::',
-																																																																_0: _madbrain$x86project$X86$Instr(
-																																																																	{
-																																																																		ctor: '_Tuple3',
-																																																																		_0: {
-																																																																			ctor: '::',
-																																																																			_0: _madbrain$x86project$X86$O(15),
-																																																																			_1: {
-																																																																				ctor: '::',
-																																																																				_0: _madbrain$x86project$X86$O(182),
-																																																																				_1: {
-																																																																					ctor: '::',
-																																																																					_0: _madbrain$x86project$X86$MODRM,
-																																																																					_1: {ctor: '[]'}
-																																																																				}
-																																																																			}
-																																																																		},
-																																																																		_1: 'MOVZX',
-																																																																		_2: _madbrain$x86project$X86$ops(
-																																																																			{
-																																																																				ctor: '::',
-																																																																				_0: 'r16',
-																																																																				_1: {
-																																																																					ctor: '::',
-																																																																					_0: 'r/m8',
-																																																																					_1: {ctor: '[]'}
-																																																																				}
-																																																																			})
-																																																																	}),
-																																																																_1: {
-																																																																	ctor: '::',
-																																																																	_0: _madbrain$x86project$X86$Instr(
-																																																																		{
-																																																																			ctor: '_Tuple3',
-																																																																			_0: {
-																																																																				ctor: '::',
-																																																																				_0: _madbrain$x86project$X86$O(15),
-																																																																				_1: {
-																																																																					ctor: '::',
-																																																																					_0: _madbrain$x86project$X86$O(182),
-																																																																					_1: {
-																																																																						ctor: '::',
-																																																																						_0: _madbrain$x86project$X86$MODRM,
-																																																																						_1: {ctor: '[]'}
-																																																																					}
-																																																																				}
-																																																																			},
-																																																																			_1: 'MOVZX',
-																																																																			_2: _madbrain$x86project$X86$ops(
-																																																																				{
-																																																																					ctor: '::',
-																																																																					_0: 'r32',
-																																																																					_1: {
-																																																																						ctor: '::',
-																																																																						_0: 'r/m8',
-																																																																						_1: {ctor: '[]'}
-																																																																					}
-																																																																				})
-																																																																		}),
-																																																																	_1: {
-																																																																		ctor: '::',
-																																																																		_0: _madbrain$x86project$X86$Instr(
-																																																																			{
-																																																																				ctor: '_Tuple3',
-																																																																				_0: {
-																																																																					ctor: '::',
-																																																																					_0: _madbrain$x86project$X86$O(15),
-																																																																					_1: {
-																																																																						ctor: '::',
-																																																																						_0: _madbrain$x86project$X86$O(183),
-																																																																						_1: {
-																																																																							ctor: '::',
-																																																																							_0: _madbrain$x86project$X86$MODRM,
-																																																																							_1: {ctor: '[]'}
-																																																																						}
-																																																																					}
-																																																																				},
-																																																																				_1: 'MOVZX',
-																																																																				_2: _madbrain$x86project$X86$ops(
-																																																																					{
-																																																																						ctor: '::',
-																																																																						_0: 'r32',
-																																																																						_1: {
-																																																																							ctor: '::',
-																																																																							_0: 'r/m16',
-																																																																							_1: {ctor: '[]'}
-																																																																						}
-																																																																					})
-																																																																			}),
-																																																																		_1: {
-																																																																			ctor: '::',
-																																																																			_0: _madbrain$x86project$X86$Instr(
-																																																																				{
-																																																																					ctor: '_Tuple3',
-																																																																					_0: {
-																																																																						ctor: '::',
-																																																																						_0: _madbrain$x86project$X86$O(246),
-																																																																						_1: {
-																																																																							ctor: '::',
-																																																																							_0: _madbrain$x86project$X86$E(4),
-																																																																							_1: {ctor: '[]'}
-																																																																						}
-																																																																					},
-																																																																					_1: 'MUL',
-																																																																					_2: _madbrain$x86project$X86$ops(
-																																																																						{
-																																																																							ctor: '::',
-																																																																							_0: 'r/m8',
-																																																																							_1: {ctor: '[]'}
-																																																																						})
-																																																																				}),
-																																																																			_1: {
-																																																																				ctor: '::',
-																																																																				_0: _madbrain$x86project$X86$Instr(
-																																																																					{
-																																																																						ctor: '_Tuple3',
-																																																																						_0: {
-																																																																							ctor: '::',
-																																																																							_0: _madbrain$x86project$X86$O(247),
-																																																																							_1: {
-																																																																								ctor: '::',
-																																																																								_0: _madbrain$x86project$X86$E(4),
-																																																																								_1: {ctor: '[]'}
-																																																																							}
-																																																																						},
-																																																																						_1: 'MUL',
-																																																																						_2: _madbrain$x86project$X86$ops(
-																																																																							{
-																																																																								ctor: '::',
-																																																																								_0: 'r/m16',
-																																																																								_1: {ctor: '[]'}
-																																																																							})
-																																																																					}),
-																																																																				_1: {
-																																																																					ctor: '::',
-																																																																					_0: _madbrain$x86project$X86$Instr(
-																																																																						{
-																																																																							ctor: '_Tuple3',
-																																																																							_0: {
-																																																																								ctor: '::',
-																																																																								_0: _madbrain$x86project$X86$O(247),
-																																																																								_1: {
-																																																																									ctor: '::',
-																																																																									_0: _madbrain$x86project$X86$E(4),
-																																																																									_1: {ctor: '[]'}
-																																																																								}
-																																																																							},
-																																																																							_1: 'MUL',
-																																																																							_2: _madbrain$x86project$X86$ops(
-																																																																								{
-																																																																									ctor: '::',
-																																																																									_0: 'r/m32',
-																																																																									_1: {ctor: '[]'}
-																																																																								})
-																																																																						}),
-																																																																					_1: {
-																																																																						ctor: '::',
-																																																																						_0: _madbrain$x86project$X86$Instr(
-																																																																							{
-																																																																								ctor: '_Tuple3',
-																																																																								_0: {
-																																																																									ctor: '::',
-																																																																									_0: _madbrain$x86project$X86$O(44),
-																																																																									_1: {ctor: '[]'}
-																																																																								},
-																																																																								_1: 'SUB',
-																																																																								_2: _madbrain$x86project$X86$ops(
-																																																																									{
-																																																																										ctor: '::',
-																																																																										_0: 'AL',
-																																																																										_1: {
-																																																																											ctor: '::',
-																																																																											_0: 'imm8',
-																																																																											_1: {ctor: '[]'}
-																																																																										}
-																																																																									})
-																																																																							}),
-																																																																						_1: {
-																																																																							ctor: '::',
-																																																																							_0: _madbrain$x86project$X86$Instr(
-																																																																								{
-																																																																									ctor: '_Tuple3',
-																																																																									_0: {
-																																																																										ctor: '::',
-																																																																										_0: _madbrain$x86project$X86$O(45),
-																																																																										_1: {ctor: '[]'}
-																																																																									},
-																																																																									_1: 'SUB',
-																																																																									_2: _madbrain$x86project$X86$ops(
-																																																																										{
-																																																																											ctor: '::',
-																																																																											_0: 'AX',
-																																																																											_1: {
-																																																																												ctor: '::',
-																																																																												_0: 'imm16',
-																																																																												_1: {ctor: '[]'}
-																																																																											}
-																																																																										})
-																																																																								}),
-																																																																							_1: {
-																																																																								ctor: '::',
-																																																																								_0: _madbrain$x86project$X86$Instr(
-																																																																									{
-																																																																										ctor: '_Tuple3',
-																																																																										_0: {
-																																																																											ctor: '::',
-																																																																											_0: _madbrain$x86project$X86$O(45),
-																																																																											_1: {ctor: '[]'}
-																																																																										},
-																																																																										_1: 'SUB',
-																																																																										_2: _madbrain$x86project$X86$ops(
-																																																																											{
-																																																																												ctor: '::',
-																																																																												_0: 'EAX',
-																																																																												_1: {
-																																																																													ctor: '::',
-																																																																													_0: 'imm32',
-																																																																													_1: {ctor: '[]'}
-																																																																												}
-																																																																											})
-																																																																									}),
-																																																																								_1: {
-																																																																									ctor: '::',
-																																																																									_0: _madbrain$x86project$X86$Instr(
-																																																																										{
-																																																																											ctor: '_Tuple3',
-																																																																											_0: {
-																																																																												ctor: '::',
-																																																																												_0: _madbrain$x86project$X86$O(128),
-																																																																												_1: {
-																																																																													ctor: '::',
-																																																																													_0: _madbrain$x86project$X86$E(5),
-																																																																													_1: {ctor: '[]'}
-																																																																												}
-																																																																											},
-																																																																											_1: 'SUB',
-																																																																											_2: _madbrain$x86project$X86$ops(
-																																																																												{
-																																																																													ctor: '::',
-																																																																													_0: 'r/m8',
-																																																																													_1: {
-																																																																														ctor: '::',
-																																																																														_0: 'imm8',
-																																																																														_1: {ctor: '[]'}
-																																																																													}
-																																																																												})
-																																																																										}),
-																																																																									_1: {
-																																																																										ctor: '::',
-																																																																										_0: _madbrain$x86project$X86$Instr(
-																																																																											{
-																																																																												ctor: '_Tuple3',
-																																																																												_0: {
-																																																																													ctor: '::',
-																																																																													_0: _madbrain$x86project$X86$O(129),
-																																																																													_1: {
-																																																																														ctor: '::',
-																																																																														_0: _madbrain$x86project$X86$E(5),
-																																																																														_1: {ctor: '[]'}
-																																																																													}
-																																																																												},
-																																																																												_1: 'SUB',
-																																																																												_2: _madbrain$x86project$X86$ops(
-																																																																													{
-																																																																														ctor: '::',
-																																																																														_0: 'r/m16',
-																																																																														_1: {
-																																																																															ctor: '::',
-																																																																															_0: 'imm16',
-																																																																															_1: {ctor: '[]'}
-																																																																														}
-																																																																													})
-																																																																											}),
-																																																																										_1: {
-																																																																											ctor: '::',
-																																																																											_0: _madbrain$x86project$X86$Instr(
-																																																																												{
-																																																																													ctor: '_Tuple3',
-																																																																													_0: {
-																																																																														ctor: '::',
-																																																																														_0: _madbrain$x86project$X86$O(129),
-																																																																														_1: {
-																																																																															ctor: '::',
-																																																																															_0: _madbrain$x86project$X86$E(5),
-																																																																															_1: {ctor: '[]'}
-																																																																														}
-																																																																													},
-																																																																													_1: 'SUB',
-																																																																													_2: _madbrain$x86project$X86$ops(
-																																																																														{
-																																																																															ctor: '::',
-																																																																															_0: 'r/m32',
-																																																																															_1: {
-																																																																																ctor: '::',
-																																																																																_0: 'imm32',
-																																																																																_1: {ctor: '[]'}
-																																																																															}
-																																																																														})
-																																																																												}),
-																																																																											_1: {
-																																																																												ctor: '::',
-																																																																												_0: _madbrain$x86project$X86$Instr(
-																																																																													{
-																																																																														ctor: '_Tuple3',
-																																																																														_0: {
-																																																																															ctor: '::',
-																																																																															_0: _madbrain$x86project$X86$O(131),
-																																																																															_1: {
-																																																																																ctor: '::',
-																																																																																_0: _madbrain$x86project$X86$E(5),
-																																																																																_1: {ctor: '[]'}
-																																																																															}
-																																																																														},
-																																																																														_1: 'SUB',
-																																																																														_2: _madbrain$x86project$X86$ops(
-																																																																															{
-																																																																																ctor: '::',
-																																																																																_0: 'r/m16',
-																																																																																_1: {
-																																																																																	ctor: '::',
-																																																																																	_0: 'imm8',
-																																																																																	_1: {ctor: '[]'}
-																																																																																}
-																																																																															})
-																																																																													}),
-																																																																												_1: {
-																																																																													ctor: '::',
-																																																																													_0: _madbrain$x86project$X86$Instr(
-																																																																														{
-																																																																															ctor: '_Tuple3',
-																																																																															_0: {
-																																																																																ctor: '::',
-																																																																																_0: _madbrain$x86project$X86$O(131),
-																																																																																_1: {
-																																																																																	ctor: '::',
-																																																																																	_0: _madbrain$x86project$X86$E(5),
-																																																																																	_1: {ctor: '[]'}
-																																																																																}
-																																																																															},
-																																																																															_1: 'SUB',
-																																																																															_2: _madbrain$x86project$X86$ops(
-																																																																																{
-																																																																																	ctor: '::',
-																																																																																	_0: 'r/m32',
-																																																																																	_1: {
-																																																																																		ctor: '::',
-																																																																																		_0: 'imm8',
-																																																																																		_1: {ctor: '[]'}
-																																																																																	}
-																																																																																})
-																																																																														}),
-																																																																													_1: {
-																																																																														ctor: '::',
-																																																																														_0: _madbrain$x86project$X86$Instr(
-																																																																															{
-																																																																																ctor: '_Tuple3',
-																																																																																_0: {
-																																																																																	ctor: '::',
-																																																																																	_0: _madbrain$x86project$X86$O(40),
-																																																																																	_1: {
-																																																																																		ctor: '::',
-																																																																																		_0: _madbrain$x86project$X86$MODRM,
-																																																																																		_1: {ctor: '[]'}
-																																																																																	}
-																																																																																},
-																																																																																_1: 'SUB',
-																																																																																_2: _madbrain$x86project$X86$ops(
-																																																																																	{
-																																																																																		ctor: '::',
-																																																																																		_0: 'r/m8',
-																																																																																		_1: {
-																																																																																			ctor: '::',
-																																																																																			_0: 'r8',
-																																																																																			_1: {ctor: '[]'}
-																																																																																		}
-																																																																																	})
-																																																																															}),
-																																																																														_1: {
-																																																																															ctor: '::',
-																																																																															_0: _madbrain$x86project$X86$Instr(
-																																																																																{
-																																																																																	ctor: '_Tuple3',
-																																																																																	_0: {
-																																																																																		ctor: '::',
-																																																																																		_0: _madbrain$x86project$X86$O(41),
-																																																																																		_1: {
-																																																																																			ctor: '::',
-																																																																																			_0: _madbrain$x86project$X86$MODRM,
-																																																																																			_1: {ctor: '[]'}
-																																																																																		}
-																																																																																	},
-																																																																																	_1: 'SUB',
-																																																																																	_2: _madbrain$x86project$X86$ops(
-																																																																																		{
-																																																																																			ctor: '::',
-																																																																																			_0: 'r/m16',
-																																																																																			_1: {
-																																																																																				ctor: '::',
-																																																																																				_0: 'r16',
-																																																																																				_1: {ctor: '[]'}
-																																																																																			}
-																																																																																		})
-																																																																																}),
-																																																																															_1: {
-																																																																																ctor: '::',
-																																																																																_0: _madbrain$x86project$X86$Instr(
-																																																																																	{
-																																																																																		ctor: '_Tuple3',
-																																																																																		_0: {
-																																																																																			ctor: '::',
-																																																																																			_0: _madbrain$x86project$X86$O(41),
-																																																																																			_1: {
-																																																																																				ctor: '::',
-																																																																																				_0: _madbrain$x86project$X86$MODRM,
-																																																																																				_1: {ctor: '[]'}
-																																																																																			}
-																																																																																		},
-																																																																																		_1: 'SUB',
-																																																																																		_2: _madbrain$x86project$X86$ops(
-																																																																																			{
-																																																																																				ctor: '::',
-																																																																																				_0: 'r/m32',
-																																																																																				_1: {
-																																																																																					ctor: '::',
-																																																																																					_0: 'r32',
-																																																																																					_1: {ctor: '[]'}
-																																																																																				}
-																																																																																			})
-																																																																																	}),
-																																																																																_1: {
-																																																																																	ctor: '::',
-																																																																																	_0: _madbrain$x86project$X86$Instr(
-																																																																																		{
-																																																																																			ctor: '_Tuple3',
-																																																																																			_0: {
-																																																																																				ctor: '::',
-																																																																																				_0: _madbrain$x86project$X86$O(42),
-																																																																																				_1: {
-																																																																																					ctor: '::',
-																																																																																					_0: _madbrain$x86project$X86$MODRM,
-																																																																																					_1: {ctor: '[]'}
-																																																																																				}
-																																																																																			},
-																																																																																			_1: 'SUB',
-																																																																																			_2: _madbrain$x86project$X86$ops(
-																																																																																				{
-																																																																																					ctor: '::',
-																																																																																					_0: 'r8',
-																																																																																					_1: {
-																																																																																						ctor: '::',
-																																																																																						_0: 'r/m8',
-																																																																																						_1: {ctor: '[]'}
-																																																																																					}
-																																																																																				})
-																																																																																		}),
-																																																																																	_1: {
-																																																																																		ctor: '::',
-																																																																																		_0: _madbrain$x86project$X86$Instr(
-																																																																																			{
-																																																																																				ctor: '_Tuple3',
-																																																																																				_0: {
-																																																																																					ctor: '::',
-																																																																																					_0: _madbrain$x86project$X86$O(43),
-																																																																																					_1: {
-																																																																																						ctor: '::',
-																																																																																						_0: _madbrain$x86project$X86$MODRM,
-																																																																																						_1: {ctor: '[]'}
-																																																																																					}
-																																																																																				},
-																																																																																				_1: 'SUB',
-																																																																																				_2: _madbrain$x86project$X86$ops(
-																																																																																					{
-																																																																																						ctor: '::',
-																																																																																						_0: 'r16',
-																																																																																						_1: {
-																																																																																							ctor: '::',
-																																																																																							_0: 'r/m16',
-																																																																																							_1: {ctor: '[]'}
-																																																																																						}
-																																																																																					})
-																																																																																			}),
-																																																																																		_1: {
-																																																																																			ctor: '::',
-																																																																																			_0: _madbrain$x86project$X86$Instr(
-																																																																																				{
-																																																																																					ctor: '_Tuple3',
-																																																																																					_0: {
-																																																																																						ctor: '::',
-																																																																																						_0: _madbrain$x86project$X86$O(43),
-																																																																																						_1: {
-																																																																																							ctor: '::',
-																																																																																							_0: _madbrain$x86project$X86$MODRM,
-																																																																																							_1: {ctor: '[]'}
-																																																																																						}
-																																																																																					},
-																																																																																					_1: 'SUB',
-																																																																																					_2: _madbrain$x86project$X86$ops(
-																																																																																						{
-																																																																																							ctor: '::',
-																																																																																							_0: 'r32',
-																																																																																							_1: {
-																																																																																								ctor: '::',
-																																																																																								_0: 'r/m32',
-																																																																																								_1: {ctor: '[]'}
-																																																																																							}
-																																																																																						})
-																																																																																				}),
-																																																																																			_1: {
-																																																																																				ctor: '::',
-																																																																																				_0: _madbrain$x86project$X86$Instr(
-																																																																																					{
-																																																																																						ctor: '_Tuple3',
-																																																																																						_0: {
-																																																																																							ctor: '::',
-																																																																																							_0: _madbrain$x86project$X86$O(168),
-																																																																																							_1: {ctor: '[]'}
-																																																																																						},
-																																																																																						_1: 'TEST',
-																																																																																						_2: _madbrain$x86project$X86$ops(
-																																																																																							{
-																																																																																								ctor: '::',
-																																																																																								_0: 'AL',
-																																																																																								_1: {
-																																																																																									ctor: '::',
-																																																																																									_0: 'imm8',
-																																																																																									_1: {ctor: '[]'}
-																																																																																								}
-																																																																																							})
-																																																																																					}),
-																																																																																				_1: {
-																																																																																					ctor: '::',
-																																																																																					_0: _madbrain$x86project$X86$Instr(
-																																																																																						{
-																																																																																							ctor: '_Tuple3',
-																																																																																							_0: {
-																																																																																								ctor: '::',
-																																																																																								_0: _madbrain$x86project$X86$O(169),
-																																																																																								_1: {ctor: '[]'}
-																																																																																							},
-																																																																																							_1: 'TEST',
-																																																																																							_2: _madbrain$x86project$X86$ops(
-																																																																																								{
-																																																																																									ctor: '::',
-																																																																																									_0: 'AX',
-																																																																																									_1: {
-																																																																																										ctor: '::',
-																																																																																										_0: 'imm16',
-																																																																																										_1: {ctor: '[]'}
-																																																																																									}
-																																																																																								})
-																																																																																						}),
-																																																																																					_1: {
-																																																																																						ctor: '::',
-																																																																																						_0: _madbrain$x86project$X86$Instr(
-																																																																																							{
-																																																																																								ctor: '_Tuple3',
-																																																																																								_0: {
-																																																																																									ctor: '::',
-																																																																																									_0: _madbrain$x86project$X86$O(169),
-																																																																																									_1: {ctor: '[]'}
-																																																																																								},
-																																																																																								_1: 'TEST',
-																																																																																								_2: _madbrain$x86project$X86$ops(
-																																																																																									{
-																																																																																										ctor: '::',
-																																																																																										_0: 'EAX',
-																																																																																										_1: {
-																																																																																											ctor: '::',
-																																																																																											_0: 'imm32',
-																																																																																											_1: {ctor: '[]'}
-																																																																																										}
-																																																																																									})
-																																																																																							}),
-																																																																																						_1: {
-																																																																																							ctor: '::',
-																																																																																							_0: _madbrain$x86project$X86$Instr(
-																																																																																								{
-																																																																																									ctor: '_Tuple3',
-																																																																																									_0: {
-																																																																																										ctor: '::',
-																																																																																										_0: _madbrain$x86project$X86$O(246),
-																																																																																										_1: {
-																																																																																											ctor: '::',
-																																																																																											_0: _madbrain$x86project$X86$E(0),
-																																																																																											_1: {ctor: '[]'}
-																																																																																										}
-																																																																																									},
-																																																																																									_1: 'TEST',
-																																																																																									_2: _madbrain$x86project$X86$ops(
-																																																																																										{
-																																																																																											ctor: '::',
-																																																																																											_0: 'r/m8',
-																																																																																											_1: {
-																																																																																												ctor: '::',
-																																																																																												_0: 'imm8',
-																																																																																												_1: {ctor: '[]'}
-																																																																																											}
-																																																																																										})
-																																																																																								}),
-																																																																																							_1: {
-																																																																																								ctor: '::',
-																																																																																								_0: _madbrain$x86project$X86$Instr(
-																																																																																									{
-																																																																																										ctor: '_Tuple3',
-																																																																																										_0: {
-																																																																																											ctor: '::',
-																																																																																											_0: _madbrain$x86project$X86$O(247),
-																																																																																											_1: {
-																																																																																												ctor: '::',
-																																																																																												_0: _madbrain$x86project$X86$E(0),
-																																																																																												_1: {ctor: '[]'}
-																																																																																											}
-																																																																																										},
-																																																																																										_1: 'TEST',
-																																																																																										_2: _madbrain$x86project$X86$ops(
-																																																																																											{
-																																																																																												ctor: '::',
-																																																																																												_0: 'r/m16',
-																																																																																												_1: {
-																																																																																													ctor: '::',
-																																																																																													_0: 'imm16',
-																																																																																													_1: {ctor: '[]'}
-																																																																																												}
-																																																																																											})
-																																																																																									}),
-																																																																																								_1: {
-																																																																																									ctor: '::',
-																																																																																									_0: _madbrain$x86project$X86$Instr(
-																																																																																										{
-																																																																																											ctor: '_Tuple3',
-																																																																																											_0: {
-																																																																																												ctor: '::',
-																																																																																												_0: _madbrain$x86project$X86$O(247),
-																																																																																												_1: {
-																																																																																													ctor: '::',
-																																																																																													_0: _madbrain$x86project$X86$E(0),
-																																																																																													_1: {ctor: '[]'}
-																																																																																												}
-																																																																																											},
-																																																																																											_1: 'TEST',
-																																																																																											_2: _madbrain$x86project$X86$ops(
-																																																																																												{
-																																																																																													ctor: '::',
-																																																																																													_0: 'r/m32',
-																																																																																													_1: {
-																																																																																														ctor: '::',
-																																																																																														_0: 'imm32',
-																																																																																														_1: {ctor: '[]'}
-																																																																																													}
-																																																																																												})
-																																																																																										}),
-																																																																																									_1: {
-																																																																																										ctor: '::',
-																																																																																										_0: _madbrain$x86project$X86$Instr(
-																																																																																											{
-																																																																																												ctor: '_Tuple3',
-																																																																																												_0: {
-																																																																																													ctor: '::',
-																																																																																													_0: _madbrain$x86project$X86$O(132),
-																																																																																													_1: {
-																																																																																														ctor: '::',
-																																																																																														_0: _madbrain$x86project$X86$MODRM,
-																																																																																														_1: {ctor: '[]'}
-																																																																																													}
-																																																																																												},
-																																																																																												_1: 'TEST',
-																																																																																												_2: _madbrain$x86project$X86$ops(
-																																																																																													{
-																																																																																														ctor: '::',
-																																																																																														_0: 'r/m8',
-																																																																																														_1: {
-																																																																																															ctor: '::',
-																																																																																															_0: 'r8',
-																																																																																															_1: {ctor: '[]'}
-																																																																																														}
-																																																																																													})
-																																																																																											}),
-																																																																																										_1: {
-																																																																																											ctor: '::',
-																																																																																											_0: _madbrain$x86project$X86$Instr(
-																																																																																												{
-																																																																																													ctor: '_Tuple3',
-																																																																																													_0: {
-																																																																																														ctor: '::',
-																																																																																														_0: _madbrain$x86project$X86$O(133),
-																																																																																														_1: {
-																																																																																															ctor: '::',
-																																																																																															_0: _madbrain$x86project$X86$MODRM,
-																																																																																															_1: {ctor: '[]'}
-																																																																																														}
-																																																																																													},
-																																																																																													_1: 'TEST',
-																																																																																													_2: _madbrain$x86project$X86$ops(
-																																																																																														{
-																																																																																															ctor: '::',
-																																																																																															_0: 'r/m16',
-																																																																																															_1: {
-																																																																																																ctor: '::',
-																																																																																																_0: 'r16',
-																																																																																																_1: {ctor: '[]'}
-																																																																																															}
-																																																																																														})
-																																																																																												}),
-																																																																																											_1: {
-																																																																																												ctor: '::',
-																																																																																												_0: _madbrain$x86project$X86$Instr(
-																																																																																													{
-																																																																																														ctor: '_Tuple3',
-																																																																																														_0: {
-																																																																																															ctor: '::',
-																																																																																															_0: _madbrain$x86project$X86$O(133),
-																																																																																															_1: {
-																																																																																																ctor: '::',
-																																																																																																_0: _madbrain$x86project$X86$MODRM,
-																																																																																																_1: {ctor: '[]'}
-																																																																																															}
-																																																																																														},
-																																																																																														_1: 'TEST',
-																																																																																														_2: _madbrain$x86project$X86$ops(
-																																																																																															{
-																																																																																																ctor: '::',
-																																																																																																_0: 'r/m32',
-																																																																																																_1: {
-																																																																																																	ctor: '::',
-																																																																																																	_0: 'r32',
-																																																																																																	_1: {ctor: '[]'}
-																																																																																																}
-																																																																																															})
-																																																																																													}),
-																																																																																												_1: {ctor: '[]'}
-																																																																																											}
-																																																																																										}
-																																																																																									}
-																																																																																								}
-																																																																																							}
-																																																																																						}
-																																																																																					}
-																																																																																				}
-																																																																																			}
-																																																																																		}
-																																																																																	}
-																																																																																}
-																																																																															}
-																																																																														}
-																																																																													}
-																																																																												}
-																																																																											}
-																																																																										}
-																																																																									}
-																																																																								}
-																																																																							}
-																																																																						}
-																																																																					}
-																																																																				}
-																																																																			}
-																																																																		}
-																																																																	}
-																																																																}
-																																																															}
-																																																														}
-																																																													}
-																																																												}
-																																																											}
-																																																										}
-																																																									}
-																																																								}
-																																																							}
-																																																						}
-																																																					}
-																																																				}
-																																																			}
-																																																		}
-																																																	}
-																																																}
-																																															}
-																																														}
-																																													}
-																																												}
-																																											}
-																																										}
-																																									}
-																																								}
-																																							}
-																																						}
-																																					}
-																																				}
-																																			}
-																																		}
-																																	}
-																																}
-																															}
-																														}
-																													}
-																												}
-																											}
-																										}
-																									}
-																								}
-																							}
-																						}
-																					}
-																				}
-																			}
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-};
-var _madbrain$x86project$X86$instructionsByName = A2(
-	_madbrain$x86project$Utils$groupBy,
-	function (_p8) {
-		var _p9 = _p8;
-		return _p9._0._1;
-	},
-	_madbrain$x86project$X86$instructions);
-
-var _madbrain$x86project$Lexer$isDigit = function (c) {
-	return (_elm_lang$core$Native_Utils.cmp(
-		c,
-		_elm_lang$core$Native_Utils.chr('0')) > -1) && (_elm_lang$core$Native_Utils.cmp(
-		c,
-		_elm_lang$core$Native_Utils.chr('9')) < 1);
-};
-var _madbrain$x86project$Lexer$isLetter = function (c) {
-	return ((_elm_lang$core$Native_Utils.cmp(
-		c,
-		_elm_lang$core$Native_Utils.chr('a')) > -1) && (_elm_lang$core$Native_Utils.cmp(
-		c,
-		_elm_lang$core$Native_Utils.chr('z')) < 1)) || ((_elm_lang$core$Native_Utils.cmp(
-		c,
-		_elm_lang$core$Native_Utils.chr('A')) > -1) && (_elm_lang$core$Native_Utils.cmp(
-		c,
-		_elm_lang$core$Native_Utils.chr('Z')) < 1));
-};
-var _madbrain$x86project$Lexer$isLetterOrDigit = function (c) {
-	return _madbrain$x86project$Lexer$isLetter(c) || _madbrain$x86project$Lexer$isDigit(c);
-};
-var _madbrain$x86project$Lexer$isSpace = function (c) {
-	return _elm_lang$core$Native_Utils.eq(
-		c,
-		_elm_lang$core$Native_Utils.chr(' ')) || (_elm_lang$core$Native_Utils.eq(
-		c,
-		_elm_lang$core$Native_Utils.chr('\t')) || _elm_lang$core$Native_Utils.eq(
-		c,
-		_elm_lang$core$Native_Utils.chr('\n')));
-};
-var _madbrain$x86project$Lexer$getChar = function (stream) {
-	var _p0 = _elm_lang$core$String$uncons(stream.content);
-	if (_p0.ctor === 'Nothing') {
-		return {ctor: '_Tuple2', _0: _elm_lang$core$Maybe$Nothing, _1: stream};
-	} else {
-		return {
-			ctor: '_Tuple2',
-			_0: _elm_lang$core$Maybe$Just(_p0._0._0),
-			_1: {content: _p0._0._1, position: stream.position + 1}
-		};
-	}
-};
-var _madbrain$x86project$Lexer$lexer = function (input) {
-	return {content: input, position: 0};
-};
-var _madbrain$x86project$Lexer$InputStream = F2(
-	function (a, b) {
-		return {content: a, position: b};
-	});
-var _madbrain$x86project$Lexer$T_IDENT = function (a) {
-	return {ctor: 'T_IDENT', _0: a};
-};
-var _madbrain$x86project$Lexer$scanIdent = F2(
-	function (stream, content) {
-		scanIdent:
-		while (true) {
-			var _p1 = _madbrain$x86project$Lexer$getChar(stream);
-			if (_p1._0.ctor === 'Nothing') {
-				return {
-					ctor: '_Tuple2',
-					_0: _madbrain$x86project$Lexer$T_IDENT(content),
-					_1: _p1._1
-				};
-			} else {
-				var _p2 = _p1._0._0;
-				if (_madbrain$x86project$Lexer$isLetterOrDigit(_p2)) {
-					var _v2 = _p1._1,
-						_v3 = A2(
-						_elm_lang$core$Basics_ops['++'],
-						content,
-						_elm_lang$core$String$fromChar(_p2));
-					stream = _v2;
-					content = _v3;
-					continue scanIdent;
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _madbrain$x86project$Lexer$T_IDENT(content),
-						_1: stream
-					};
-				}
-			}
-		}
-	});
-var _madbrain$x86project$Lexer$T_INTEGER = function (a) {
-	return {ctor: 'T_INTEGER', _0: a};
-};
-var _madbrain$x86project$Lexer$scanInteger = F2(
-	function (stream, content) {
-		scanInteger:
-		while (true) {
-			var _p3 = _madbrain$x86project$Lexer$getChar(stream);
-			if (_p3._0.ctor === 'Nothing') {
-				return {
-					ctor: '_Tuple2',
-					_0: _madbrain$x86project$Lexer$T_INTEGER(content),
-					_1: _p3._1
-				};
-			} else {
-				var _p5 = _p3._1;
-				var _p4 = _p3._0._0;
-				if (_madbrain$x86project$Lexer$isDigit(_p4)) {
-					var _v5 = _p5,
-						_v6 = A2(
-						_elm_lang$core$Basics_ops['++'],
-						content,
-						_elm_lang$core$String$fromChar(_p4));
-					stream = _v5;
-					content = _v6;
-					continue scanInteger;
-				} else {
-					if (_elm_lang$core$Native_Utils.eq(
-						_elm_lang$core$Char$toLower(_p4),
-						_elm_lang$core$Native_Utils.chr('h')) || _elm_lang$core$Native_Utils.eq(
-						_elm_lang$core$Char$toLower(_p4),
-						_elm_lang$core$Native_Utils.chr('b'))) {
-						return {
-							ctor: '_Tuple2',
-							_0: _madbrain$x86project$Lexer$T_INTEGER(
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									content,
-									_elm_lang$core$String$fromChar(_p4))),
-							_1: _p5
-						};
-					} else {
-						return {
-							ctor: '_Tuple2',
-							_0: _madbrain$x86project$Lexer$T_INTEGER(content),
-							_1: stream
-						};
-					}
-				}
-			}
-		}
-	});
-var _madbrain$x86project$Lexer$T_ERROR = function (a) {
-	return {ctor: 'T_ERROR', _0: a};
-};
-var _madbrain$x86project$Lexer$T_ADD = {ctor: 'T_ADD'};
-var _madbrain$x86project$Lexer$T_SUB = {ctor: 'T_SUB'};
-var _madbrain$x86project$Lexer$T_MUL = {ctor: 'T_MUL'};
-var _madbrain$x86project$Lexer$T_LBRT = {ctor: 'T_LBRT'};
-var _madbrain$x86project$Lexer$T_RBRT = {ctor: 'T_RBRT'};
-var _madbrain$x86project$Lexer$T_COMA = {ctor: 'T_COMA'};
-var _madbrain$x86project$Lexer$T_EOF = {ctor: 'T_EOF'};
-var _madbrain$x86project$Lexer$nextToken = function (stream) {
-	nextToken:
-	while (true) {
-		var _p6 = _madbrain$x86project$Lexer$getChar(stream);
-		if (_p6._0.ctor === 'Nothing') {
-			return {ctor: '_Tuple2', _0: _madbrain$x86project$Lexer$T_EOF, _1: _p6._1};
-		} else {
-			var _p8 = _p6._1;
-			var _p7 = _p6._0._0;
-			if (_madbrain$x86project$Lexer$isSpace(_p7)) {
-				var _v8 = _p8;
-				stream = _v8;
-				continue nextToken;
-			} else {
-				if (_madbrain$x86project$Lexer$isLetter(_p7)) {
-					return A2(
-						_madbrain$x86project$Lexer$scanIdent,
-						_p8,
-						_elm_lang$core$String$fromChar(_p7));
-				} else {
-					if (_madbrain$x86project$Lexer$isDigit(_p7)) {
-						return A2(
-							_madbrain$x86project$Lexer$scanInteger,
-							_p8,
-							_elm_lang$core$String$fromChar(_p7));
-					} else {
-						if (_elm_lang$core$Native_Utils.eq(
-							_p7,
-							_elm_lang$core$Native_Utils.chr(','))) {
-							return {ctor: '_Tuple2', _0: _madbrain$x86project$Lexer$T_COMA, _1: _p8};
-						} else {
-							if (_elm_lang$core$Native_Utils.eq(
-								_p7,
-								_elm_lang$core$Native_Utils.chr('['))) {
-								return {ctor: '_Tuple2', _0: _madbrain$x86project$Lexer$T_LBRT, _1: _p8};
-							} else {
-								if (_elm_lang$core$Native_Utils.eq(
-									_p7,
-									_elm_lang$core$Native_Utils.chr(']'))) {
-									return {ctor: '_Tuple2', _0: _madbrain$x86project$Lexer$T_RBRT, _1: _p8};
-								} else {
-									if (_elm_lang$core$Native_Utils.eq(
-										_p7,
-										_elm_lang$core$Native_Utils.chr('+'))) {
-										return {ctor: '_Tuple2', _0: _madbrain$x86project$Lexer$T_ADD, _1: _p8};
-									} else {
-										if (_elm_lang$core$Native_Utils.eq(
-											_p7,
-											_elm_lang$core$Native_Utils.chr('-'))) {
-											return {ctor: '_Tuple2', _0: _madbrain$x86project$Lexer$T_SUB, _1: _p8};
-										} else {
-											if (_elm_lang$core$Native_Utils.eq(
-												_p7,
-												_elm_lang$core$Native_Utils.chr('*'))) {
-												return {ctor: '_Tuple2', _0: _madbrain$x86project$Lexer$T_MUL, _1: _p8};
-											} else {
-												return {
-													ctor: '_Tuple2',
-													_0: _madbrain$x86project$Lexer$T_ERROR(
-														_elm_lang$core$String$fromChar(_p7)),
-													_1: _p8
-												};
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-};
-
-var _rtfeldman$hex$Hex$toString = function (num) {
-	return _elm_lang$core$String$fromList(
-		(_elm_lang$core$Native_Utils.cmp(num, 0) < 0) ? {
-			ctor: '::',
-			_0: _elm_lang$core$Native_Utils.chr('-'),
-			_1: A2(
-				_rtfeldman$hex$Hex$unsafePositiveToDigits,
-				{ctor: '[]'},
-				_elm_lang$core$Basics$negate(num))
-		} : A2(
-			_rtfeldman$hex$Hex$unsafePositiveToDigits,
-			{ctor: '[]'},
-			num));
-};
-var _rtfeldman$hex$Hex$unsafePositiveToDigits = F2(
-	function (digits, num) {
-		unsafePositiveToDigits:
-		while (true) {
-			if (_elm_lang$core$Native_Utils.cmp(num, 16) < 0) {
-				return {
-					ctor: '::',
-					_0: _rtfeldman$hex$Hex$unsafeToDigit(num),
-					_1: digits
-				};
-			} else {
-				var _v0 = {
-					ctor: '::',
-					_0: _rtfeldman$hex$Hex$unsafeToDigit(
-						A2(_elm_lang$core$Basics_ops['%'], num, 16)),
-					_1: digits
-				},
-					_v1 = (num / 16) | 0;
-				digits = _v0;
-				num = _v1;
-				continue unsafePositiveToDigits;
-			}
-		}
-	});
-var _rtfeldman$hex$Hex$unsafeToDigit = function (num) {
-	var _p0 = num;
-	switch (_p0) {
-		case 0:
-			return _elm_lang$core$Native_Utils.chr('0');
-		case 1:
-			return _elm_lang$core$Native_Utils.chr('1');
-		case 2:
-			return _elm_lang$core$Native_Utils.chr('2');
-		case 3:
-			return _elm_lang$core$Native_Utils.chr('3');
-		case 4:
-			return _elm_lang$core$Native_Utils.chr('4');
-		case 5:
-			return _elm_lang$core$Native_Utils.chr('5');
-		case 6:
-			return _elm_lang$core$Native_Utils.chr('6');
-		case 7:
-			return _elm_lang$core$Native_Utils.chr('7');
-		case 8:
-			return _elm_lang$core$Native_Utils.chr('8');
-		case 9:
-			return _elm_lang$core$Native_Utils.chr('9');
-		case 10:
-			return _elm_lang$core$Native_Utils.chr('a');
-		case 11:
-			return _elm_lang$core$Native_Utils.chr('b');
-		case 12:
-			return _elm_lang$core$Native_Utils.chr('c');
-		case 13:
-			return _elm_lang$core$Native_Utils.chr('d');
-		case 14:
-			return _elm_lang$core$Native_Utils.chr('e');
-		case 15:
-			return _elm_lang$core$Native_Utils.chr('f');
-		default:
-			return _elm_lang$core$Native_Utils.crashCase(
-				'Hex',
-				{
-					start: {line: 138, column: 5},
-					end: {line: 188, column: 84}
-				},
-				_p0)(
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'Tried to convert ',
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						_rtfeldman$hex$Hex$toString(num),
-						' to hexadecimal.')));
-	}
-};
-var _rtfeldman$hex$Hex$fromStringHelp = F3(
-	function (position, chars, accumulated) {
-		var _p2 = chars;
-		if (_p2.ctor === '[]') {
-			return _elm_lang$core$Result$Ok(accumulated);
-		} else {
-			var recurse = function (additional) {
-				return A3(
-					_rtfeldman$hex$Hex$fromStringHelp,
-					position - 1,
-					_p2._1,
-					accumulated + (additional * Math.pow(16, position)));
-			};
-			var _p3 = _p2._0;
-			switch (_p3.valueOf()) {
-				case '0':
-					return recurse(0);
-				case '1':
-					return recurse(1);
-				case '2':
-					return recurse(2);
-				case '3':
-					return recurse(3);
-				case '4':
-					return recurse(4);
-				case '5':
-					return recurse(5);
-				case '6':
-					return recurse(6);
-				case '7':
-					return recurse(7);
-				case '8':
-					return recurse(8);
-				case '9':
-					return recurse(9);
-				case 'a':
-					return recurse(10);
-				case 'b':
-					return recurse(11);
-				case 'c':
-					return recurse(12);
-				case 'd':
-					return recurse(13);
-				case 'e':
-					return recurse(14);
-				case 'f':
-					return recurse(15);
-				default:
-					return _elm_lang$core$Result$Err(
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							_elm_lang$core$Basics$toString(_p3),
-							' is not a valid hexadecimal character.'));
-			}
-		}
-	});
-var _rtfeldman$hex$Hex$fromString = function (str) {
-	if (_elm_lang$core$String$isEmpty(str)) {
-		return _elm_lang$core$Result$Err('Empty strings are not valid hexadecimal strings.');
-	} else {
-		var formatError = function (err) {
-			return A2(
-				_elm_lang$core$String$join,
-				' ',
-				{
-					ctor: '::',
-					_0: _elm_lang$core$Basics$toString(str),
-					_1: {
-						ctor: '::',
-						_0: 'is not a valid hexadecimal string because',
-						_1: {
-							ctor: '::',
-							_0: err,
-							_1: {ctor: '[]'}
-						}
-					}
-				});
-		};
-		var result = function () {
-			if (A2(_elm_lang$core$String$startsWith, '-', str)) {
-				var list = A2(
-					_elm_lang$core$Maybe$withDefault,
-					{ctor: '[]'},
-					_elm_lang$core$List$tail(
-						_elm_lang$core$String$toList(str)));
-				return A2(
-					_elm_lang$core$Result$map,
-					_elm_lang$core$Basics$negate,
-					A3(
-						_rtfeldman$hex$Hex$fromStringHelp,
-						_elm_lang$core$List$length(list) - 1,
-						list,
-						0));
-			} else {
-				return A3(
-					_rtfeldman$hex$Hex$fromStringHelp,
-					_elm_lang$core$String$length(str) - 1,
-					_elm_lang$core$String$toList(str),
-					0);
-			}
-		}();
-		return A2(_elm_lang$core$Result$mapError, formatError, result);
-	}
-};
-
-var _madbrain$x86project$Parser$advance = function (context) {
-	var _p0 = _madbrain$x86project$Lexer$nextToken(context.stream);
-	return _madbrain$x86project$Parser$skipErrors(
-		_elm_lang$core$Native_Utils.update(
-			context,
-			{stream: _p0._1, current: _p0._0}));
-};
-var _madbrain$x86project$Parser$skipErrors = function (context) {
-	skipErrors:
-	while (true) {
-		var _p1 = context.current;
-		if (_p1.ctor === 'T_ERROR') {
-			var _v2 = _madbrain$x86project$Parser$advance(
-				_elm_lang$core$Native_Utils.update(
-					context,
-					{
-						errors: {
-							ctor: '::',
-							_0: {
-								msg: A2(
-									_elm_lang$core$Basics_ops['++'],
-									'unexpected char \'',
-									A2(_elm_lang$core$Basics_ops['++'], _p1._0, '\''))
-							},
-							_1: context.errors
-						}
-					}));
-			context = _v2;
-			continue skipErrors;
-		} else {
-			return context;
-		}
-	}
-};
-var _madbrain$x86project$Parser$addError = F2(
-	function (context, msg) {
-		return _elm_lang$core$Native_Utils.update(
-			context,
-			{
-				errors: {
-					ctor: '::',
-					_0: {msg: msg},
-					_1: context.errors
-				}
-			});
-	});
-var _madbrain$x86project$Parser$errorExpecting = F2(
-	function (context, ident) {
-		return A2(
-			_madbrain$x86project$Parser$addError,
-			context,
-			A2(_elm_lang$core$Basics_ops['++'], 'expecting ', ident));
-	});
-var _madbrain$x86project$Parser$immValue = function (value) {
-	return A2(
-		_elm_lang$core$String$endsWith,
-		'H',
-		_elm_lang$core$String$toUpper(value)) ? _rtfeldman$hex$Hex$fromString(
-		A3(_elm_lang$core$String$slice, 0, -1, value)) : _elm_lang$core$String$toInt(value);
-};
-var _madbrain$x86project$Parser$scaleOf = function (value) {
-	var _p2 = _elm_lang$core$String$toInt(value);
-	_v3_3:
-	do {
-		if (_p2.ctor === 'Ok') {
-			switch (_p2._0) {
-				case 1:
-					return 1;
-				case 2:
-					return 2;
-				case 4:
-					return 4;
-				default:
-					break _v3_3;
-			}
-		} else {
-			break _v3_3;
-		}
-	} while(false);
-	return 1;
-};
-var _madbrain$x86project$Parser$analyseMemoryOperand = F2(
-	function (element, memory) {
-		var _p3 = element;
-		if (_p3.ctor === 'EARegister') {
-			if (_p3._0._1.ctor === 'Nothing') {
-				var _p5 = _p3._0._0;
-				var _p4 = memory.base;
-				if (_p4.ctor === 'Just') {
-					return _elm_lang$core$Native_Utils.update(
-						memory,
-						{
-							index: _elm_lang$core$Maybe$Just(
-								{ctor: '_Tuple2', _0: _p5, _1: 1})
-						});
-				} else {
-					return _elm_lang$core$Native_Utils.update(
-						memory,
-						{
-							base: _elm_lang$core$Maybe$Just(_p5)
-						});
-				}
-			} else {
-				var _p7 = _p3._0._0;
-				var _p6 = {
-					ctor: '_Tuple2',
-					_0: memory.base,
-					_1: _madbrain$x86project$Parser$scaleOf(_p3._0._1._0)
-				};
-				if ((_p6._0.ctor === 'Nothing') && (_p6._1 === 1)) {
-					return _elm_lang$core$Native_Utils.update(
-						memory,
-						{
-							base: _elm_lang$core$Maybe$Just(_p7)
-						});
-				} else {
-					return _elm_lang$core$Native_Utils.update(
-						memory,
-						{
-							index: _elm_lang$core$Maybe$Just(
-								{ctor: '_Tuple2', _0: _p7, _1: _p6._1})
-						});
-				}
-			}
-		} else {
-			var _p8 = _madbrain$x86project$Parser$immValue(_p3._0._1);
-			if (_p8.ctor === 'Ok') {
-				var _p9 = _p8._0;
-				return _elm_lang$core$Native_Utils.update(
-					memory,
-					{
-						displacement: memory.displacement + (_p3._0._0 ? _p9 : (0 - _p9))
-					});
-			} else {
-				return memory;
-			}
-		}
-	});
-var _madbrain$x86project$Parser$makeMemoryOperand = F2(
-	function (elements, memory) {
-		makeMemoryOperand:
-		while (true) {
-			var _p10 = elements;
-			if (_p10.ctor === '[]') {
-				return memory;
-			} else {
-				var _v9 = _p10._1,
-					_v10 = A2(_madbrain$x86project$Parser$analyseMemoryOperand, _p10._0, memory);
-				elements = _v9;
-				memory = _v10;
-				continue makeMemoryOperand;
-			}
-		}
-	});
-var _madbrain$x86project$Parser$initMemoryOperand = function (size) {
-	return {size: size, base: _elm_lang$core$Maybe$Nothing, index: _elm_lang$core$Maybe$Nothing, displacement: 0};
-};
-var _madbrain$x86project$Parser$makeParser = F2(
-	function (is32Bits, content) {
-		var stream = _madbrain$x86project$Lexer$lexer(content);
-		var _p11 = _madbrain$x86project$Lexer$nextToken(stream);
-		var token = _p11._0;
-		var next = _p11._1;
-		return _madbrain$x86project$Parser$skipErrors(
-			{
-				stream: next,
-				current: token,
-				errors: {ctor: '[]'},
-				size: is32Bits ? 32 : 16
-			});
-	});
-var _madbrain$x86project$Parser$Error = function (a) {
-	return {msg: a};
-};
-var _madbrain$x86project$Parser$ParserContext = F4(
-	function (a, b, c, d) {
-		return {stream: a, current: b, errors: c, size: d};
-	});
-var _madbrain$x86project$Parser$MemoryOperand = F4(
-	function (a, b, c, d) {
-		return {size: a, base: b, index: c, displacement: d};
-	});
-var _madbrain$x86project$Parser$NOK = function (a) {
-	return {ctor: 'NOK', _0: a};
-};
-var _madbrain$x86project$Parser$OK = function (a) {
-	return {ctor: 'OK', _0: a};
-};
-var _madbrain$x86project$Parser$parseIdent = function (context) {
-	var _p12 = context.current;
-	if (_p12.ctor === 'T_IDENT') {
-		return _madbrain$x86project$Parser$OK(
-			{
-				ctor: '_Tuple2',
-				_0: _p12._0,
-				_1: _madbrain$x86project$Parser$advance(context)
-			});
-	} else {
-		return _madbrain$x86project$Parser$NOK(
-			A2(_madbrain$x86project$Parser$errorExpecting, context, 'IDENT'));
-	}
-};
-var _madbrain$x86project$Parser$parseInteger = function (context) {
-	var _p13 = context.current;
-	if (_p13.ctor === 'T_INTEGER') {
-		return _madbrain$x86project$Parser$OK(
-			{
-				ctor: '_Tuple2',
-				_0: _p13._0,
-				_1: _madbrain$x86project$Parser$advance(context)
-			});
-	} else {
-		return _madbrain$x86project$Parser$NOK(
-			A2(_madbrain$x86project$Parser$errorExpecting, context, 'INTEGER'));
-	}
-};
-var _madbrain$x86project$Parser$parseScale = function (context) {
-	var _p14 = context.current;
-	if (_p14.ctor === 'T_MUL') {
-		var _p15 = _madbrain$x86project$Parser$parseInteger(
-			_madbrain$x86project$Parser$advance(context));
-		if (_p15.ctor === 'OK') {
-			return _madbrain$x86project$Parser$OK(
-				{
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Maybe$Just(_p15._0._0),
-					_1: _p15._0._1
-				});
-		} else {
-			return _madbrain$x86project$Parser$NOK(_p15._0);
-		}
-	} else {
-		return _madbrain$x86project$Parser$OK(
-			{ctor: '_Tuple2', _0: _elm_lang$core$Maybe$Nothing, _1: context});
-	}
-};
-var _madbrain$x86project$Parser$AstInstr = function (a) {
-	return {ctor: 'AstInstr', _0: a};
-};
-var _madbrain$x86project$Parser$AstEffectiveAddress = function (a) {
-	return {ctor: 'AstEffectiveAddress', _0: a};
-};
-var _madbrain$x86project$Parser$AstImmediat = function (a) {
-	return {ctor: 'AstImmediat', _0: a};
-};
-var _madbrain$x86project$Parser$AstRegister = function (a) {
-	return {ctor: 'AstRegister', _0: a};
-};
-var _madbrain$x86project$Parser$EADisplacement = function (a) {
-	return {ctor: 'EADisplacement', _0: a};
-};
-var _madbrain$x86project$Parser$EARegister = function (a) {
-	return {ctor: 'EARegister', _0: a};
-};
-var _madbrain$x86project$Parser$parseEAElement = F2(
-	function (sign, context) {
-		var _p16 = context.current;
-		switch (_p16.ctor) {
-			case 'T_IDENT':
-				var _p17 = _madbrain$x86project$Parser$parseScale(
-					_madbrain$x86project$Parser$advance(context));
-				if (_p17.ctor === 'OK') {
-					return _madbrain$x86project$Parser$OK(
-						{
-							ctor: '_Tuple2',
-							_0: _madbrain$x86project$Parser$EARegister(
-								{ctor: '_Tuple2', _0: _p16._0, _1: _p17._0._0}),
-							_1: _p17._0._1
-						});
-				} else {
-					return _madbrain$x86project$Parser$NOK(_p17._0);
-				}
-			case 'T_INTEGER':
-				return _madbrain$x86project$Parser$OK(
-					{
-						ctor: '_Tuple2',
-						_0: _madbrain$x86project$Parser$EADisplacement(
-							{ctor: '_Tuple2', _0: sign, _1: _p16._0}),
-						_1: _madbrain$x86project$Parser$advance(context)
-					});
-			default:
-				return _madbrain$x86project$Parser$NOK(
-					A2(_madbrain$x86project$Parser$errorExpecting, context, 'IDENT or INTEGER'));
-		}
-	});
-var _madbrain$x86project$Parser$parseEffectiveAddress = F3(
-	function (sign, context, elements) {
-		parseEffectiveAddress:
-		while (true) {
-			var _p18 = A2(_madbrain$x86project$Parser$parseEAElement, sign, context);
-			if (_p18.ctor === 'OK') {
-				var _p20 = _p18._0._1;
-				var newElements = {ctor: '::', _0: _p18._0._0, _1: elements};
-				var _p19 = _p20.current;
-				switch (_p19.ctor) {
-					case 'T_ADD':
-						var _v19 = true,
-							_v20 = _madbrain$x86project$Parser$advance(_p20),
-							_v21 = newElements;
-						sign = _v19;
-						context = _v20;
-						elements = _v21;
-						continue parseEffectiveAddress;
-					case 'T_SUB':
-						var _v22 = false,
-							_v23 = _madbrain$x86project$Parser$advance(_p20),
-							_v24 = newElements;
-						sign = _v22;
-						context = _v23;
-						elements = _v24;
-						continue parseEffectiveAddress;
-					case 'T_RBRT':
-						return _madbrain$x86project$Parser$OK(
-							{
-								ctor: '_Tuple2',
-								_0: _elm_lang$core$List$reverse(newElements),
-								_1: _madbrain$x86project$Parser$advance(_p20)
-							});
-					default:
-						return _madbrain$x86project$Parser$OK(
-							{
-								ctor: '_Tuple2',
-								_0: _elm_lang$core$List$reverse(newElements),
-								_1: context
-							});
-				}
-			} else {
-				return _madbrain$x86project$Parser$OK(
-					{
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$List$reverse(elements),
-						_1: _p18._0
-					});
-			}
-		}
-	});
-var _madbrain$x86project$Parser$parseMemory = F2(
-	function (size, context) {
-		var _p21 = A3(
-			_madbrain$x86project$Parser$parseEffectiveAddress,
-			true,
-			_madbrain$x86project$Parser$advance(context),
-			{ctor: '[]'});
-		if (_p21.ctor === 'OK') {
-			return _madbrain$x86project$Parser$OK(
-				{
-					ctor: '_Tuple2',
-					_0: _madbrain$x86project$Parser$AstEffectiveAddress(
-						A2(
-							_madbrain$x86project$Parser$makeMemoryOperand,
-							_p21._0._0,
-							_madbrain$x86project$Parser$initMemoryOperand(size))),
-					_1: _p21._0._1
-				});
-		} else {
-			return _madbrain$x86project$Parser$NOK(_p21._0);
-		}
-	});
-var _madbrain$x86project$Parser$parseOperand = function (context) {
-	var _p22 = context.current;
-	switch (_p22.ctor) {
-		case 'T_IDENT':
-			var _p23 = _p22._0;
-			return _elm_lang$core$Native_Utils.eq(_p23, 'byteptr') ? A2(
-				_madbrain$x86project$Parser$parseMemory,
-				8,
-				_madbrain$x86project$Parser$advance(context)) : (_elm_lang$core$Native_Utils.eq(_p23, 'wordptr') ? A2(
-				_madbrain$x86project$Parser$parseMemory,
-				16,
-				_madbrain$x86project$Parser$advance(context)) : _madbrain$x86project$Parser$OK(
-				{
-					ctor: '_Tuple2',
-					_0: _madbrain$x86project$Parser$AstRegister(_p23),
-					_1: _madbrain$x86project$Parser$advance(context)
-				}));
-		case 'T_INTEGER':
-			return _madbrain$x86project$Parser$OK(
-				{
-					ctor: '_Tuple2',
-					_0: _madbrain$x86project$Parser$AstImmediat(_p22._0),
-					_1: _madbrain$x86project$Parser$advance(context)
-				});
-		case 'T_LBRT':
-			return A2(_madbrain$x86project$Parser$parseMemory, context.size, context);
-		default:
-			return _madbrain$x86project$Parser$NOK(
-				A2(_madbrain$x86project$Parser$errorExpecting, context, 'IDENT, INTEGER or ['));
-	}
-};
-var _madbrain$x86project$Parser$parseOperands = F2(
-	function (context, operands) {
-		parseOperands:
-		while (true) {
-			var _p24 = context.current;
-			if (_p24.ctor === 'T_EOF') {
-				return {ctor: '_Tuple2', _0: operands, _1: context};
-			} else {
-				var _p25 = _madbrain$x86project$Parser$parseOperand(context);
-				if (_p25.ctor === 'OK') {
-					var _p27 = _p25._0._1;
-					var newOperands = {ctor: '::', _0: _p25._0._0, _1: operands};
-					var _p26 = _p27.current;
-					if (_p26.ctor === 'T_COMA') {
-						var _v30 = _madbrain$x86project$Parser$advance(_p27),
-							_v31 = newOperands;
-						context = _v30;
-						operands = _v31;
-						continue parseOperands;
-					} else {
-						return {
-							ctor: '_Tuple2',
-							_0: _elm_lang$core$List$reverse(newOperands),
-							_1: _p27
-						};
-					}
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$List$reverse(operands),
-						_1: _p25._0
-					};
-				}
-			}
-		}
-	});
-var _madbrain$x86project$Parser$parseAssembly = function (context) {
-	var _p28 = _madbrain$x86project$Parser$parseIdent(context);
-	if (_p28.ctor === 'OK') {
-		var _p29 = A2(
-			_madbrain$x86project$Parser$parseOperands,
-			_p28._0._1,
-			{ctor: '[]'});
-		var operands = _p29._0;
-		var nn = _p29._1;
-		return {
-			ctor: '_Tuple2',
-			_0: _elm_lang$core$Maybe$Just(
-				_madbrain$x86project$Parser$AstInstr(
-					{ctor: '_Tuple2', _0: _p28._0._0, _1: operands})),
-			_1: nn
-		};
-	} else {
-		return {ctor: '_Tuple2', _0: _elm_lang$core$Maybe$Nothing, _1: _p28._0};
-	}
-};
-var _madbrain$x86project$Parser$parse = F2(
-	function (is32Bits, content) {
-		return _madbrain$x86project$Parser$parseAssembly(
-			A2(_madbrain$x86project$Parser$makeParser, is32Bits, content));
-	});
-
-var _madbrain$x86project$Encode$encodeMode = function (mode) {
-	var _p0 = mode;
-	switch (_p0.ctor) {
+var author$project$Encode$encodeMode = function (mode) {
+	switch (mode.$) {
 		case 'MEMORY':
 			return 0;
 		case 'MEMORY_DISP8':
@@ -14848,9 +6394,8 @@ var _madbrain$x86project$Encode$encodeMode = function (mode) {
 			return 3;
 	}
 };
-var _madbrain$x86project$Encode$encodeScale = function (scale) {
-	var _p1 = scale;
-	switch (_p1) {
+var author$project$Encode$encodeScale = function (scale) {
+	switch (scale) {
 		case 1:
 			return 0;
 		case 2:
@@ -14861,30 +6406,3696 @@ var _madbrain$x86project$Encode$encodeScale = function (scale) {
 			return 3;
 	}
 };
-var _madbrain$x86project$Encode$encodeOpt = F2(
-	function (elementOpt, context) {
-		var _p2 = elementOpt;
-		if (_p2.ctor === 'Just') {
-			return _elm_lang$core$Native_Utils.update(
+var elm$core$String$slice = _String_slice;
+var elm$core$String$fromList = _String_fromList;
+var elm$core$Basics$modBy = _Basics_modBy;
+var rtfeldman$elm_hex$Hex$unsafeToDigit = function (num) {
+	unsafeToDigit:
+	while (true) {
+		switch (num) {
+			case 0:
+				return _Utils_chr('0');
+			case 1:
+				return _Utils_chr('1');
+			case 2:
+				return _Utils_chr('2');
+			case 3:
+				return _Utils_chr('3');
+			case 4:
+				return _Utils_chr('4');
+			case 5:
+				return _Utils_chr('5');
+			case 6:
+				return _Utils_chr('6');
+			case 7:
+				return _Utils_chr('7');
+			case 8:
+				return _Utils_chr('8');
+			case 9:
+				return _Utils_chr('9');
+			case 10:
+				return _Utils_chr('a');
+			case 11:
+				return _Utils_chr('b');
+			case 12:
+				return _Utils_chr('c');
+			case 13:
+				return _Utils_chr('d');
+			case 14:
+				return _Utils_chr('e');
+			case 15:
+				return _Utils_chr('f');
+			default:
+				var $temp$num = num;
+				num = $temp$num;
+				continue unsafeToDigit;
+		}
+	}
+};
+var rtfeldman$elm_hex$Hex$unsafePositiveToDigits = F2(
+	function (digits, num) {
+		unsafePositiveToDigits:
+		while (true) {
+			if (num < 16) {
+				return A2(
+					elm$core$List$cons,
+					rtfeldman$elm_hex$Hex$unsafeToDigit(num),
+					digits);
+			} else {
+				var $temp$digits = A2(
+					elm$core$List$cons,
+					rtfeldman$elm_hex$Hex$unsafeToDigit(
+						A2(elm$core$Basics$modBy, 16, num)),
+					digits),
+					$temp$num = (num / 16) | 0;
+				digits = $temp$digits;
+				num = $temp$num;
+				continue unsafePositiveToDigits;
+			}
+		}
+	});
+var rtfeldman$elm_hex$Hex$toString = function (num) {
+	return elm$core$String$fromList(
+		(num < 0) ? A2(
+			elm$core$List$cons,
+			_Utils_chr('-'),
+			A2(rtfeldman$elm_hex$Hex$unsafePositiveToDigits, _List_Nil, -num)) : A2(rtfeldman$elm_hex$Hex$unsafePositiveToDigits, _List_Nil, num));
+};
+var author$project$EncodeDiagram$toByteHex = function (value) {
+	return A3(
+		elm$core$String$slice,
+		1,
+		3,
+		rtfeldman$elm_hex$Hex$toString(value + 256));
+};
+var author$project$EncodeDiagram$bytes = function (values) {
+	return A2(
+		elm$core$String$join,
+		' ',
+		A2(elm$core$List$map, author$project$EncodeDiagram$toByteHex, values));
+};
+var author$project$Diagram$Node = F2(
+	function (a, b) {
+		return {$: 'Node', a: a, b: b};
+	});
+var elm$core$Bitwise$and = _Bitwise_and;
+var elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
+var author$project$EncodeDiagram$toBits = F2(
+	function (size, value) {
+		return A2(
+			elm$core$String$join,
+			'',
+			elm$core$Array$toList(
+				A2(
+					elm$core$Array$initialize,
+					size,
+					function (i) {
+						return elm$core$String$fromInt(1 & (value >> ((size - i) - 1)));
+					})));
+	});
+var elm$core$Bitwise$or = _Bitwise_or;
+var elm$core$List$singleton = function (value) {
+	return _List_fromArray(
+		[value]);
+};
+var author$project$EncodeDiagram$encodeIntoByte = F2(
+	function (encoding, values) {
+		var o = A3(
+			elm$core$List$map2,
+			F2(
+				function (el, v) {
+					return _Utils_Tuple2(
+						A2(author$project$EncodeDiagram$toBits, el.size, v),
+						author$project$Diagram$Leaf(el.name));
+				}),
+			encoding.elements,
+			values);
+		var e = elm$core$List$singleton(
+			A3(
+				elm$core$List$foldl,
+				elm$core$Bitwise$or,
+				0,
+				A3(
+					elm$core$List$map2,
+					F2(
+						function (el, v) {
+							return v << el.shift;
+						}),
+					encoding.elements,
+					values)));
+		return _Utils_Tuple2(
+			author$project$EncodeDiagram$bytes(e),
+			A2(author$project$Diagram$Node, encoding.name, o));
+	});
+var author$project$EncodeDiagram$modRmEncoding = {
+	elements: _List_fromArray(
+		[
+			{name: 'Mode', shift: 6, size: 2},
+			{name: 'Reg', shift: 3, size: 3},
+			{name: 'RM', shift: 0, size: 3}
+		]),
+	name: 'ModRM'
+};
+var author$project$EncodeDiagram$opRegEncoding = {
+	elements: _List_fromArray(
+		[
+			{name: 'Opcode', shift: 3, size: 5},
+			{name: 'Reg', shift: 0, size: 3}
+		]),
+	name: 'Opcode and Register'
+};
+var author$project$EncodeDiagram$sibEncoding = {
+	elements: _List_fromArray(
+		[
+			{name: 'Scale', shift: 6, size: 2},
+			{name: 'Index', shift: 3, size: 3},
+			{name: 'Base', shift: 0, size: 3}
+		]),
+	name: 'SIB'
+};
+var author$project$EncodeDiagram$toLitteEndian = F2(
+	function (size, value) {
+		return A2(
+			elm$core$List$map,
+			function (i) {
+				return 255 & (value >>> (i * 8));
+			},
+			A2(elm$core$List$range, 0, ((size / 8) | 0) - 1));
+	});
+var author$project$Syntax$toDisplayInt = function (value) {
+	return (value < 1000) ? elm$core$String$fromInt(value) : (rtfeldman$elm_hex$Hex$toString(value) + 'h');
+};
+var author$project$X86$bitSize = function (size) {
+	switch (size.$) {
+		case 'S_8':
+			return 8;
+		case 'S_16':
+			return 16;
+		default:
+			return 32;
+	}
+};
+var author$project$EncodeDiagram$encodeElement = function (element) {
+	switch (element.$) {
+		case 'Prefix':
+			var value = element.a;
+			return _Utils_Tuple2(
+				author$project$EncodeDiagram$bytes(
+					_List_fromArray(
+						[value])),
+				author$project$Diagram$Leaf('Prefix'));
+		case 'Opcode':
+			var value = element.a;
+			return _Utils_Tuple2(
+				author$project$EncodeDiagram$bytes(
+					_List_fromArray(
+						[value])),
+				author$project$Diagram$Leaf('Opcode'));
+		case 'OpcodeAndReg':
+			var _n1 = element.a;
+			var opcode = _n1.a;
+			var reg = _n1.b;
+			return A2(
+				author$project$EncodeDiagram$encodeIntoByte,
+				author$project$EncodeDiagram$opRegEncoding,
+				_List_fromArray(
+					[opcode, reg]));
+		case 'ModRM':
+			var _n2 = element.a;
+			var mode = _n2.a;
+			var reg = _n2.b;
+			var rm = _n2.c;
+			return A2(
+				author$project$EncodeDiagram$encodeIntoByte,
+				author$project$EncodeDiagram$modRmEncoding,
+				_List_fromArray(
+					[
+						author$project$Encode$encodeMode(mode),
+						reg,
+						rm
+					]));
+		case 'Sib':
+			var _n3 = element.a;
+			var base = _n3.a;
+			var index = _n3.b;
+			var scale = _n3.c;
+			return A2(
+				author$project$EncodeDiagram$encodeIntoByte,
+				author$project$EncodeDiagram$sibEncoding,
+				_List_fromArray(
+					[
+						author$project$Encode$encodeScale(scale),
+						index,
+						base
+					]));
+		case 'Disp8':
+			var value = element.a;
+			return _Utils_Tuple2(
+				author$project$EncodeDiagram$bytes(
+					_List_fromArray(
+						[value])),
+				author$project$Diagram$Leaf(
+					'Displacement: ' + author$project$Syntax$toDisplayInt(value)));
+		case 'Disp32':
+			var value = element.a;
+			return _Utils_Tuple2(
+				author$project$EncodeDiagram$bytes(
+					A2(author$project$EncodeDiagram$toLitteEndian, 32, value)),
+				author$project$Diagram$Leaf(
+					'Displacement: ' + author$project$Syntax$toDisplayInt(value)));
+		default:
+			var _n4 = element.a;
+			var size = _n4.a;
+			var value = _n4.b;
+			return _Utils_Tuple2(
+				author$project$EncodeDiagram$bytes(
+					A2(
+						author$project$EncodeDiagram$toLitteEndian,
+						author$project$X86$bitSize(size),
+						value)),
+				author$project$Diagram$Leaf(
+					'Immediat value: ' + author$project$Syntax$toDisplayInt(value)));
+	}
+};
+var author$project$EncodeDiagram$encode = function (elements) {
+	return author$project$Diagram$draw(
+		A2(elm$core$List$map, author$project$EncodeDiagram$encodeElement, elements));
+};
+var author$project$Main$BitSizeChange = {$: 'BitSizeChange'};
+var author$project$Main$Change = function (a) {
+	return {$: 'Change', a: a};
+};
+var author$project$Main$OperationModeChange = {$: 'OperationModeChange'};
+var author$project$X86$S_16 = {$: 'S_16'};
+var author$project$X86$S_16_32 = {$: 'S_16_32'};
+var author$project$X86$S_32 = {$: 'S_32'};
+var author$project$Decode$getContextSize = F2(
+	function (size, context) {
+		return _Utils_eq(size, author$project$X86$S_16_32) ? (context.is32Bits ? author$project$X86$S_32 : author$project$X86$S_16) : size;
+	});
+var author$project$Syntax$AstRegister = function (a) {
+	return {$: 'AstRegister', a: a};
+};
+var author$project$X86$regName = F2(
+	function (size, reg) {
+		switch (reg.$) {
+			case 'AX':
+				return _Utils_eq(size, author$project$X86$S_16) ? 'AX' : 'EAX';
+			case 'AL':
+				return 'AL';
+			default:
+				return 'DX';
+		}
+	});
+var author$project$Decode$decodeFixedRegister = F3(
+	function (size, reg, context) {
+		return _Utils_update(
+			context,
+			{
+				operands: A2(
+					elm$core$List$cons,
+					author$project$Syntax$AstRegister(
+						A2(
+							author$project$X86$regName,
+							A2(author$project$Decode$getContextSize, size, context),
+							reg)),
+					context.operands)
+			});
+	});
+var author$project$Decode$getByte = function (context) {
+	var _n0 = context.bytes;
+	if (_n0.b) {
+		var x = _n0.a;
+		var tail = _n0.b;
+		return _Utils_Tuple2(
+			elm$core$Maybe$Just(x),
+			_Utils_update(
+				context,
+				{bytes: tail}));
+	} else {
+		return _Utils_Tuple2(
+			elm$core$Maybe$Nothing,
+			_Utils_update(
+				context,
+				{error: 'Not enough bytes'}));
+	}
+};
+var author$project$Decode$getLong = function (context) {
+	var number = function (l) {
+		return A3(
+			elm$core$List$foldl,
+			F2(
+				function (a, s) {
+					return a | (s << 8);
+				}),
+			0,
+			l);
+	};
+	var _n0 = context.bytes;
+	if (((_n0.b && _n0.b.b) && _n0.b.b.b) && _n0.b.b.b.b) {
+		var x = _n0.a;
+		var _n1 = _n0.b;
+		var y = _n1.a;
+		var _n2 = _n1.b;
+		var z = _n2.a;
+		var _n3 = _n2.b;
+		var w = _n3.a;
+		var tail = _n3.b;
+		return _Utils_Tuple2(
+			elm$core$Maybe$Just(
+				number(
+					_List_fromArray(
+						[w, z, y, x]))),
+			_Utils_update(
+				context,
+				{bytes: tail}));
+	} else {
+		return _Utils_Tuple2(
+			elm$core$Maybe$Nothing,
+			_Utils_update(
+				context,
+				{error: 'Not enough bytes'}));
+	}
+};
+var author$project$Decode$getWord = function (context) {
+	var _n0 = context.bytes;
+	if (_n0.b && _n0.b.b) {
+		var x = _n0.a;
+		var _n1 = _n0.b;
+		var y = _n1.a;
+		var tail = _n1.b;
+		return _Utils_Tuple2(
+			elm$core$Maybe$Just(y | (x << 8)),
+			_Utils_update(
+				context,
+				{bytes: tail}));
+	} else {
+		return _Utils_Tuple2(
+			elm$core$Maybe$Nothing,
+			_Utils_update(
+				context,
+				{error: 'Not enough bytes'}));
+	}
+};
+var author$project$Encode$Immediat = function (a) {
+	return {$: 'Immediat', a: a};
+};
+var author$project$Syntax$AstImmediat = function (a) {
+	return {$: 'AstImmediat', a: a};
+};
+var author$project$Decode$decodeImm = F2(
+	function (size, context) {
+		var s = A2(author$project$Decode$getContextSize, size, context);
+		var _n0 = function () {
+			switch (s.$) {
+				case 'S_8':
+					return author$project$Decode$getByte(context);
+				case 'S_16':
+					return author$project$Decode$getWord(context);
+				default:
+					return author$project$Decode$getLong(context);
+			}
+		}();
+		var value = _n0.a;
+		var newContext = _n0.b;
+		if (value.$ === 'Just') {
+			var v = value.a;
+			return _Utils_update(
+				newContext,
+				{
+					elements: A2(
+						elm$core$List$cons,
+						author$project$Encode$Immediat(
+							_Utils_Tuple2(s, v)),
+						context.elements),
+					operands: A2(
+						elm$core$List$cons,
+						author$project$Syntax$AstImmediat(v),
+						context.operands)
+				});
+		} else {
+			return newContext;
+		}
+	});
+var author$project$Decode$decodeRegName = F2(
+	function (size, r) {
+		switch (size.$) {
+			case 'S_8':
+				switch (r) {
+					case 0:
+						return 'AL';
+					case 1:
+						return 'CL';
+					case 2:
+						return 'DL';
+					case 3:
+						return 'CL';
+					case 4:
+						return 'AH';
+					case 5:
+						return 'CH';
+					case 6:
+						return 'DH';
+					default:
+						return 'CH';
+				}
+			case 'S_16':
+				switch (r) {
+					case 0:
+						return 'AX';
+					case 1:
+						return 'CX';
+					case 2:
+						return 'DX';
+					case 3:
+						return 'BX';
+					case 4:
+						return 'SP';
+					case 5:
+						return 'BP';
+					case 6:
+						return 'SI';
+					default:
+						return 'DI';
+				}
+			case 'S_32':
+				switch (r) {
+					case 0:
+						return 'EAX';
+					case 1:
+						return 'ECX';
+					case 2:
+						return 'EDX';
+					case 3:
+						return 'EBX';
+					case 4:
+						return 'ESP';
+					case 5:
+						return 'EBP';
+					case 6:
+						return 'ESI';
+					default:
+						return 'EDI';
+				}
+			default:
+				return 'RR';
+		}
+	});
+var author$project$Syntax$AstEffectiveAddress = function (a) {
+	return {$: 'AstEffectiveAddress', a: a};
+};
+var author$project$Decode$decodeRM = F2(
+	function (size, context) {
+		var _n0 = function () {
+			var _n1 = context.mode;
+			_n1$2:
+			while (true) {
+				if (_n1.$ === 'Just') {
+					switch (_n1.a.$) {
+						case 'REG':
+							var _n2 = _n1.a;
+							return _Utils_Tuple2(
+								author$project$Syntax$AstRegister(
+									A2(
+										author$project$Decode$decodeRegName,
+										A2(author$project$Decode$getContextSize, size, context),
+										A2(elm$core$Maybe$withDefault, 0, context.rm))),
+								context);
+						case 'MEMORY':
+							var _n3 = _n1.a;
+							var _n4 = context.rm;
+							if (_n4.$ === 'Just') {
+								switch (_n4.a) {
+									case 4:
+										return _Utils_Tuple2(
+											author$project$Syntax$AstRegister('SIB no displacement'),
+											context);
+									case 5:
+										var s = A2(author$project$Decode$getContextSize, size, context);
+										var _n5 = context.is32Bits ? author$project$Decode$getLong(context) : author$project$Decode$getWord(context);
+										var v = _n5.a;
+										var nc = _n5.b;
+										var value = A2(elm$core$Maybe$withDefault, 0, v);
+										return _Utils_Tuple2(
+											author$project$Syntax$AstEffectiveAddress(
+												{base: elm$core$Maybe$Nothing, displacement: value, index: elm$core$Maybe$Nothing, size: s}),
+											_Utils_update(
+												nc,
+												{
+													elements: A2(
+														elm$core$List$cons,
+														author$project$Encode$Immediat(
+															_Utils_Tuple2(s, value)),
+														context.elements)
+												}));
+									default:
+										var rm = _n4.a;
+										return _Utils_Tuple2(
+											author$project$Syntax$AstEffectiveAddress(
+												{
+													base: elm$core$Maybe$Just(
+														A2(
+															author$project$Decode$decodeRegName,
+															A2(author$project$Decode$getContextSize, size, context),
+															rm)),
+													displacement: 0,
+													index: elm$core$Maybe$Nothing,
+													size: size
+												}),
+											context);
+								}
+							} else {
+								return _Utils_Tuple2(
+									author$project$Syntax$AstRegister('expecting modrm'),
+									context);
+							}
+						default:
+							break _n1$2;
+					}
+				} else {
+					break _n1$2;
+				}
+			}
+			return _Utils_Tuple2(
+				author$project$Syntax$AstRegister('mode error'),
+				context);
+		}();
+		var operand = _n0.a;
+		var newContext = _n0.b;
+		return _Utils_update(
+			newContext,
+			{
+				operands: A2(elm$core$List$cons, operand, newContext.operands)
+			});
+	});
+var author$project$Decode$decodeReg = F2(
+	function (size, context) {
+		var operand = author$project$Syntax$AstRegister(
+			A2(
+				author$project$Decode$decodeRegName,
+				A2(author$project$Decode$getContextSize, size, context),
+				A2(elm$core$Maybe$withDefault, 0, context.reg)));
+		return _Utils_update(
+			context,
+			{
+				operands: A2(elm$core$List$cons, operand, context.operands)
+			});
+	});
+var author$project$Decode$decodeRel = F2(
+	function (size, context) {
+		var _n0 = function () {
+			switch (size.$) {
+				case 'S_8':
+					return author$project$Decode$getByte(context);
+				case 'S_16':
+					return author$project$Decode$getWord(context);
+				case 'S_32':
+					return author$project$Decode$getLong(context);
+				default:
+					return context.is32Bits ? author$project$Decode$getLong(context) : author$project$Decode$getWord(context);
+			}
+		}();
+		var value = _n0.a;
+		var newContext = _n0.b;
+		if (value.$ === 'Just') {
+			var v = value.a;
+			var newPc = (newContext.pc + v) + (newContext.length - elm$core$List$length(newContext.bytes));
+			return _Utils_update(
+				newContext,
+				{
+					elements: A2(
+						elm$core$List$cons,
+						author$project$Encode$Immediat(
+							_Utils_Tuple2(size, v)),
+						context.elements),
+					operands: A2(
+						elm$core$List$cons,
+						author$project$Syntax$AstImmediat(newPc),
+						newContext.operands)
+				});
+		} else {
+			return newContext;
+		}
+	});
+var elm$core$Debug$toString = _Debug_toString;
+var author$project$Decode$decodeOperand = F2(
+	function (operand, context) {
+		switch (operand.$) {
+			case 'R':
+				var size = operand.a;
+				return A2(author$project$Decode$decodeReg, size, context);
+			case 'RM':
+				var size = operand.a;
+				return A2(author$project$Decode$decodeRM, size, context);
+			case 'I':
+				var size = operand.a;
+				return A2(author$project$Decode$decodeImm, size, context);
+			case 'REL':
+				var size = operand.a;
+				return A2(author$project$Decode$decodeRel, size, context);
+			case 'Register':
+				var _n1 = operand.a;
+				var size = _n1.a;
+				var r = _n1.b;
+				return A3(author$project$Decode$decodeFixedRegister, size, r, context);
+			default:
+				return _Utils_update(
+					context,
+					{
+						error: context.error + (' >> ' + elm$core$Debug$toString(operand))
+					});
+		}
+	});
+var author$project$Decode$decodeOperands = F2(
+	function (instr, context) {
+		var operands = function () {
+			var _n1 = instr.a;
+			var ops = _n1.c;
+			return ops;
+		}();
+		return A3(
+			elm$core$List$foldl,
+			author$project$Decode$decodeOperand,
+			_Utils_update(
 				context,
 				{
-					elements: {ctor: '::', _0: _p2._0, _1: context.elements}
-				});
+					instr: elm$core$Maybe$Just(instr)
+				}),
+			operands);
+	});
+var author$project$Decode$ExtractModRM = function (a) {
+	return {$: 'ExtractModRM', a: a};
+};
+var author$project$Decode$ExtractReg = function (a) {
+	return {$: 'ExtractReg', a: a};
+};
+var author$project$Decode$InstructionNode = function (a) {
+	return {$: 'InstructionNode', a: a};
+};
+var author$project$Decode$MatchOpcodeNode = function (a) {
+	return {$: 'MatchOpcodeNode', a: a};
+};
+var author$project$Decode$MatchRegNode = function (a) {
+	return {$: 'MatchRegNode', a: a};
+};
+var author$project$Decode$NextOpcode = function (a) {
+	return {$: 'NextOpcode', a: a};
+};
+var author$project$Decode$UnknownNode = {$: 'UnknownNode'};
+var author$project$Decode$advance = function (pending) {
+	var _n0 = pending.opcodes;
+	if (_n0.b) {
+		var x = _n0.a;
+		var tail = _n0.b;
+		return _Utils_update(
+			pending,
+			{opcodes: tail});
+	} else {
+		return pending;
+	}
+};
+var author$project$Decode$extractOpcodes = function (pending) {
+	var _n0 = pending.opcodes;
+	_n0$2:
+	while (true) {
+		if (_n0.b) {
+			switch (_n0.a.$) {
+				case 'O':
+					var value = _n0.a.a;
+					return _List_fromArray(
+						[
+							_Utils_Tuple2(value, pending)
+						]);
+				case 'O_R':
+					var value = _n0.a.a;
+					return elm$core$Array$toList(
+						A2(
+							elm$core$Array$initialize,
+							8,
+							function (i) {
+								return _Utils_Tuple2(value | i, pending);
+							}));
+				default:
+					break _n0$2;
+			}
+		} else {
+			break _n0$2;
+		}
+	}
+	return _List_Nil;
+};
+var elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
+var elm$core$List$all = F2(
+	function (isOkay, list) {
+		return !A2(
+			elm$core$List$any,
+			A2(elm$core$Basics$composeL, elm$core$Basics$not, isOkay),
+			list);
+	});
+var author$project$Decode$hasAllOpcodes = function (pendings) {
+	var matchOne = function (pending) {
+		var _n0 = pending.opcodes;
+		if (_n0.b && (_n0.a.$ === 'O')) {
+			return true;
+		} else {
+			return false;
+		}
+	};
+	return A2(elm$core$List$all, matchOne, pendings);
+};
+var elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
+var elm$core$Dict$empty = elm$core$Dict$RBEmpty_elm_builtin;
+var elm$core$Basics$compare = _Utils_compare;
+var elm$core$Dict$get = F2(
+	function (targetKey, dict) {
+		get:
+		while (true) {
+			if (dict.$ === 'RBEmpty_elm_builtin') {
+				return elm$core$Maybe$Nothing;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var _n1 = A2(elm$core$Basics$compare, targetKey, key);
+				switch (_n1.$) {
+					case 'LT':
+						var $temp$targetKey = targetKey,
+							$temp$dict = left;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+					case 'EQ':
+						return elm$core$Maybe$Just(value);
+					default:
+						var $temp$targetKey = targetKey,
+							$temp$dict = right;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+				}
+			}
+		}
+	});
+var elm$core$Dict$Black = {$: 'Black'};
+var elm$core$Dict$RBNode_elm_builtin = F5(
+	function (a, b, c, d, e) {
+		return {$: 'RBNode_elm_builtin', a: a, b: b, c: c, d: d, e: e};
+	});
+var elm$core$Dict$Red = {$: 'Red'};
+var elm$core$Dict$balance = F5(
+	function (color, key, value, left, right) {
+		if ((right.$ === 'RBNode_elm_builtin') && (right.a.$ === 'Red')) {
+			var _n1 = right.a;
+			var rK = right.b;
+			var rV = right.c;
+			var rLeft = right.d;
+			var rRight = right.e;
+			if ((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) {
+				var _n3 = left.a;
+				var lK = left.b;
+				var lV = left.c;
+				var lLeft = left.d;
+				var lRight = left.e;
+				return A5(
+					elm$core$Dict$RBNode_elm_builtin,
+					elm$core$Dict$Red,
+					key,
+					value,
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Black, lK, lV, lLeft, lRight),
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Black, rK, rV, rLeft, rRight));
+			} else {
+				return A5(
+					elm$core$Dict$RBNode_elm_builtin,
+					color,
+					rK,
+					rV,
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Red, key, value, left, rLeft),
+					rRight);
+			}
+		} else {
+			if ((((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) && (left.d.$ === 'RBNode_elm_builtin')) && (left.d.a.$ === 'Red')) {
+				var _n5 = left.a;
+				var lK = left.b;
+				var lV = left.c;
+				var _n6 = left.d;
+				var _n7 = _n6.a;
+				var llK = _n6.b;
+				var llV = _n6.c;
+				var llLeft = _n6.d;
+				var llRight = _n6.e;
+				var lRight = left.e;
+				return A5(
+					elm$core$Dict$RBNode_elm_builtin,
+					elm$core$Dict$Red,
+					lK,
+					lV,
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Black, llK, llV, llLeft, llRight),
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Black, key, value, lRight, right));
+			} else {
+				return A5(elm$core$Dict$RBNode_elm_builtin, color, key, value, left, right);
+			}
+		}
+	});
+var elm$core$Dict$insertHelp = F3(
+	function (key, value, dict) {
+		if (dict.$ === 'RBEmpty_elm_builtin') {
+			return A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Red, key, value, elm$core$Dict$RBEmpty_elm_builtin, elm$core$Dict$RBEmpty_elm_builtin);
+		} else {
+			var nColor = dict.a;
+			var nKey = dict.b;
+			var nValue = dict.c;
+			var nLeft = dict.d;
+			var nRight = dict.e;
+			var _n1 = A2(elm$core$Basics$compare, key, nKey);
+			switch (_n1.$) {
+				case 'LT':
+					return A5(
+						elm$core$Dict$balance,
+						nColor,
+						nKey,
+						nValue,
+						A3(elm$core$Dict$insertHelp, key, value, nLeft),
+						nRight);
+				case 'EQ':
+					return A5(elm$core$Dict$RBNode_elm_builtin, nColor, nKey, value, nLeft, nRight);
+				default:
+					return A5(
+						elm$core$Dict$balance,
+						nColor,
+						nKey,
+						nValue,
+						nLeft,
+						A3(elm$core$Dict$insertHelp, key, value, nRight));
+			}
+		}
+	});
+var elm$core$Dict$insert = F3(
+	function (key, value, dict) {
+		var _n0 = A3(elm$core$Dict$insertHelp, key, value, dict);
+		if ((_n0.$ === 'RBNode_elm_builtin') && (_n0.a.$ === 'Red')) {
+			var _n1 = _n0.a;
+			var k = _n0.b;
+			var v = _n0.c;
+			var l = _n0.d;
+			var r = _n0.e;
+			return A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Black, k, v, l, r);
+		} else {
+			var x = _n0;
+			return x;
+		}
+	});
+var elm$core$Dict$getMin = function (dict) {
+	getMin:
+	while (true) {
+		if ((dict.$ === 'RBNode_elm_builtin') && (dict.d.$ === 'RBNode_elm_builtin')) {
+			var left = dict.d;
+			var $temp$dict = left;
+			dict = $temp$dict;
+			continue getMin;
+		} else {
+			return dict;
+		}
+	}
+};
+var elm$core$Dict$moveRedLeft = function (dict) {
+	if (((dict.$ === 'RBNode_elm_builtin') && (dict.d.$ === 'RBNode_elm_builtin')) && (dict.e.$ === 'RBNode_elm_builtin')) {
+		if ((dict.e.d.$ === 'RBNode_elm_builtin') && (dict.e.d.a.$ === 'Red')) {
+			var clr = dict.a;
+			var k = dict.b;
+			var v = dict.c;
+			var _n1 = dict.d;
+			var lClr = _n1.a;
+			var lK = _n1.b;
+			var lV = _n1.c;
+			var lLeft = _n1.d;
+			var lRight = _n1.e;
+			var _n2 = dict.e;
+			var rClr = _n2.a;
+			var rK = _n2.b;
+			var rV = _n2.c;
+			var rLeft = _n2.d;
+			var _n3 = rLeft.a;
+			var rlK = rLeft.b;
+			var rlV = rLeft.c;
+			var rlL = rLeft.d;
+			var rlR = rLeft.e;
+			var rRight = _n2.e;
+			return A5(
+				elm$core$Dict$RBNode_elm_builtin,
+				elm$core$Dict$Red,
+				rlK,
+				rlV,
+				A5(
+					elm$core$Dict$RBNode_elm_builtin,
+					elm$core$Dict$Black,
+					k,
+					v,
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Red, lK, lV, lLeft, lRight),
+					rlL),
+				A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Black, rK, rV, rlR, rRight));
+		} else {
+			var clr = dict.a;
+			var k = dict.b;
+			var v = dict.c;
+			var _n4 = dict.d;
+			var lClr = _n4.a;
+			var lK = _n4.b;
+			var lV = _n4.c;
+			var lLeft = _n4.d;
+			var lRight = _n4.e;
+			var _n5 = dict.e;
+			var rClr = _n5.a;
+			var rK = _n5.b;
+			var rV = _n5.c;
+			var rLeft = _n5.d;
+			var rRight = _n5.e;
+			if (clr.$ === 'Black') {
+				return A5(
+					elm$core$Dict$RBNode_elm_builtin,
+					elm$core$Dict$Black,
+					k,
+					v,
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Red, lK, lV, lLeft, lRight),
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Red, rK, rV, rLeft, rRight));
+			} else {
+				return A5(
+					elm$core$Dict$RBNode_elm_builtin,
+					elm$core$Dict$Black,
+					k,
+					v,
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Red, lK, lV, lLeft, lRight),
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Red, rK, rV, rLeft, rRight));
+			}
+		}
+	} else {
+		return dict;
+	}
+};
+var elm$core$Dict$moveRedRight = function (dict) {
+	if (((dict.$ === 'RBNode_elm_builtin') && (dict.d.$ === 'RBNode_elm_builtin')) && (dict.e.$ === 'RBNode_elm_builtin')) {
+		if ((dict.d.d.$ === 'RBNode_elm_builtin') && (dict.d.d.a.$ === 'Red')) {
+			var clr = dict.a;
+			var k = dict.b;
+			var v = dict.c;
+			var _n1 = dict.d;
+			var lClr = _n1.a;
+			var lK = _n1.b;
+			var lV = _n1.c;
+			var _n2 = _n1.d;
+			var _n3 = _n2.a;
+			var llK = _n2.b;
+			var llV = _n2.c;
+			var llLeft = _n2.d;
+			var llRight = _n2.e;
+			var lRight = _n1.e;
+			var _n4 = dict.e;
+			var rClr = _n4.a;
+			var rK = _n4.b;
+			var rV = _n4.c;
+			var rLeft = _n4.d;
+			var rRight = _n4.e;
+			return A5(
+				elm$core$Dict$RBNode_elm_builtin,
+				elm$core$Dict$Red,
+				lK,
+				lV,
+				A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Black, llK, llV, llLeft, llRight),
+				A5(
+					elm$core$Dict$RBNode_elm_builtin,
+					elm$core$Dict$Black,
+					k,
+					v,
+					lRight,
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Red, rK, rV, rLeft, rRight)));
+		} else {
+			var clr = dict.a;
+			var k = dict.b;
+			var v = dict.c;
+			var _n5 = dict.d;
+			var lClr = _n5.a;
+			var lK = _n5.b;
+			var lV = _n5.c;
+			var lLeft = _n5.d;
+			var lRight = _n5.e;
+			var _n6 = dict.e;
+			var rClr = _n6.a;
+			var rK = _n6.b;
+			var rV = _n6.c;
+			var rLeft = _n6.d;
+			var rRight = _n6.e;
+			if (clr.$ === 'Black') {
+				return A5(
+					elm$core$Dict$RBNode_elm_builtin,
+					elm$core$Dict$Black,
+					k,
+					v,
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Red, lK, lV, lLeft, lRight),
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Red, rK, rV, rLeft, rRight));
+			} else {
+				return A5(
+					elm$core$Dict$RBNode_elm_builtin,
+					elm$core$Dict$Black,
+					k,
+					v,
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Red, lK, lV, lLeft, lRight),
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Red, rK, rV, rLeft, rRight));
+			}
+		}
+	} else {
+		return dict;
+	}
+};
+var elm$core$Dict$removeHelpPrepEQGT = F7(
+	function (targetKey, dict, color, key, value, left, right) {
+		if ((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) {
+			var _n1 = left.a;
+			var lK = left.b;
+			var lV = left.c;
+			var lLeft = left.d;
+			var lRight = left.e;
+			return A5(
+				elm$core$Dict$RBNode_elm_builtin,
+				color,
+				lK,
+				lV,
+				lLeft,
+				A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Red, key, value, lRight, right));
+		} else {
+			_n2$2:
+			while (true) {
+				if ((right.$ === 'RBNode_elm_builtin') && (right.a.$ === 'Black')) {
+					if (right.d.$ === 'RBNode_elm_builtin') {
+						if (right.d.a.$ === 'Black') {
+							var _n3 = right.a;
+							var _n4 = right.d;
+							var _n5 = _n4.a;
+							return elm$core$Dict$moveRedRight(dict);
+						} else {
+							break _n2$2;
+						}
+					} else {
+						var _n6 = right.a;
+						var _n7 = right.d;
+						return elm$core$Dict$moveRedRight(dict);
+					}
+				} else {
+					break _n2$2;
+				}
+			}
+			return dict;
+		}
+	});
+var elm$core$Dict$removeMin = function (dict) {
+	if ((dict.$ === 'RBNode_elm_builtin') && (dict.d.$ === 'RBNode_elm_builtin')) {
+		var color = dict.a;
+		var key = dict.b;
+		var value = dict.c;
+		var left = dict.d;
+		var lColor = left.a;
+		var lLeft = left.d;
+		var right = dict.e;
+		if (lColor.$ === 'Black') {
+			if ((lLeft.$ === 'RBNode_elm_builtin') && (lLeft.a.$ === 'Red')) {
+				var _n3 = lLeft.a;
+				return A5(
+					elm$core$Dict$RBNode_elm_builtin,
+					color,
+					key,
+					value,
+					elm$core$Dict$removeMin(left),
+					right);
+			} else {
+				var _n4 = elm$core$Dict$moveRedLeft(dict);
+				if (_n4.$ === 'RBNode_elm_builtin') {
+					var nColor = _n4.a;
+					var nKey = _n4.b;
+					var nValue = _n4.c;
+					var nLeft = _n4.d;
+					var nRight = _n4.e;
+					return A5(
+						elm$core$Dict$balance,
+						nColor,
+						nKey,
+						nValue,
+						elm$core$Dict$removeMin(nLeft),
+						nRight);
+				} else {
+					return elm$core$Dict$RBEmpty_elm_builtin;
+				}
+			}
+		} else {
+			return A5(
+				elm$core$Dict$RBNode_elm_builtin,
+				color,
+				key,
+				value,
+				elm$core$Dict$removeMin(left),
+				right);
+		}
+	} else {
+		return elm$core$Dict$RBEmpty_elm_builtin;
+	}
+};
+var elm$core$Dict$removeHelp = F2(
+	function (targetKey, dict) {
+		if (dict.$ === 'RBEmpty_elm_builtin') {
+			return elm$core$Dict$RBEmpty_elm_builtin;
+		} else {
+			var color = dict.a;
+			var key = dict.b;
+			var value = dict.c;
+			var left = dict.d;
+			var right = dict.e;
+			if (_Utils_cmp(targetKey, key) < 0) {
+				if ((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Black')) {
+					var _n4 = left.a;
+					var lLeft = left.d;
+					if ((lLeft.$ === 'RBNode_elm_builtin') && (lLeft.a.$ === 'Red')) {
+						var _n6 = lLeft.a;
+						return A5(
+							elm$core$Dict$RBNode_elm_builtin,
+							color,
+							key,
+							value,
+							A2(elm$core$Dict$removeHelp, targetKey, left),
+							right);
+					} else {
+						var _n7 = elm$core$Dict$moveRedLeft(dict);
+						if (_n7.$ === 'RBNode_elm_builtin') {
+							var nColor = _n7.a;
+							var nKey = _n7.b;
+							var nValue = _n7.c;
+							var nLeft = _n7.d;
+							var nRight = _n7.e;
+							return A5(
+								elm$core$Dict$balance,
+								nColor,
+								nKey,
+								nValue,
+								A2(elm$core$Dict$removeHelp, targetKey, nLeft),
+								nRight);
+						} else {
+							return elm$core$Dict$RBEmpty_elm_builtin;
+						}
+					}
+				} else {
+					return A5(
+						elm$core$Dict$RBNode_elm_builtin,
+						color,
+						key,
+						value,
+						A2(elm$core$Dict$removeHelp, targetKey, left),
+						right);
+				}
+			} else {
+				return A2(
+					elm$core$Dict$removeHelpEQGT,
+					targetKey,
+					A7(elm$core$Dict$removeHelpPrepEQGT, targetKey, dict, color, key, value, left, right));
+			}
+		}
+	});
+var elm$core$Dict$removeHelpEQGT = F2(
+	function (targetKey, dict) {
+		if (dict.$ === 'RBNode_elm_builtin') {
+			var color = dict.a;
+			var key = dict.b;
+			var value = dict.c;
+			var left = dict.d;
+			var right = dict.e;
+			if (_Utils_eq(targetKey, key)) {
+				var _n1 = elm$core$Dict$getMin(right);
+				if (_n1.$ === 'RBNode_elm_builtin') {
+					var minKey = _n1.b;
+					var minValue = _n1.c;
+					return A5(
+						elm$core$Dict$balance,
+						color,
+						minKey,
+						minValue,
+						left,
+						elm$core$Dict$removeMin(right));
+				} else {
+					return elm$core$Dict$RBEmpty_elm_builtin;
+				}
+			} else {
+				return A5(
+					elm$core$Dict$balance,
+					color,
+					key,
+					value,
+					left,
+					A2(elm$core$Dict$removeHelp, targetKey, right));
+			}
+		} else {
+			return elm$core$Dict$RBEmpty_elm_builtin;
+		}
+	});
+var elm$core$Dict$remove = F2(
+	function (key, dict) {
+		var _n0 = A2(elm$core$Dict$removeHelp, key, dict);
+		if ((_n0.$ === 'RBNode_elm_builtin') && (_n0.a.$ === 'Red')) {
+			var _n1 = _n0.a;
+			var k = _n0.b;
+			var v = _n0.c;
+			var l = _n0.d;
+			var r = _n0.e;
+			return A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Black, k, v, l, r);
+		} else {
+			var x = _n0;
+			return x;
+		}
+	});
+var elm$core$Dict$update = F3(
+	function (targetKey, alter, dictionary) {
+		var _n0 = alter(
+			A2(elm$core$Dict$get, targetKey, dictionary));
+		if (_n0.$ === 'Just') {
+			var value = _n0.a;
+			return A3(elm$core$Dict$insert, targetKey, value, dictionary);
+		} else {
+			return A2(elm$core$Dict$remove, targetKey, dictionary);
+		}
+	});
+var author$project$Utils$groupBy = F2(
+	function (func, list) {
+		var addToList = F2(
+			function (element, previous) {
+				if (previous.$ === 'Just') {
+					var elements = previous.a;
+					return elm$core$Maybe$Just(
+						A2(elm$core$List$cons, element, elements));
+				} else {
+					return elm$core$Maybe$Just(
+						_List_fromArray(
+							[element]));
+				}
+			});
+		var process = F2(
+			function (element, dict) {
+				return A3(
+					elm$core$Dict$update,
+					func(element),
+					addToList(element),
+					dict);
+			});
+		return A3(elm$core$List$foldl, process, elm$core$Dict$empty, list);
+	});
+var elm$core$List$concatMap = F2(
+	function (f, list) {
+		return elm$core$List$concat(
+			A2(elm$core$List$map, f, list));
+	});
+var author$project$Decode$buildMatchOpcode = function (pendings) {
+	var groups = A2(
+		elm$core$List$map,
+		function (_n5) {
+			var i = _n5.a;
+			var l = _n5.b;
+			return _Utils_Tuple2(
+				i,
+				A2(elm$core$List$map, elm$core$Tuple$second, l));
+		},
+		elm$core$Dict$toList(
+			A2(author$project$Utils$groupBy, elm$core$Tuple$first, pendings)));
+	return author$project$Decode$MatchOpcodeNode(
+		A2(
+			elm$core$List$map,
+			function (_n4) {
+				var value = _n4.a;
+				var p = _n4.b;
+				return _Utils_Tuple2(
+					value,
+					author$project$Decode$processGroup(p));
+			},
+			groups));
+};
+var author$project$Decode$extractExtensions = function (pending) {
+	var _n3 = pending.opcodes;
+	if (_n3.b && (_n3.a.$ === 'E')) {
+		var value = _n3.a.a;
+		return _List_fromArray(
+			[
+				_Utils_Tuple2(
+				value,
+				A2(
+					elm$core$Maybe$withDefault,
+					author$project$Decode$UnknownNode,
+					author$project$Decode$processOpcodes(
+						author$project$Decode$advance(pending))))
+			]);
+	} else {
+		return _List_Nil;
+	}
+};
+var author$project$Decode$processGroup = function (group) {
+	if (group.b && (!group.b.b)) {
+		var pending = group.a;
+		return A2(
+			elm$core$Maybe$withDefault,
+			author$project$Decode$UnknownNode,
+			author$project$Decode$processOpcodes(pending));
+	} else {
+		var next = A2(elm$core$List$map, author$project$Decode$advance, group);
+		return author$project$Decode$hasAllOpcodes(next) ? author$project$Decode$NextOpcode(
+			author$project$Decode$buildMatchOpcode(
+				A2(elm$core$List$concatMap, author$project$Decode$extractOpcodes, next))) : author$project$Decode$NextOpcode(
+			author$project$Decode$ExtractModRM(
+				author$project$Decode$MatchRegNode(
+					A2(elm$core$List$concatMap, author$project$Decode$extractExtensions, next))));
+	}
+};
+var author$project$Decode$processOpcodes = function (pending) {
+	var _n0 = pending.opcodes;
+	if (!_n0.b) {
+		return elm$core$Maybe$Just(
+			author$project$Decode$InstructionNode(pending.instr));
+	} else {
+		switch (_n0.a.$) {
+			case 'O':
+				var value = _n0.a.a;
+				var tail = _n0.b;
+				return elm$core$Maybe$Just(
+					author$project$Decode$NextOpcode(
+						author$project$Decode$processGroup(
+							_List_fromArray(
+								[
+									_Utils_update(
+									pending,
+									{opcodes: tail})
+								]))));
+			case 'O_R':
+				var value = _n0.a.a;
+				var tail = _n0.b;
+				return elm$core$Maybe$Just(
+					author$project$Decode$ExtractReg(
+						author$project$Decode$processGroup(
+							_List_fromArray(
+								[
+									_Utils_update(
+									pending,
+									{opcodes: tail})
+								]))));
+			case 'E':
+				var value = _n0.a.a;
+				var tail = _n0.b;
+				return elm$core$Maybe$Just(
+					author$project$Decode$ExtractModRM(
+						author$project$Decode$MatchRegNode(
+							_List_fromArray(
+								[
+									_Utils_Tuple2(
+									value,
+									author$project$Decode$processGroup(
+										_List_fromArray(
+											[
+												_Utils_update(
+												pending,
+												{opcodes: tail})
+											])))
+								]))));
+			default:
+				var _n1 = _n0.a;
+				var tail = _n0.b;
+				return elm$core$Maybe$Just(
+					author$project$Decode$ExtractModRM(
+						author$project$Decode$processGroup(
+							_List_fromArray(
+								[
+									_Utils_update(
+									pending,
+									{opcodes: tail})
+								]))));
+		}
+	}
+};
+var author$project$Decode$createPending = function (instr) {
+	var _n1 = instr.a;
+	var opcodes = _n1.a;
+	return {instr: instr, opcodes: opcodes};
+};
+var author$project$X86$E = function (a) {
+	return {$: 'E', a: a};
+};
+var author$project$X86$Instr = function (a) {
+	return {$: 'Instr', a: a};
+};
+var author$project$X86$MODRM = {$: 'MODRM'};
+var author$project$X86$O = function (a) {
+	return {$: 'O', a: a};
+};
+var author$project$X86$O_R = function (a) {
+	return {$: 'O_R', a: a};
+};
+var author$project$X86$Error = {$: 'Error'};
+var author$project$X86$I = function (a) {
+	return {$: 'I', a: a};
+};
+var author$project$X86$R = function (a) {
+	return {$: 'R', a: a};
+};
+var author$project$X86$REL = function (a) {
+	return {$: 'REL', a: a};
+};
+var author$project$X86$RM = function (a) {
+	return {$: 'RM', a: a};
+};
+var author$project$X86$Register = function (a) {
+	return {$: 'Register', a: a};
+};
+var author$project$X86$AL = {$: 'AL'};
+var author$project$X86$AX = {$: 'AX'};
+var author$project$X86$DX = {$: 'DX'};
+var author$project$X86$S_8 = {$: 'S_8'};
+var author$project$X86$makeReg = function (tpl) {
+	switch (tpl) {
+		case 'E_AX':
+			return elm$core$Maybe$Just(
+				_Utils_Tuple2(author$project$X86$S_16_32, author$project$X86$AX));
+		case 'EAX':
+			return elm$core$Maybe$Just(
+				_Utils_Tuple2(author$project$X86$S_32, author$project$X86$AX));
+		case 'AX':
+			return elm$core$Maybe$Just(
+				_Utils_Tuple2(author$project$X86$S_16, author$project$X86$AX));
+		case 'AL':
+			return elm$core$Maybe$Just(
+				_Utils_Tuple2(author$project$X86$S_8, author$project$X86$AL));
+		case 'DX':
+			return elm$core$Maybe$Just(
+				_Utils_Tuple2(author$project$X86$S_16, author$project$X86$DX));
+		default:
+			return elm$core$Maybe$Nothing;
+	}
+};
+var author$project$X86$templateSize = function (s) {
+	switch (s) {
+		case '32':
+			return elm$core$Maybe$Just(author$project$X86$S_32);
+		case '16':
+			return elm$core$Maybe$Just(author$project$X86$S_16);
+		case '8':
+			return elm$core$Maybe$Just(author$project$X86$S_8);
+		case '16/32':
+			return elm$core$Maybe$Just(author$project$X86$S_16_32);
+		default:
+			return elm$core$Maybe$Nothing;
+	}
+};
+var elm$core$String$startsWith = _String_startsWith;
+var author$project$X86$templatePattern = function (tpl) {
+	if (A2(elm$core$String$startsWith, 'r/m', tpl)) {
+		return A2(
+			elm$core$Maybe$withDefault,
+			author$project$X86$Error,
+			A2(
+				elm$core$Maybe$map,
+				author$project$X86$RM,
+				author$project$X86$templateSize(
+					A3(
+						elm$core$String$slice,
+						3,
+						elm$core$String$length(tpl),
+						tpl))));
+	} else {
+		if (A2(elm$core$String$startsWith, 'rel', tpl)) {
+			return A2(
+				elm$core$Maybe$withDefault,
+				author$project$X86$Error,
+				A2(
+					elm$core$Maybe$map,
+					author$project$X86$REL,
+					author$project$X86$templateSize(
+						A3(
+							elm$core$String$slice,
+							3,
+							elm$core$String$length(tpl),
+							tpl))));
+		} else {
+			if (A2(elm$core$String$startsWith, 'r', tpl)) {
+				return A2(
+					elm$core$Maybe$withDefault,
+					author$project$X86$Error,
+					A2(
+						elm$core$Maybe$map,
+						author$project$X86$R,
+						author$project$X86$templateSize(
+							A3(
+								elm$core$String$slice,
+								1,
+								elm$core$String$length(tpl),
+								tpl))));
+			} else {
+				if (A2(elm$core$String$startsWith, 'imm', tpl)) {
+					return A2(
+						elm$core$Maybe$withDefault,
+						author$project$X86$Error,
+						A2(
+							elm$core$Maybe$map,
+							author$project$X86$I,
+							author$project$X86$templateSize(
+								A3(
+									elm$core$String$slice,
+									3,
+									elm$core$String$length(tpl),
+									tpl))));
+				} else {
+					var _n0 = author$project$X86$makeReg(tpl);
+					if (_n0.$ === 'Just') {
+						var name = _n0.a;
+						return author$project$X86$Register(name);
+					} else {
+						return author$project$X86$Error;
+					}
+				}
+			}
+		}
+	}
+};
+var author$project$X86$ops = function (operands) {
+	return A2(elm$core$List$map, author$project$X86$templatePattern, operands);
+};
+var author$project$X86$instructions = _List_fromArray(
+	[
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(0),
+					author$project$X86$MODRM
+				]),
+			'ADD',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m8', 'r8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(1),
+					author$project$X86$MODRM
+				]),
+			'ADD',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m16/32', 'r16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(2),
+					author$project$X86$MODRM
+				]),
+			'ADD',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r8', 'r/m8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(3),
+					author$project$X86$MODRM
+				]),
+			'ADD',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r16/32', 'r/m16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(4)
+				]),
+			'ADD',
+			author$project$X86$ops(
+				_List_fromArray(
+					['AL', 'imm8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(5)
+				]),
+			'ADD',
+			author$project$X86$ops(
+				_List_fromArray(
+					['E_AX', 'imm16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(128),
+					author$project$X86$E(0)
+				]),
+			'ADD',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m8', 'imm8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(129),
+					author$project$X86$E(0)
+				]),
+			'ADD',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m16/32', 'imm16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(131),
+					author$project$X86$E(0)
+				]),
+			'ADD',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m16/32', 'imm8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(254),
+					author$project$X86$E(1)
+				]),
+			'DEC',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(255),
+					author$project$X86$E(1)
+				]),
+			'DEC',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O_R(72)
+				]),
+			'DEC',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(246),
+					author$project$X86$E(6)
+				]),
+			'DIV',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(247),
+					author$project$X86$E(6)
+				]),
+			'DIV',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(244)
+				]),
+			'HLT',
+			_List_Nil)),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(246),
+					author$project$X86$E(7)
+				]),
+			'IDIV',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(247),
+					author$project$X86$E(7)
+				]),
+			'IDIV',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(246),
+					author$project$X86$E(5)
+				]),
+			'IMUL',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(247),
+					author$project$X86$E(5)
+				]),
+			'IMUL',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(15),
+					author$project$X86$O(175),
+					author$project$X86$MODRM
+				]),
+			'IMUL',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r16/32', 'r/m16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(107),
+					author$project$X86$MODRM
+				]),
+			'IMUL',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r16/32', 'r/m16/32', 'imm8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(105),
+					author$project$X86$MODRM
+				]),
+			'IMUL',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r16/32', 'r/m16/32', 'imm16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(228)
+				]),
+			'IN',
+			author$project$X86$ops(
+				_List_fromArray(
+					['AL', 'imm8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(229)
+				]),
+			'IN',
+			author$project$X86$ops(
+				_List_fromArray(
+					['E_AX', 'imm8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(236)
+				]),
+			'IN',
+			author$project$X86$ops(
+				_List_fromArray(
+					['AL', 'DX'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(237)
+				]),
+			'IN',
+			author$project$X86$ops(
+				_List_fromArray(
+					['E_AX', 'DX'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(254),
+					author$project$X86$E(0)
+				]),
+			'INC',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(255),
+					author$project$X86$E(0)
+				]),
+			'INC',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O_R(64)
+				]),
+			'INC',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(204)
+				]),
+			'INT3',
+			_List_Nil)),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(205)
+				]),
+			'INT',
+			author$project$X86$ops(
+				_List_fromArray(
+					['imm8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(15),
+					author$project$X86$O(132)
+				]),
+			'JE',
+			author$project$X86$ops(
+				_List_fromArray(
+					['rel16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(233)
+				]),
+			'JMP',
+			author$project$X86$ops(
+				_List_fromArray(
+					['rel16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(141),
+					author$project$X86$MODRM
+				]),
+			'LEA',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r16/32', 'm'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(136),
+					author$project$X86$MODRM
+				]),
+			'MOV',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m8', 'r8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(137),
+					author$project$X86$MODRM
+				]),
+			'MOV',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m16/32', 'r16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(138),
+					author$project$X86$MODRM
+				]),
+			'MOV',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r8', 'r/m8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(139),
+					author$project$X86$MODRM
+				]),
+			'MOV',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r16/32', 'r/m16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(140),
+					author$project$X86$MODRM
+				]),
+			'MOV',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m16', 'sreg'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(142),
+					author$project$X86$MODRM
+				]),
+			'MOV',
+			author$project$X86$ops(
+				_List_fromArray(
+					['sreg', 'r/m16'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(160)
+				]),
+			'MOV',
+			author$project$X86$ops(
+				_List_fromArray(
+					['AL', 'moffs8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(161)
+				]),
+			'MOV',
+			author$project$X86$ops(
+				_List_fromArray(
+					['E_AX', 'moffs16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(162)
+				]),
+			'MOV',
+			author$project$X86$ops(
+				_List_fromArray(
+					['moffs8', 'AL'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(163)
+				]),
+			'MOV',
+			author$project$X86$ops(
+				_List_fromArray(
+					['moffs16/32', 'E_AX'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O_R(176)
+				]),
+			'MOV',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r8', 'imm8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O_R(184)
+				]),
+			'MOV',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r16/32', 'imm16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(198),
+					author$project$X86$E(0)
+				]),
+			'MOV',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m8', 'imm8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(199),
+					author$project$X86$E(0)
+				]),
+			'MOV',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m16/32', 'imm16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(15),
+					author$project$X86$O(182),
+					author$project$X86$MODRM
+				]),
+			'MOVZX',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r16/32', 'r/m8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(15),
+					author$project$X86$O(183),
+					author$project$X86$MODRM
+				]),
+			'MOVZX',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r32', 'r/m16'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(246),
+					author$project$X86$E(4)
+				]),
+			'MUL',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(247),
+					author$project$X86$E(4)
+				]),
+			'MUL',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(144)
+				]),
+			'NOP',
+			_List_Nil)),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(230)
+				]),
+			'OUT',
+			author$project$X86$ops(
+				_List_fromArray(
+					['imm8', 'AL'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(231)
+				]),
+			'OUT',
+			author$project$X86$ops(
+				_List_fromArray(
+					['imm8', 'E_AX'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(238)
+				]),
+			'OUT',
+			author$project$X86$ops(
+				_List_fromArray(
+					['DX', 'AL'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(239)
+				]),
+			'OUT',
+			author$project$X86$ops(
+				_List_fromArray(
+					['DX', 'E_AX'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(44)
+				]),
+			'SUB',
+			author$project$X86$ops(
+				_List_fromArray(
+					['AL', 'imm8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(45)
+				]),
+			'SUB',
+			author$project$X86$ops(
+				_List_fromArray(
+					['E_AX', 'imm16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(128),
+					author$project$X86$E(5)
+				]),
+			'SUB',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m8', 'imm8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(129),
+					author$project$X86$E(5)
+				]),
+			'SUB',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m16/32', 'imm16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(131),
+					author$project$X86$E(5)
+				]),
+			'SUB',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m16/32', 'imm8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(40),
+					author$project$X86$MODRM
+				]),
+			'SUB',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m8', 'r8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(41),
+					author$project$X86$MODRM
+				]),
+			'SUB',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m16/32', 'r16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(42),
+					author$project$X86$MODRM
+				]),
+			'SUB',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r8', 'r/m8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(43),
+					author$project$X86$MODRM
+				]),
+			'SUB',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r16/32', 'r/m16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(168)
+				]),
+			'TEST',
+			author$project$X86$ops(
+				_List_fromArray(
+					['AL', 'imm8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(169)
+				]),
+			'TEST',
+			author$project$X86$ops(
+				_List_fromArray(
+					['E_AX', 'imm16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(246),
+					author$project$X86$E(0)
+				]),
+			'TEST',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m8', 'imm8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(247),
+					author$project$X86$E(0)
+				]),
+			'TEST',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m16/32', 'imm16/32'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(132),
+					author$project$X86$MODRM
+				]),
+			'TEST',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m8', 'r8'])))),
+		author$project$X86$Instr(
+		_Utils_Tuple3(
+			_List_fromArray(
+				[
+					author$project$X86$O(133),
+					author$project$X86$MODRM
+				]),
+			'TEST',
+			author$project$X86$ops(
+				_List_fromArray(
+					['r/m16/32', 'r16/32']))))
+	]);
+var author$project$Decode$decoderRoot = author$project$Decode$buildMatchOpcode(
+	A2(
+		elm$core$List$concatMap,
+		author$project$Decode$extractOpcodes,
+		A2(elm$core$List$map, author$project$Decode$createPending, author$project$X86$instructions)));
+var author$project$Encode$MEMORY = {$: 'MEMORY'};
+var author$project$Encode$MEMORY_DISP32 = {$: 'MEMORY_DISP32'};
+var author$project$Encode$MEMORY_DISP8 = {$: 'MEMORY_DISP8'};
+var author$project$Encode$REG = {$: 'REG'};
+var author$project$Decode$decodeMode = function (mode) {
+	switch (mode) {
+		case 0:
+			return author$project$Encode$MEMORY;
+		case 1:
+			return author$project$Encode$MEMORY_DISP8;
+		case 2:
+			return author$project$Encode$MEMORY_DISP32;
+		default:
+			return author$project$Encode$REG;
+	}
+};
+var author$project$Encode$ModRM = function (a) {
+	return {$: 'ModRM', a: a};
+};
+var author$project$Decode$extractModRM = F2(
+	function (x, context) {
+		var rm = 7 & x;
+		var reg = 7 & (x >>> 3);
+		var mode = author$project$Decode$decodeMode(3 & (x >>> 6));
+		return _Utils_update(
+			context,
+			{
+				elements: A2(
+					elm$core$List$cons,
+					author$project$Encode$ModRM(
+						_Utils_Tuple3(mode, reg, rm)),
+					context.elements),
+				mode: elm$core$Maybe$Just(mode),
+				reg: elm$core$Maybe$Just(reg),
+				rm: elm$core$Maybe$Just(rm)
+			});
+	});
+var author$project$Encode$OpcodeAndReg = function (a) {
+	return {$: 'OpcodeAndReg', a: a};
+};
+var author$project$Decode$extractReg = F2(
+	function (x, context) {
+		var reg = 7 & x;
+		var opcode = 31 & (x >>> 3);
+		return _Utils_update(
+			context,
+			{
+				elements: A2(
+					elm$core$List$cons,
+					author$project$Encode$OpcodeAndReg(
+						_Utils_Tuple2(opcode, reg)),
+					context.elements),
+				reg: elm$core$Maybe$Just(reg)
+			});
+	});
+var author$project$Encode$Opcode = function (a) {
+	return {$: 'Opcode', a: a};
+};
+var elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var author$project$Decode$decodeFromContext = function (context) {
+	decodeFromContext:
+	while (true) {
+		var _n0 = _Utils_Tuple2(context.node, context.bytes);
+		_n0$8:
+		while (true) {
+			switch (_n0.a.$) {
+				case 'MatchOpcodeNode':
+					if (_n0.b.b) {
+						var nodes = _n0.a.a;
+						var _n1 = _n0.b;
+						var op = _n1.a;
+						var tail = _n1.b;
+						return A2(
+							elm$core$Maybe$withDefault,
+							_Utils_update(
+								context,
+								{error: 'Unknown'}),
+							A2(
+								elm$core$Maybe$map,
+								function (_n3) {
+									var v = _n3.a;
+									var n = _n3.b;
+									return author$project$Decode$decodeFromContext(
+										_Utils_update(
+											context,
+											{node: n}));
+								},
+								elm$core$List$head(
+									A2(
+										elm$core$List$filter,
+										function (_n2) {
+											var v = _n2.a;
+											var n = _n2.b;
+											return _Utils_eq(v, op);
+										},
+										nodes))));
+					} else {
+						break _n0$8;
+					}
+				case 'NextOpcode':
+					if (_n0.b.b) {
+						var n = _n0.a.a;
+						var _n4 = _n0.b;
+						var x = _n4.a;
+						var tail = _n4.b;
+						var $temp$context = _Utils_update(
+							context,
+							{
+								bytes: tail,
+								elements: A2(
+									elm$core$List$cons,
+									author$project$Encode$Opcode(x),
+									context.elements),
+								node: n
+							});
+						context = $temp$context;
+						continue decodeFromContext;
+					} else {
+						break _n0$8;
+					}
+				case 'ExtractReg':
+					if (_n0.b.b) {
+						var n = _n0.a.a;
+						var _n5 = _n0.b;
+						var x = _n5.a;
+						var tail = _n5.b;
+						return author$project$Decode$decodeFromContext(
+							A2(
+								author$project$Decode$extractReg,
+								x,
+								_Utils_update(
+									context,
+									{bytes: tail, node: n})));
+					} else {
+						break _n0$8;
+					}
+				case 'ExtractModRM':
+					if (_n0.b.b) {
+						var n = _n0.a.a;
+						var _n6 = _n0.b;
+						var x = _n6.a;
+						var tail = _n6.b;
+						return author$project$Decode$decodeFromContext(
+							A2(
+								author$project$Decode$extractModRM,
+								x,
+								_Utils_update(
+									context,
+									{bytes: tail, node: n})));
+					} else {
+						break _n0$8;
+					}
+				case 'MatchRegNode':
+					var l = _n0.a.a;
+					return A2(
+						elm$core$Maybe$withDefault,
+						_Utils_update(
+							context,
+							{error: 'Unknown'}),
+						A2(
+							elm$core$Maybe$map,
+							function (_n8) {
+								var v = _n8.a;
+								var n = _n8.b;
+								return author$project$Decode$decodeFromContext(
+									_Utils_update(
+										context,
+										{node: n}));
+							},
+							elm$core$List$head(
+								A2(
+									elm$core$List$filter,
+									function (_n7) {
+										var v = _n7.a;
+										var n = _n7.b;
+										return _Utils_eq(
+											v,
+											A2(elm$core$Maybe$withDefault, -1, context.reg));
+									},
+									l))));
+				case 'InstructionNode':
+					var instr = _n0.a.a;
+					return A2(author$project$Decode$decodeOperands, instr, context);
+				case 'PrefixNode':
+					var _n9 = _n0.a;
+					return _Utils_update(
+						context,
+						{error: 'PREFIX not handled'});
+				default:
+					var _n10 = _n0.a;
+					return _Utils_update(
+						context,
+						{
+							error: elm$core$Debug$toString(author$project$Decode$decoderRoot)
+						});
+			}
+		}
+		return _Utils_update(
+			context,
+			{error: 'Not enough bytes'});
+	}
+};
+var author$project$Syntax$AstInstr = function (a) {
+	return {$: 'AstInstr', a: a};
+};
+var elm$core$Basics$neq = _Utils_notEqual;
+var author$project$Syntax$memoryOperand = function (memory) {
+	var index = A2(
+		elm$core$Maybe$map,
+		function (_n1) {
+			var reg = _n1.a;
+			var scale = _n1.b;
+			return elm$core$String$fromInt(scale) + ('*' + reg);
+		},
+		memory.index);
+	var disp = memory.displacement ? elm$core$Maybe$Just(
+		author$project$Syntax$toDisplayInt(memory.displacement)) : elm$core$Maybe$Nothing;
+	var base = A2(elm$core$Maybe$withDefault, '', memory.base);
+	return A2(
+		elm$core$String$join,
+		'+',
+		A2(
+			elm$core$List$concatMap,
+			function (i) {
+				if (i.$ === 'Just') {
+					var x = i.a;
+					return _List_fromArray(
+						[x]);
+				} else {
+					return _List_Nil;
+				}
+			},
+			_List_fromArray(
+				[memory.base, index, disp])));
+};
+var author$project$Syntax$memoryString = function (memory) {
+	var size = function () {
+		var _n0 = memory.size;
+		switch (_n0.$) {
+			case 'S_32':
+				return '';
+			case 'S_16':
+				return 'WORDPTR ';
+			case 'S_8':
+				return 'BYTEPTR ';
+			default:
+				return '';
+		}
+	}();
+	return size + ('[' + (author$project$Syntax$memoryOperand(memory) + ']'));
+};
+var author$project$Syntax$operandString = function (operand) {
+	switch (operand.$) {
+		case 'AstRegister':
+			var reg = operand.a;
+			return reg;
+		case 'AstImmediat':
+			var value = operand.a;
+			return author$project$Syntax$toDisplayInt(value);
+		default:
+			var memory = operand.a;
+			return author$project$Syntax$memoryString(memory);
+	}
+};
+var author$project$Syntax$toString = function (_n0) {
+	var _n1 = _n0.a;
+	var name = _n1.a;
+	var operands = _n1.b;
+	return name + (' ' + A2(
+		elm$core$String$join,
+		', ',
+		A2(elm$core$List$map, author$project$Syntax$operandString, operands)));
+};
+var author$project$X86$sizeName = function (size) {
+	switch (size.$) {
+		case 'S_32':
+			return '32';
+		case 'S_16':
+			return '16';
+		case 'S_8':
+			return '8';
+		default:
+			return '16/32';
+	}
+};
+var author$project$X86$operandString = function (op) {
+	switch (op.$) {
+		case 'RM':
+			var size = op.a;
+			return 'r/m' + author$project$X86$sizeName(size);
+		case 'R':
+			var size = op.a;
+			return 'r' + author$project$X86$sizeName(size);
+		case 'I':
+			var size = op.a;
+			return 'imm' + author$project$X86$sizeName(size);
+		case 'REL':
+			var size = op.a;
+			return 'rel' + author$project$X86$sizeName(size);
+		case 'Register':
+			var _n1 = op.a;
+			var size = _n1.a;
+			var reg = _n1.b;
+			return A2(author$project$X86$regName, size, reg);
+		default:
+			return '<error>';
+	}
+};
+var author$project$X86$instrToString = function (_n0) {
+	var _n1 = _n0.a;
+	var name = _n1.b;
+	var operands = _n1.c;
+	return name + (' ' + A2(
+		elm$core$String$join,
+		', ',
+		A2(elm$core$List$map, author$project$X86$operandString, operands)));
+};
+var author$project$Decode$intructionName = F2(
+	function (instr, operands) {
+		var name = function () {
+			var _n1 = instr.a;
+			var n = _n1.b;
+			return n;
+		}();
+		return author$project$Syntax$toString(
+			author$project$Syntax$AstInstr(
+				_Utils_Tuple2(
+					name,
+					elm$core$List$reverse(operands)))) + ('  (' + (author$project$X86$instrToString(instr) + ')'));
+	});
+var elm$core$String$cons = _String_cons;
+var elm$core$String$fromChar = function (_char) {
+	return A2(elm$core$String$cons, _char, '');
+};
+var elm$core$List$tail = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(xs);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var elm$core$Result$map = F2(
+	function (func, ra) {
+		if (ra.$ === 'Ok') {
+			var a = ra.a;
+			return elm$core$Result$Ok(
+				func(a));
+		} else {
+			var e = ra.a;
+			return elm$core$Result$Err(e);
+		}
+	});
+var elm$core$Result$mapError = F2(
+	function (f, result) {
+		if (result.$ === 'Ok') {
+			var v = result.a;
+			return elm$core$Result$Ok(v);
+		} else {
+			var e = result.a;
+			return elm$core$Result$Err(
+				f(e));
+		}
+	});
+var elm$core$String$isEmpty = function (string) {
+	return string === '';
+};
+var elm$core$String$foldr = _String_foldr;
+var elm$core$String$toList = function (string) {
+	return A3(elm$core$String$foldr, elm$core$List$cons, _List_Nil, string);
+};
+var elm$core$Basics$pow = _Basics_pow;
+var rtfeldman$elm_hex$Hex$fromStringHelp = F3(
+	function (position, chars, accumulated) {
+		fromStringHelp:
+		while (true) {
+			if (!chars.b) {
+				return elm$core$Result$Ok(accumulated);
+			} else {
+				var _char = chars.a;
+				var rest = chars.b;
+				switch (_char.valueOf()) {
+					case '0':
+						var $temp$position = position - 1,
+							$temp$chars = rest,
+							$temp$accumulated = accumulated;
+						position = $temp$position;
+						chars = $temp$chars;
+						accumulated = $temp$accumulated;
+						continue fromStringHelp;
+					case '1':
+						var $temp$position = position - 1,
+							$temp$chars = rest,
+							$temp$accumulated = accumulated + A2(elm$core$Basics$pow, 16, position);
+						position = $temp$position;
+						chars = $temp$chars;
+						accumulated = $temp$accumulated;
+						continue fromStringHelp;
+					case '2':
+						var $temp$position = position - 1,
+							$temp$chars = rest,
+							$temp$accumulated = accumulated + (2 * A2(elm$core$Basics$pow, 16, position));
+						position = $temp$position;
+						chars = $temp$chars;
+						accumulated = $temp$accumulated;
+						continue fromStringHelp;
+					case '3':
+						var $temp$position = position - 1,
+							$temp$chars = rest,
+							$temp$accumulated = accumulated + (3 * A2(elm$core$Basics$pow, 16, position));
+						position = $temp$position;
+						chars = $temp$chars;
+						accumulated = $temp$accumulated;
+						continue fromStringHelp;
+					case '4':
+						var $temp$position = position - 1,
+							$temp$chars = rest,
+							$temp$accumulated = accumulated + (4 * A2(elm$core$Basics$pow, 16, position));
+						position = $temp$position;
+						chars = $temp$chars;
+						accumulated = $temp$accumulated;
+						continue fromStringHelp;
+					case '5':
+						var $temp$position = position - 1,
+							$temp$chars = rest,
+							$temp$accumulated = accumulated + (5 * A2(elm$core$Basics$pow, 16, position));
+						position = $temp$position;
+						chars = $temp$chars;
+						accumulated = $temp$accumulated;
+						continue fromStringHelp;
+					case '6':
+						var $temp$position = position - 1,
+							$temp$chars = rest,
+							$temp$accumulated = accumulated + (6 * A2(elm$core$Basics$pow, 16, position));
+						position = $temp$position;
+						chars = $temp$chars;
+						accumulated = $temp$accumulated;
+						continue fromStringHelp;
+					case '7':
+						var $temp$position = position - 1,
+							$temp$chars = rest,
+							$temp$accumulated = accumulated + (7 * A2(elm$core$Basics$pow, 16, position));
+						position = $temp$position;
+						chars = $temp$chars;
+						accumulated = $temp$accumulated;
+						continue fromStringHelp;
+					case '8':
+						var $temp$position = position - 1,
+							$temp$chars = rest,
+							$temp$accumulated = accumulated + (8 * A2(elm$core$Basics$pow, 16, position));
+						position = $temp$position;
+						chars = $temp$chars;
+						accumulated = $temp$accumulated;
+						continue fromStringHelp;
+					case '9':
+						var $temp$position = position - 1,
+							$temp$chars = rest,
+							$temp$accumulated = accumulated + (9 * A2(elm$core$Basics$pow, 16, position));
+						position = $temp$position;
+						chars = $temp$chars;
+						accumulated = $temp$accumulated;
+						continue fromStringHelp;
+					case 'a':
+						var $temp$position = position - 1,
+							$temp$chars = rest,
+							$temp$accumulated = accumulated + (10 * A2(elm$core$Basics$pow, 16, position));
+						position = $temp$position;
+						chars = $temp$chars;
+						accumulated = $temp$accumulated;
+						continue fromStringHelp;
+					case 'b':
+						var $temp$position = position - 1,
+							$temp$chars = rest,
+							$temp$accumulated = accumulated + (11 * A2(elm$core$Basics$pow, 16, position));
+						position = $temp$position;
+						chars = $temp$chars;
+						accumulated = $temp$accumulated;
+						continue fromStringHelp;
+					case 'c':
+						var $temp$position = position - 1,
+							$temp$chars = rest,
+							$temp$accumulated = accumulated + (12 * A2(elm$core$Basics$pow, 16, position));
+						position = $temp$position;
+						chars = $temp$chars;
+						accumulated = $temp$accumulated;
+						continue fromStringHelp;
+					case 'd':
+						var $temp$position = position - 1,
+							$temp$chars = rest,
+							$temp$accumulated = accumulated + (13 * A2(elm$core$Basics$pow, 16, position));
+						position = $temp$position;
+						chars = $temp$chars;
+						accumulated = $temp$accumulated;
+						continue fromStringHelp;
+					case 'e':
+						var $temp$position = position - 1,
+							$temp$chars = rest,
+							$temp$accumulated = accumulated + (14 * A2(elm$core$Basics$pow, 16, position));
+						position = $temp$position;
+						chars = $temp$chars;
+						accumulated = $temp$accumulated;
+						continue fromStringHelp;
+					case 'f':
+						var $temp$position = position - 1,
+							$temp$chars = rest,
+							$temp$accumulated = accumulated + (15 * A2(elm$core$Basics$pow, 16, position));
+						position = $temp$position;
+						chars = $temp$chars;
+						accumulated = $temp$accumulated;
+						continue fromStringHelp;
+					default:
+						var nonHex = _char;
+						return elm$core$Result$Err(
+							elm$core$String$fromChar(nonHex) + ' is not a valid hexadecimal character.');
+				}
+			}
+		}
+	});
+var rtfeldman$elm_hex$Hex$fromString = function (str) {
+	if (elm$core$String$isEmpty(str)) {
+		return elm$core$Result$Err('Empty strings are not valid hexadecimal strings.');
+	} else {
+		var result = function () {
+			if (A2(elm$core$String$startsWith, '-', str)) {
+				var list = A2(
+					elm$core$Maybe$withDefault,
+					_List_Nil,
+					elm$core$List$tail(
+						elm$core$String$toList(str)));
+				return A2(
+					elm$core$Result$map,
+					elm$core$Basics$negate,
+					A3(
+						rtfeldman$elm_hex$Hex$fromStringHelp,
+						elm$core$List$length(list) - 1,
+						list,
+						0));
+			} else {
+				return A3(
+					rtfeldman$elm_hex$Hex$fromStringHelp,
+					elm$core$String$length(str) - 1,
+					elm$core$String$toList(str),
+					0);
+			}
+		}();
+		var formatError = function (err) {
+			return A2(
+				elm$core$String$join,
+				' ',
+				_List_fromArray(
+					['\"' + (str + '\"'), 'is not a valid hexadecimal string because', err]));
+		};
+		return A2(elm$core$Result$mapError, formatError, result);
+	}
+};
+var author$project$Decode$split = F2(
+	function (result, chars) {
+		split:
+		while (true) {
+			var concatIfOK = function (value) {
+				var _n2 = rtfeldman$elm_hex$Hex$fromString(value);
+				if (_n2.$ === 'Ok') {
+					var x = _n2.a;
+					return A2(elm$core$List$cons, x, result);
+				} else {
+					var str = _n2.a;
+					return result;
+				}
+			};
+			if (chars.b) {
+				if (chars.b.b) {
+					var a = chars.a;
+					var _n1 = chars.b;
+					var b = _n1.a;
+					var tail = _n1.b;
+					var $temp$result = concatIfOK(
+						elm$core$String$fromList(
+							_List_fromArray(
+								[a, b]))),
+						$temp$chars = tail;
+					result = $temp$result;
+					chars = $temp$chars;
+					continue split;
+				} else {
+					var a = chars.a;
+					return concatIfOK(
+						elm$core$String$fromChar(a));
+				}
+			} else {
+				return result;
+			}
+		}
+	});
+var elm$core$Char$isHexDigit = function (_char) {
+	var code = elm$core$Char$toCode(_char);
+	return ((48 <= code) && (code <= 57)) || (((65 <= code) && (code <= 70)) || ((97 <= code) && (code <= 102)));
+};
+var elm$core$Char$toLower = _Char_toLower;
+var author$project$Decode$toBytes = function (content) {
+	return elm$core$List$reverse(
+		A2(
+			author$project$Decode$split,
+			_List_Nil,
+			A2(
+				elm$core$List$filter,
+				elm$core$Char$isHexDigit,
+				A2(
+					elm$core$List$map,
+					elm$core$Char$toLower,
+					elm$core$String$toList(content)))));
+};
+var author$project$Decode$decode = F2(
+	function (is32Bits, content) {
+		var bytes = author$project$Decode$toBytes(content);
+		var context = author$project$Decode$decodeFromContext(
+			{
+				bytes: bytes,
+				elements: _List_Nil,
+				error: '',
+				instr: elm$core$Maybe$Nothing,
+				is32Bits: is32Bits,
+				length: elm$core$List$length(bytes),
+				mode: elm$core$Maybe$Nothing,
+				node: author$project$Decode$decoderRoot,
+				operands: _List_Nil,
+				pc: 134217875,
+				reg: elm$core$Maybe$Nothing,
+				rm: elm$core$Maybe$Nothing
+			});
+		return _Utils_Tuple2(
+			context.error,
+			A2(
+				elm$core$Maybe$withDefault,
+				_List_Nil,
+				A2(
+					elm$core$Maybe$map,
+					function (i) {
+						return _List_fromArray(
+							[
+								_Utils_Tuple2(
+								A2(author$project$Decode$intructionName, i, context.operands),
+								elm$core$Maybe$Just(
+									elm$core$List$reverse(context.elements)))
+							]);
+					},
+					context.instr)));
+	});
+var author$project$Main$decode = function (model) {
+	var _n0 = A2(author$project$Decode$decode, model.is32Bits, model.content);
+	var error = _n0.a;
+	var instructions = _n0.b;
+	return _Utils_Tuple2(
+		_List_fromArray(
+			[
+				{msg: error}
+			]),
+		instructions);
+};
+var author$project$Lexer$lexer = function (input) {
+	return {content: input, position: 0};
+};
+var author$project$Lexer$T_ADD = {$: 'T_ADD'};
+var author$project$Lexer$T_COMA = {$: 'T_COMA'};
+var author$project$Lexer$T_EOF = {$: 'T_EOF'};
+var author$project$Lexer$T_ERROR = function (a) {
+	return {$: 'T_ERROR', a: a};
+};
+var author$project$Lexer$T_LBRT = {$: 'T_LBRT'};
+var author$project$Lexer$T_MUL = {$: 'T_MUL'};
+var author$project$Lexer$T_RBRT = {$: 'T_RBRT'};
+var author$project$Lexer$T_SUB = {$: 'T_SUB'};
+var author$project$Lexer$getChar = function (stream) {
+	var _n0 = elm$core$String$uncons(stream.content);
+	if (_n0.$ === 'Nothing') {
+		return _Utils_Tuple2(elm$core$Maybe$Nothing, stream);
+	} else {
+		var _n1 = _n0.a;
+		var c = _n1.a;
+		var next = _n1.b;
+		return _Utils_Tuple2(
+			elm$core$Maybe$Just(c),
+			{content: next, position: stream.position + 1});
+	}
+};
+var elm$core$Basics$ge = _Utils_ge;
+var author$project$Lexer$isDigit = function (c) {
+	return (_Utils_cmp(
+		c,
+		_Utils_chr('0')) > -1) && (_Utils_cmp(
+		c,
+		_Utils_chr('9')) < 1);
+};
+var author$project$Lexer$isLetter = function (c) {
+	return ((_Utils_cmp(
+		c,
+		_Utils_chr('a')) > -1) && (_Utils_cmp(
+		c,
+		_Utils_chr('z')) < 1)) || ((_Utils_cmp(
+		c,
+		_Utils_chr('A')) > -1) && (_Utils_cmp(
+		c,
+		_Utils_chr('Z')) < 1));
+};
+var author$project$Lexer$isSpace = function (c) {
+	return _Utils_eq(
+		c,
+		_Utils_chr(' ')) || (_Utils_eq(
+		c,
+		_Utils_chr('\t')) || _Utils_eq(
+		c,
+		_Utils_chr('\n')));
+};
+var author$project$Lexer$T_IDENT = function (a) {
+	return {$: 'T_IDENT', a: a};
+};
+var author$project$Lexer$isLetterOrDigit = function (c) {
+	return author$project$Lexer$isLetter(c) || author$project$Lexer$isDigit(c);
+};
+var author$project$Lexer$scanIdent = F2(
+	function (stream, content) {
+		scanIdent:
+		while (true) {
+			var _n0 = author$project$Lexer$getChar(stream);
+			if (_n0.a.$ === 'Nothing') {
+				var _n1 = _n0.a;
+				var next = _n0.b;
+				return _Utils_Tuple2(
+					author$project$Lexer$T_IDENT(content),
+					next);
+			} else {
+				var c = _n0.a.a;
+				var next = _n0.b;
+				if (author$project$Lexer$isLetterOrDigit(c)) {
+					var $temp$stream = next,
+						$temp$content = _Utils_ap(
+						content,
+						elm$core$String$fromChar(c));
+					stream = $temp$stream;
+					content = $temp$content;
+					continue scanIdent;
+				} else {
+					return _Utils_Tuple2(
+						author$project$Lexer$T_IDENT(content),
+						stream);
+				}
+			}
+		}
+	});
+var author$project$Lexer$T_INTEGER = function (a) {
+	return {$: 'T_INTEGER', a: a};
+};
+var author$project$Lexer$scanInteger = F2(
+	function (stream, content) {
+		scanInteger:
+		while (true) {
+			var _n0 = author$project$Lexer$getChar(stream);
+			if (_n0.a.$ === 'Nothing') {
+				var _n1 = _n0.a;
+				var next = _n0.b;
+				return _Utils_Tuple2(
+					author$project$Lexer$T_INTEGER(content),
+					next);
+			} else {
+				var c = _n0.a.a;
+				var next = _n0.b;
+				if (author$project$Lexer$isDigit(c)) {
+					var $temp$stream = next,
+						$temp$content = _Utils_ap(
+						content,
+						elm$core$String$fromChar(c));
+					stream = $temp$stream;
+					content = $temp$content;
+					continue scanInteger;
+				} else {
+					if (_Utils_eq(
+						elm$core$Char$toLower(c),
+						_Utils_chr('h')) || _Utils_eq(
+						elm$core$Char$toLower(c),
+						_Utils_chr('b'))) {
+						return _Utils_Tuple2(
+							author$project$Lexer$T_INTEGER(
+								_Utils_ap(
+									content,
+									elm$core$String$fromChar(c))),
+							next);
+					} else {
+						return _Utils_Tuple2(
+							author$project$Lexer$T_INTEGER(content),
+							stream);
+					}
+				}
+			}
+		}
+	});
+var author$project$Lexer$nextToken = function (stream) {
+	nextToken:
+	while (true) {
+		var _n0 = author$project$Lexer$getChar(stream);
+		if (_n0.a.$ === 'Nothing') {
+			var _n1 = _n0.a;
+			var next = _n0.b;
+			return _Utils_Tuple2(author$project$Lexer$T_EOF, next);
+		} else {
+			var c = _n0.a.a;
+			var next = _n0.b;
+			if (author$project$Lexer$isSpace(c)) {
+				var $temp$stream = next;
+				stream = $temp$stream;
+				continue nextToken;
+			} else {
+				if (author$project$Lexer$isLetter(c)) {
+					return A2(
+						author$project$Lexer$scanIdent,
+						next,
+						elm$core$String$fromChar(c));
+				} else {
+					if (author$project$Lexer$isDigit(c)) {
+						return A2(
+							author$project$Lexer$scanInteger,
+							next,
+							elm$core$String$fromChar(c));
+					} else {
+						if (_Utils_eq(
+							c,
+							_Utils_chr(','))) {
+							return _Utils_Tuple2(author$project$Lexer$T_COMA, next);
+						} else {
+							if (_Utils_eq(
+								c,
+								_Utils_chr('['))) {
+								return _Utils_Tuple2(author$project$Lexer$T_LBRT, next);
+							} else {
+								if (_Utils_eq(
+									c,
+									_Utils_chr(']'))) {
+									return _Utils_Tuple2(author$project$Lexer$T_RBRT, next);
+								} else {
+									if (_Utils_eq(
+										c,
+										_Utils_chr('+'))) {
+										return _Utils_Tuple2(author$project$Lexer$T_ADD, next);
+									} else {
+										if (_Utils_eq(
+											c,
+											_Utils_chr('-'))) {
+											return _Utils_Tuple2(author$project$Lexer$T_SUB, next);
+										} else {
+											if (_Utils_eq(
+												c,
+												_Utils_chr('*'))) {
+												return _Utils_Tuple2(author$project$Lexer$T_MUL, next);
+											} else {
+												return _Utils_Tuple2(
+													author$project$Lexer$T_ERROR(
+														elm$core$String$fromChar(c)),
+													next);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+};
+var author$project$Parser$advance = function (context) {
+	var _n1 = author$project$Lexer$nextToken(context.stream);
+	var token = _n1.a;
+	var next = _n1.b;
+	return author$project$Parser$skipErrors(
+		_Utils_update(
+			context,
+			{current: token, stream: next}));
+};
+var author$project$Parser$skipErrors = function (context) {
+	skipErrors:
+	while (true) {
+		var _n0 = context.current;
+		if (_n0.$ === 'T_ERROR') {
+			var msg = _n0.a;
+			var $temp$context = author$project$Parser$advance(
+				_Utils_update(
+					context,
+					{
+						errors: A2(
+							elm$core$List$cons,
+							{msg: 'unexpected char \'' + (msg + '\'')},
+							context.errors)
+					}));
+			context = $temp$context;
+			continue skipErrors;
 		} else {
 			return context;
 		}
-	});
-var _madbrain$x86project$Encode$encodeReq = F2(
-	function (element, context) {
-		return _elm_lang$core$Native_Utils.update(
-			context,
+	}
+};
+var author$project$Parser$makeParser = F2(
+	function (is32Bits, content) {
+		var stream = author$project$Lexer$lexer(content);
+		var _n0 = author$project$Lexer$nextToken(stream);
+		var token = _n0.a;
+		var next = _n0.b;
+		return author$project$Parser$skipErrors(
 			{
-				elements: {ctor: '::', _0: element, _1: context.elements}
+				current: token,
+				errors: _List_Nil,
+				size: is32Bits ? author$project$X86$S_32 : author$project$X86$S_16,
+				stream: next
 			});
 	});
-var _madbrain$x86project$Encode$encodeReg = function (r) {
-	var _p3 = _elm_lang$core$String$toUpper(r);
-	switch (_p3) {
+var author$project$Parser$NOK = function (a) {
+	return {$: 'NOK', a: a};
+};
+var author$project$Parser$OK = function (a) {
+	return {$: 'OK', a: a};
+};
+var author$project$Parser$addError = F2(
+	function (context, msg) {
+		return _Utils_update(
+			context,
+			{
+				errors: A2(
+					elm$core$List$cons,
+					{msg: msg},
+					context.errors)
+			});
+	});
+var author$project$Parser$errorExpecting = F2(
+	function (context, ident) {
+		return A2(author$project$Parser$addError, context, 'expecting ' + ident);
+	});
+var author$project$Parser$parseIdent = function (context) {
+	var _n0 = context.current;
+	if (_n0.$ === 'T_IDENT') {
+		var value = _n0.a;
+		return author$project$Parser$OK(
+			_Utils_Tuple2(
+				value,
+				author$project$Parser$advance(context)));
+	} else {
+		return author$project$Parser$NOK(
+			A2(author$project$Parser$errorExpecting, context, 'IDENT'));
+	}
+};
+var elm$core$Result$toMaybe = function (result) {
+	if (result.$ === 'Ok') {
+		var v = result.a;
+		return elm$core$Maybe$Just(v);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var elm$core$String$endsWith = _String_endsWith;
+var elm$core$String$toInt = _String_toInt;
+var elm$core$String$toUpper = _String_toUpper;
+var author$project$Parser$immValue = function (value) {
+	return A2(
+		elm$core$String$endsWith,
+		'H',
+		elm$core$String$toUpper(value)) ? elm$core$Result$toMaybe(
+		rtfeldman$elm_hex$Hex$fromString(
+			A3(elm$core$String$slice, 0, -1, value))) : elm$core$String$toInt(value);
+};
+var author$project$Parser$initMemoryOperand = function (size) {
+	return {base: elm$core$Maybe$Nothing, displacement: 0, index: elm$core$Maybe$Nothing, size: size};
+};
+var author$project$Parser$scaleOf = function (value) {
+	var _n0 = elm$core$String$toInt(value);
+	_n0$3:
+	while (true) {
+		if (_n0.$ === 'Just') {
+			switch (_n0.a) {
+				case 1:
+					return 1;
+				case 2:
+					return 2;
+				case 4:
+					return 4;
+				default:
+					break _n0$3;
+			}
+		} else {
+			break _n0$3;
+		}
+	}
+	return 1;
+};
+var author$project$Parser$analyseMemoryOperand = F2(
+	function (element, memory) {
+		if (element.$ === 'EARegister') {
+			if (element.a.b.$ === 'Nothing') {
+				var _n1 = element.a;
+				var name = _n1.a;
+				var _n2 = _n1.b;
+				var _n3 = memory.base;
+				if (_n3.$ === 'Just') {
+					return _Utils_update(
+						memory,
+						{
+							index: elm$core$Maybe$Just(
+								_Utils_Tuple2(name, 1))
+						});
+				} else {
+					return _Utils_update(
+						memory,
+						{
+							base: elm$core$Maybe$Just(name)
+						});
+				}
+			} else {
+				var _n4 = element.a;
+				var name = _n4.a;
+				var s = _n4.b.a;
+				var _n5 = _Utils_Tuple2(
+					memory.base,
+					author$project$Parser$scaleOf(s));
+				if ((_n5.a.$ === 'Nothing') && (_n5.b === 1)) {
+					var _n6 = _n5.a;
+					return _Utils_update(
+						memory,
+						{
+							base: elm$core$Maybe$Just(name)
+						});
+				} else {
+					var scale = _n5.b;
+					return _Utils_update(
+						memory,
+						{
+							index: elm$core$Maybe$Just(
+								_Utils_Tuple2(name, scale))
+						});
+				}
+			}
+		} else {
+			var _n7 = element.a;
+			var sign = _n7.a;
+			var disp = _n7.b;
+			var _n8 = author$project$Parser$immValue(disp);
+			if (_n8.$ === 'Just') {
+				var value = _n8.a;
+				return _Utils_update(
+					memory,
+					{
+						displacement: memory.displacement + (sign ? value : (-value))
+					});
+			} else {
+				return memory;
+			}
+		}
+	});
+var author$project$Parser$makeMemoryOperand = F2(
+	function (elements, memory) {
+		makeMemoryOperand:
+		while (true) {
+			if (!elements.b) {
+				return memory;
+			} else {
+				var v0 = elements.a;
+				var v1 = elements.b;
+				var $temp$elements = v1,
+					$temp$memory = A2(author$project$Parser$analyseMemoryOperand, v0, memory);
+				elements = $temp$elements;
+				memory = $temp$memory;
+				continue makeMemoryOperand;
+			}
+		}
+	});
+var author$project$Parser$EADisplacement = function (a) {
+	return {$: 'EADisplacement', a: a};
+};
+var author$project$Parser$EARegister = function (a) {
+	return {$: 'EARegister', a: a};
+};
+var author$project$Parser$parseInteger = function (context) {
+	var _n0 = context.current;
+	if (_n0.$ === 'T_INTEGER') {
+		var value = _n0.a;
+		return author$project$Parser$OK(
+			_Utils_Tuple2(
+				value,
+				author$project$Parser$advance(context)));
+	} else {
+		return author$project$Parser$NOK(
+			A2(author$project$Parser$errorExpecting, context, 'INTEGER'));
+	}
+};
+var author$project$Parser$parseScale = function (context) {
+	var _n0 = context.current;
+	if (_n0.$ === 'T_MUL') {
+		var _n1 = author$project$Parser$parseInteger(
+			author$project$Parser$advance(context));
+		if (_n1.$ === 'OK') {
+			var _n2 = _n1.a;
+			var value = _n2.a;
+			var next = _n2.b;
+			return author$project$Parser$OK(
+				_Utils_Tuple2(
+					elm$core$Maybe$Just(value),
+					next));
+		} else {
+			var next = _n1.a;
+			return author$project$Parser$NOK(next);
+		}
+	} else {
+		return author$project$Parser$OK(
+			_Utils_Tuple2(elm$core$Maybe$Nothing, context));
+	}
+};
+var author$project$Parser$parseEAElement = F2(
+	function (sign, context) {
+		var _n0 = context.current;
+		switch (_n0.$) {
+			case 'T_IDENT':
+				var name = _n0.a;
+				var _n1 = author$project$Parser$parseScale(
+					author$project$Parser$advance(context));
+				if (_n1.$ === 'OK') {
+					var _n2 = _n1.a;
+					var s = _n2.a;
+					var next = _n2.b;
+					return author$project$Parser$OK(
+						_Utils_Tuple2(
+							author$project$Parser$EARegister(
+								_Utils_Tuple2(name, s)),
+							next));
+				} else {
+					var next = _n1.a;
+					return author$project$Parser$NOK(next);
+				}
+			case 'T_INTEGER':
+				var value = _n0.a;
+				return author$project$Parser$OK(
+					_Utils_Tuple2(
+						author$project$Parser$EADisplacement(
+							_Utils_Tuple2(sign, value)),
+						author$project$Parser$advance(context)));
+			default:
+				return author$project$Parser$NOK(
+					A2(author$project$Parser$errorExpecting, context, 'IDENT or INTEGER'));
+		}
+	});
+var author$project$Parser$parseEffectiveAddress = F3(
+	function (sign, context, elements) {
+		parseEffectiveAddress:
+		while (true) {
+			var _n0 = A2(author$project$Parser$parseEAElement, sign, context);
+			if (_n0.$ === 'OK') {
+				var _n1 = _n0.a;
+				var element = _n1.a;
+				var next = _n1.b;
+				var newElements = A2(elm$core$List$cons, element, elements);
+				var _n2 = next.current;
+				switch (_n2.$) {
+					case 'T_ADD':
+						var $temp$sign = true,
+							$temp$context = author$project$Parser$advance(next),
+							$temp$elements = newElements;
+						sign = $temp$sign;
+						context = $temp$context;
+						elements = $temp$elements;
+						continue parseEffectiveAddress;
+					case 'T_SUB':
+						var $temp$sign = false,
+							$temp$context = author$project$Parser$advance(next),
+							$temp$elements = newElements;
+						sign = $temp$sign;
+						context = $temp$context;
+						elements = $temp$elements;
+						continue parseEffectiveAddress;
+					case 'T_RBRT':
+						return author$project$Parser$OK(
+							_Utils_Tuple2(
+								elm$core$List$reverse(newElements),
+								author$project$Parser$advance(next)));
+					default:
+						return author$project$Parser$OK(
+							_Utils_Tuple2(
+								elm$core$List$reverse(newElements),
+								context));
+				}
+			} else {
+				var next = _n0.a;
+				return author$project$Parser$OK(
+					_Utils_Tuple2(
+						elm$core$List$reverse(elements),
+						next));
+			}
+		}
+	});
+var author$project$Parser$parseMemory = F2(
+	function (size, context) {
+		var _n0 = A3(
+			author$project$Parser$parseEffectiveAddress,
+			true,
+			author$project$Parser$advance(context),
+			_List_Nil);
+		if (_n0.$ === 'OK') {
+			var _n1 = _n0.a;
+			var elements = _n1.a;
+			var next = _n1.b;
+			return author$project$Parser$OK(
+				_Utils_Tuple2(
+					author$project$Syntax$AstEffectiveAddress(
+						A2(
+							author$project$Parser$makeMemoryOperand,
+							elements,
+							author$project$Parser$initMemoryOperand(size))),
+					next));
+		} else {
+			var next = _n0.a;
+			return author$project$Parser$NOK(next);
+		}
+	});
+var author$project$Parser$parseOperand = function (context) {
+	var _n0 = context.current;
+	switch (_n0.$) {
+		case 'T_IDENT':
+			var name = _n0.a;
+			return (name === 'byteptr') ? A2(
+				author$project$Parser$parseMemory,
+				author$project$X86$S_8,
+				author$project$Parser$advance(context)) : ((name === 'wordptr') ? A2(
+				author$project$Parser$parseMemory,
+				author$project$X86$S_16,
+				author$project$Parser$advance(context)) : author$project$Parser$OK(
+				_Utils_Tuple2(
+					author$project$Syntax$AstRegister(name),
+					author$project$Parser$advance(context))));
+		case 'T_INTEGER':
+			var value = _n0.a;
+			return author$project$Parser$OK(
+				_Utils_Tuple2(
+					author$project$Syntax$AstImmediat(
+						A2(
+							elm$core$Maybe$withDefault,
+							0,
+							author$project$Parser$immValue(value))),
+					author$project$Parser$advance(context)));
+		case 'T_LBRT':
+			return A2(author$project$Parser$parseMemory, context.size, context);
+		default:
+			return author$project$Parser$NOK(
+				A2(author$project$Parser$errorExpecting, context, 'IDENT, INTEGER or ['));
+	}
+};
+var author$project$Parser$parseOperands = F2(
+	function (context, operands) {
+		parseOperands:
+		while (true) {
+			var _n0 = context.current;
+			if (_n0.$ === 'T_EOF') {
+				return _Utils_Tuple2(operands, context);
+			} else {
+				var _n1 = author$project$Parser$parseOperand(context);
+				if (_n1.$ === 'OK') {
+					var _n2 = _n1.a;
+					var operand = _n2.a;
+					var next = _n2.b;
+					var newOperands = A2(elm$core$List$cons, operand, operands);
+					var _n3 = next.current;
+					if (_n3.$ === 'T_COMA') {
+						var $temp$context = author$project$Parser$advance(next),
+							$temp$operands = newOperands;
+						context = $temp$context;
+						operands = $temp$operands;
+						continue parseOperands;
+					} else {
+						return _Utils_Tuple2(
+							elm$core$List$reverse(newOperands),
+							next);
+					}
+				} else {
+					var next = _n1.a;
+					return _Utils_Tuple2(
+						elm$core$List$reverse(operands),
+						next);
+				}
+			}
+		}
+	});
+var author$project$Parser$parseAssembly = function (context) {
+	var _n0 = author$project$Parser$parseIdent(context);
+	if (_n0.$ === 'OK') {
+		var _n1 = _n0.a;
+		var name = _n1.a;
+		var next = _n1.b;
+		var _n2 = A2(author$project$Parser$parseOperands, next, _List_Nil);
+		var operands = _n2.a;
+		var nn = _n2.b;
+		return _Utils_Tuple2(
+			elm$core$Maybe$Just(
+				author$project$Syntax$AstInstr(
+					_Utils_Tuple2(name, operands))),
+			nn);
+	} else {
+		var next = _n0.a;
+		return _Utils_Tuple2(elm$core$Maybe$Nothing, next);
+	}
+};
+var author$project$Parser$parse = F2(
+	function (is32Bits, content) {
+		return author$project$Parser$parseAssembly(
+			A2(author$project$Parser$makeParser, is32Bits, content));
+	});
+var author$project$Encode$encodeReg = function (r) {
+	var _n0 = elm$core$String$toUpper(r);
+	switch (_n0) {
 		case 'EAX':
 			return 0;
 		case 'ECX':
@@ -14905,1093 +10116,1053 @@ var _madbrain$x86project$Encode$encodeReg = function (r) {
 			return 0;
 	}
 };
-var _madbrain$x86project$Encode$extractRegister = function (operands) {
+var author$project$Encode$extractRegister = function (operands) {
 	extractRegister:
 	while (true) {
-		var _p4 = operands;
-		if (_p4.ctor === '[]') {
+		if (!operands.b) {
 			return 0;
 		} else {
-			if (((_p4._0.ctor === '_Tuple2') && (_p4._0._0.ctor === 'R')) && (_p4._0._1.ctor === 'AstRegister')) {
-				return _madbrain$x86project$Encode$encodeReg(_p4._0._1._0);
+			if ((operands.a.a.$ === 'R') && (operands.a.b.$ === 'AstRegister')) {
+				var _n1 = operands.a;
+				var size = _n1.a.a;
+				var name = _n1.b.a;
+				return author$project$Encode$encodeReg(name);
 			} else {
-				var _v5 = _p4._1;
-				operands = _v5;
+				var tail = operands.b;
+				var $temp$operands = tail;
+				operands = $temp$operands;
 				continue extractRegister;
 			}
 		}
 	}
 };
-var _madbrain$x86project$Encode$extractMemory = function (memory) {
-	var mb = A2(_elm_lang$core$Maybe$map, _madbrain$x86project$Encode$encodeReg, memory.base);
-	var mi = A2(
-		_elm_lang$core$Maybe$map,
-		function (_p5) {
-			var _p6 = _p5;
-			return {
-				ctor: '_Tuple2',
-				_0: _madbrain$x86project$Encode$encodeReg(_p6._0),
-				_1: _p6._1
-			};
-		},
-		memory.index);
-	return _elm_lang$core$Native_Utils.eq(memory.displacement, 0) ? {isReg: false, base: mb, index: mi, disp: _elm_lang$core$Maybe$Nothing} : {
-		isReg: false,
-		base: mb,
-		index: mi,
-		disp: _elm_lang$core$Maybe$Just(memory.displacement)
-	};
-};
-var _madbrain$x86project$Encode$EncodingContext = F3(
-	function (a, b, c) {
-		return {elements: a, reg: b, rm: c};
-	});
-var _madbrain$x86project$Encode$MemoryContext = F4(
-	function (a, b, c, d) {
-		return {isReg: a, base: b, index: c, disp: d};
-	});
-var _madbrain$x86project$Encode$MEMORY_DISP32 = {ctor: 'MEMORY_DISP32'};
-var _madbrain$x86project$Encode$MEMORY_DISP8 = {ctor: 'MEMORY_DISP8'};
-var _madbrain$x86project$Encode$MEMORY = {ctor: 'MEMORY'};
-var _madbrain$x86project$Encode$REG = {ctor: 'REG'};
-var _madbrain$x86project$Encode$Disp32 = function (a) {
-	return {ctor: 'Disp32', _0: a};
-};
-var _madbrain$x86project$Encode$Disp8 = function (a) {
-	return {ctor: 'Disp8', _0: a};
-};
-var _madbrain$x86project$Encode$makeDisp = function (disp) {
-	var _p7 = disp;
-	if (_p7.ctor === 'Just') {
-		var _p8 = _p7._0;
-		return ((_elm_lang$core$Native_Utils.cmp(-128, _p8) < 0) && (_elm_lang$core$Native_Utils.cmp(_p8, 127) < 0)) ? {
-			ctor: '_Tuple2',
-			_0: _madbrain$x86project$Encode$MEMORY_DISP8,
-			_1: _elm_lang$core$Maybe$Just(
-				_madbrain$x86project$Encode$Disp8(_p8))
-		} : {
-			ctor: '_Tuple2',
-			_0: _madbrain$x86project$Encode$MEMORY_DISP32,
-			_1: _elm_lang$core$Maybe$Just(
-				_madbrain$x86project$Encode$Disp32(_p8))
-		};
-	} else {
-		return {ctor: '_Tuple2', _0: _madbrain$x86project$Encode$MEMORY, _1: _elm_lang$core$Maybe$Nothing};
-	}
-};
-var _madbrain$x86project$Encode$Sib = function (a) {
-	return {ctor: 'Sib', _0: a};
-};
-var _madbrain$x86project$Encode$ModRM = function (a) {
-	return {ctor: 'ModRM', _0: a};
-};
-var _madbrain$x86project$Encode$encodeCompleteOperands = F3(
-	function (reg, rm, context) {
-		var _p9 = {ctor: '_Tuple3', _0: rm.isReg, _1: rm.base, _2: rm.index};
-		_v8_4:
-		do {
-			_v8_0:
-			do {
-				if (_p9.ctor === '_Tuple3') {
-					if (_p9._1.ctor === 'Just') {
-						if (_p9._2.ctor === 'Nothing') {
-							if (_p9._0 === true) {
-								break _v8_0;
-							} else {
-								var _p10 = _madbrain$x86project$Encode$makeDisp(rm.disp);
-								var mode = _p10._0;
-								var disp = _p10._1;
-								return A2(
-									_madbrain$x86project$Encode$encodeOpt,
-									disp,
-									A2(
-										_madbrain$x86project$Encode$encodeReq,
-										_madbrain$x86project$Encode$ModRM(
-											{ctor: '_Tuple3', _0: mode, _1: reg, _2: _p9._1._0}),
-										context));
-							}
-						} else {
-							if (_p9._0 === true) {
-								break _v8_0;
-							} else {
-								if (_p9._2._0.ctor === '_Tuple2') {
-									var _p11 = _madbrain$x86project$Encode$makeDisp(rm.disp);
-									var mode = _p11._0;
-									var disp = _p11._1;
-									return A2(
-										_madbrain$x86project$Encode$encodeOpt,
-										disp,
-										A2(
-											_madbrain$x86project$Encode$encodeReq,
-											_madbrain$x86project$Encode$Sib(
-												{ctor: '_Tuple3', _0: _p9._1._0, _1: _p9._2._0._0, _2: _p9._2._0._1}),
-											A2(
-												_madbrain$x86project$Encode$encodeReq,
-												_madbrain$x86project$Encode$ModRM(
-													{
-														ctor: '_Tuple3',
-														_0: mode,
-														_1: reg,
-														_2: _madbrain$x86project$Encode$encodeReg('ESP')
-													}),
-												context)));
-								} else {
-									break _v8_4;
-								}
-							}
-						}
-					} else {
-						if ((_p9._2.ctor === 'Just') && (_p9._2._0.ctor === '_Tuple2')) {
-							var _p12 = _madbrain$x86project$Encode$makeDisp(rm.disp);
-							var mode = _p12._0;
-							var disp = _p12._1;
-							return A2(
-								_madbrain$x86project$Encode$encodeReq,
-								_madbrain$x86project$Encode$Disp32(
-									A2(_elm_lang$core$Maybe$withDefault, 0, rm.disp)),
-								A2(
-									_madbrain$x86project$Encode$encodeReq,
-									_madbrain$x86project$Encode$Sib(
-										{
-											ctor: '_Tuple3',
-											_0: _madbrain$x86project$Encode$encodeReg('EBP'),
-											_1: _p9._2._0._0,
-											_2: _p9._2._0._1
-										}),
-									A2(
-										_madbrain$x86project$Encode$encodeReq,
-										_madbrain$x86project$Encode$ModRM(
-											{
-												ctor: '_Tuple3',
-												_0: _madbrain$x86project$Encode$MEMORY,
-												_1: reg,
-												_2: _madbrain$x86project$Encode$encodeReg('ESP')
-											}),
-										context)));
-						} else {
-							break _v8_4;
-						}
-					}
-				} else {
-					break _v8_4;
-				}
-			} while(false);
-			return _elm_lang$core$Native_Utils.update(
-				context,
-				{
-					elements: {
-						ctor: '::',
-						_0: _madbrain$x86project$Encode$ModRM(
-							{ctor: '_Tuple3', _0: _madbrain$x86project$Encode$REG, _1: reg, _2: _p9._1._0}),
-						_1: context.elements
-					}
-				});
-		} while(false);
-		return context;
-	});
-var _madbrain$x86project$Encode$addMemoryTo = F2(
-	function (context, memory) {
-		var _p13 = context.reg;
-		if (_p13.ctor === 'Just') {
-			return A3(_madbrain$x86project$Encode$encodeCompleteOperands, _p13._0, memory, context);
-		} else {
-			return _elm_lang$core$Native_Utils.update(
-				context,
-				{
-					rm: _elm_lang$core$Maybe$Just(memory)
-				});
-		}
-	});
-var _madbrain$x86project$Encode$Immediat = function (a) {
-	return {ctor: 'Immediat', _0: a};
-};
-var _madbrain$x86project$Encode$encodeOperand = F3(
-	function (context, operandDef, operand) {
-		var _p14 = {ctor: '_Tuple2', _0: operandDef, _1: operand};
-		_v10_4:
-		do {
-			if (_p14.ctor === '_Tuple2') {
-				switch (_p14._1.ctor) {
-					case 'AstEffectiveAddress':
-						if (_p14._0.ctor === 'RM') {
-							return A2(
-								_madbrain$x86project$Encode$addMemoryTo,
-								context,
-								_madbrain$x86project$Encode$extractMemory(_p14._1._0));
-						} else {
-							break _v10_4;
-						}
-					case 'AstRegister':
-						switch (_p14._0.ctor) {
-							case 'RM':
-								return A2(
-									_madbrain$x86project$Encode$addMemoryTo,
-									context,
-									{
-										isReg: true,
-										base: _elm_lang$core$Maybe$Just(
-											_madbrain$x86project$Encode$encodeReg(_p14._1._0)),
-										index: _elm_lang$core$Maybe$Nothing,
-										disp: _elm_lang$core$Maybe$Nothing
-									});
-							case 'R':
-								var _p15 = {
-									ctor: '_Tuple2',
-									_0: context.rm,
-									_1: _madbrain$x86project$Encode$encodeReg(_p14._1._0)
-								};
-								if (_p15._0.ctor === 'Just') {
-									return A3(_madbrain$x86project$Encode$encodeCompleteOperands, _p15._1, _p15._0._0, context);
-								} else {
-									return _elm_lang$core$Native_Utils.update(
-										context,
-										{
-											reg: _elm_lang$core$Maybe$Just(_p15._1)
-										});
-								}
-							default:
-								break _v10_4;
-						}
-					default:
-						if (_p14._0.ctor === 'I') {
-							var _p16 = _madbrain$x86project$Parser$immValue(_p14._1._0);
-							if (_p16.ctor === 'Ok') {
-								return A2(
-									_madbrain$x86project$Encode$encodeReq,
-									_madbrain$x86project$Encode$Immediat(
-										{ctor: '_Tuple2', _0: _p14._0._0, _1: _p16._0}),
-									context);
-							} else {
-								return context;
-							}
-						} else {
-							break _v10_4;
-						}
-				}
-			} else {
-				break _v10_4;
-			}
-		} while(false);
-		return context;
-	});
-var _madbrain$x86project$Encode$encodeOperands = F2(
-	function (input, operands) {
-		encodeOperands:
-		while (true) {
-			var _p17 = operands;
-			if (_p17.ctor === '[]') {
-				return input;
-			} else {
-				var _v14 = A3(_madbrain$x86project$Encode$encodeOperand, input, _p17._0._0, _p17._0._1),
-					_v15 = _p17._1;
-				input = _v14;
-				operands = _v15;
-				continue encodeOperands;
-			}
-		}
-	});
-var _madbrain$x86project$Encode$OpcodeAndReg = function (a) {
-	return {ctor: 'OpcodeAndReg', _0: a};
-};
-var _madbrain$x86project$Encode$Opcode = function (a) {
-	return {ctor: 'Opcode', _0: a};
-};
-var _madbrain$x86project$Encode$encodeOpcode = F3(
+var author$project$Encode$encodeOpcode = F3(
 	function (operands, opcode, context) {
-		var _p18 = opcode;
-		switch (_p18.ctor) {
+		switch (opcode.$) {
 			case 'O':
-				return _elm_lang$core$Native_Utils.update(
+				var value = opcode.a;
+				return _Utils_update(
 					context,
 					{
-						elements: {
-							ctor: '::',
-							_0: _madbrain$x86project$Encode$Opcode(_p18._0),
-							_1: context.elements
-						}
+						elements: A2(
+							elm$core$List$cons,
+							author$project$Encode$Opcode(value),
+							context.elements)
 					});
 			case 'O_R':
-				return _elm_lang$core$Native_Utils.update(
+				var value = opcode.a;
+				return _Utils_update(
 					context,
 					{
-						elements: {
-							ctor: '::',
-							_0: _madbrain$x86project$Encode$OpcodeAndReg(
-								{
-									ctor: '_Tuple2',
-									_0: _p18._0,
-									_1: _madbrain$x86project$Encode$extractRegister(operands)
-								}),
-							_1: context.elements
-						}
+						elements: A2(
+							elm$core$List$cons,
+							author$project$Encode$OpcodeAndReg(
+								_Utils_Tuple2(
+									value,
+									author$project$Encode$extractRegister(operands))),
+							context.elements)
 					});
 			case 'E':
-				return _elm_lang$core$Native_Utils.update(
+				var value = opcode.a;
+				return _Utils_update(
 					context,
 					{
-						reg: _elm_lang$core$Maybe$Just(_p18._0)
+						reg: elm$core$Maybe$Just(value)
 					});
 			default:
 				return context;
 		}
 	});
-var _madbrain$x86project$Encode$encodeOpcodes = F3(
+var author$project$Encode$Disp32 = function (a) {
+	return {$: 'Disp32', a: a};
+};
+var author$project$Encode$Sib = function (a) {
+	return {$: 'Sib', a: a};
+};
+var author$project$Encode$encodeOpt = F2(
+	function (elementOpt, context) {
+		if (elementOpt.$ === 'Just') {
+			var element = elementOpt.a;
+			return _Utils_update(
+				context,
+				{
+					elements: A2(elm$core$List$cons, element, context.elements)
+				});
+		} else {
+			return context;
+		}
+	});
+var author$project$Encode$encodeReq = F2(
+	function (element, context) {
+		return _Utils_update(
+			context,
+			{
+				elements: A2(elm$core$List$cons, element, context.elements)
+			});
+	});
+var author$project$Encode$Disp8 = function (a) {
+	return {$: 'Disp8', a: a};
+};
+var author$project$Encode$makeDisp = function (disp) {
+	if (disp.$ === 'Just') {
+		var value = disp.a;
+		return ((_Utils_cmp(-128, value) < 0) && (value < 127)) ? _Utils_Tuple2(
+			author$project$Encode$MEMORY_DISP8,
+			elm$core$Maybe$Just(
+				author$project$Encode$Disp8(value))) : _Utils_Tuple2(
+			author$project$Encode$MEMORY_DISP32,
+			elm$core$Maybe$Just(
+				author$project$Encode$Disp32(value)));
+	} else {
+		return _Utils_Tuple2(author$project$Encode$MEMORY, elm$core$Maybe$Nothing);
+	}
+};
+var author$project$Encode$encodeCompleteOperands = F3(
+	function (reg, rm, context) {
+		var _n0 = _Utils_Tuple3(rm.isReg, rm.base, rm.index);
+		_n0$0:
+		while (true) {
+			if (_n0.b.$ === 'Just') {
+				if (_n0.c.$ === 'Nothing') {
+					if (_n0.a) {
+						break _n0$0;
+					} else {
+						var base = _n0.b.a;
+						var _n1 = _n0.c;
+						var _n2 = author$project$Encode$makeDisp(rm.disp);
+						var mode = _n2.a;
+						var disp = _n2.b;
+						return A2(
+							author$project$Encode$encodeOpt,
+							disp,
+							A2(
+								author$project$Encode$encodeReq,
+								author$project$Encode$ModRM(
+									_Utils_Tuple3(mode, reg, base)),
+								context));
+					}
+				} else {
+					if (_n0.a) {
+						break _n0$0;
+					} else {
+						var base = _n0.b.a;
+						var _n3 = _n0.c.a;
+						var index = _n3.a;
+						var scale = _n3.b;
+						var _n4 = author$project$Encode$makeDisp(rm.disp);
+						var mode = _n4.a;
+						var disp = _n4.b;
+						return A2(
+							author$project$Encode$encodeOpt,
+							disp,
+							A2(
+								author$project$Encode$encodeReq,
+								author$project$Encode$Sib(
+									_Utils_Tuple3(base, index, scale)),
+								A2(
+									author$project$Encode$encodeReq,
+									author$project$Encode$ModRM(
+										_Utils_Tuple3(
+											mode,
+											reg,
+											author$project$Encode$encodeReg('ESP'))),
+									context)));
+					}
+				}
+			} else {
+				if (_n0.c.$ === 'Just') {
+					var _n5 = _n0.b;
+					var _n6 = _n0.c.a;
+					var index = _n6.a;
+					var scale = _n6.b;
+					var _n7 = author$project$Encode$makeDisp(rm.disp);
+					var mode = _n7.a;
+					var disp = _n7.b;
+					return A2(
+						author$project$Encode$encodeReq,
+						author$project$Encode$Disp32(
+							A2(elm$core$Maybe$withDefault, 0, rm.disp)),
+						A2(
+							author$project$Encode$encodeReq,
+							author$project$Encode$Sib(
+								_Utils_Tuple3(
+									author$project$Encode$encodeReg('EBP'),
+									index,
+									scale)),
+							A2(
+								author$project$Encode$encodeReq,
+								author$project$Encode$ModRM(
+									_Utils_Tuple3(
+										author$project$Encode$MEMORY,
+										reg,
+										author$project$Encode$encodeReg('ESP'))),
+								context)));
+				} else {
+					return context;
+				}
+			}
+		}
+		var base = _n0.b.a;
+		return _Utils_update(
+			context,
+			{
+				elements: A2(
+					elm$core$List$cons,
+					author$project$Encode$ModRM(
+						_Utils_Tuple3(author$project$Encode$REG, reg, base)),
+					context.elements)
+			});
+	});
+var author$project$Encode$addMemoryTo = F2(
+	function (context, memory) {
+		var _n0 = context.reg;
+		if (_n0.$ === 'Just') {
+			var reg = _n0.a;
+			return A3(author$project$Encode$encodeCompleteOperands, reg, memory, context);
+		} else {
+			return _Utils_update(
+				context,
+				{
+					rm: elm$core$Maybe$Just(memory)
+				});
+		}
+	});
+var author$project$Encode$extractMemory = function (memory) {
+	var mi = A2(
+		elm$core$Maybe$map,
+		function (_n0) {
+			var reg = _n0.a;
+			var scale = _n0.b;
+			return _Utils_Tuple2(
+				author$project$Encode$encodeReg(reg),
+				scale);
+		},
+		memory.index);
+	var mb = A2(elm$core$Maybe$map, author$project$Encode$encodeReg, memory.base);
+	return (!memory.displacement) ? {base: mb, disp: elm$core$Maybe$Nothing, index: mi, isReg: false} : {
+		base: mb,
+		disp: elm$core$Maybe$Just(memory.displacement),
+		index: mi,
+		isReg: false
+	};
+};
+var author$project$Encode$getSize = F2(
+	function (size, is32Bits) {
+		switch (size.$) {
+			case 'S_8':
+				return author$project$X86$S_8;
+			case 'S_16':
+				return author$project$X86$S_16;
+			case 'S_32':
+				return author$project$X86$S_32;
+			default:
+				return is32Bits ? author$project$X86$S_32 : author$project$X86$S_16;
+		}
+	});
+var author$project$Encode$encodeOperand = F3(
+	function (context, operandDef, operand) {
+		var _n0 = _Utils_Tuple2(operandDef, operand);
+		_n0$4:
+		while (true) {
+			switch (_n0.b.$) {
+				case 'AstEffectiveAddress':
+					if (_n0.a.$ === 'RM') {
+						var size = _n0.a.a;
+						var memory = _n0.b.a;
+						return A2(
+							author$project$Encode$addMemoryTo,
+							context,
+							author$project$Encode$extractMemory(memory));
+					} else {
+						break _n0$4;
+					}
+				case 'AstRegister':
+					switch (_n0.a.$) {
+						case 'RM':
+							var size = _n0.a.a;
+							var reg = _n0.b.a;
+							return A2(
+								author$project$Encode$addMemoryTo,
+								context,
+								{
+									base: elm$core$Maybe$Just(
+										author$project$Encode$encodeReg(reg)),
+									disp: elm$core$Maybe$Nothing,
+									index: elm$core$Maybe$Nothing,
+									isReg: true
+								});
+						case 'R':
+							var size = _n0.a.a;
+							var reg = _n0.b.a;
+							var _n1 = _Utils_Tuple2(
+								context.rm,
+								author$project$Encode$encodeReg(reg));
+							if (_n1.a.$ === 'Just') {
+								var rm = _n1.a.a;
+								var r = _n1.b;
+								return A3(author$project$Encode$encodeCompleteOperands, r, rm, context);
+							} else {
+								var r = _n1.b;
+								return _Utils_update(
+									context,
+									{
+										reg: elm$core$Maybe$Just(r)
+									});
+							}
+						default:
+							break _n0$4;
+					}
+				default:
+					if (_n0.a.$ === 'I') {
+						var size = _n0.a.a;
+						var value = _n0.b.a;
+						return A2(
+							author$project$Encode$encodeReq,
+							author$project$Encode$Immediat(
+								_Utils_Tuple2(
+									A2(author$project$Encode$getSize, size, context.is32Bits),
+									value)),
+							context);
+					} else {
+						break _n0$4;
+					}
+			}
+		}
+		return context;
+	});
+var author$project$Encode$encodeOperands = F2(
+	function (input, operands) {
+		encodeOperands:
+		while (true) {
+			if (!operands.b) {
+				return input;
+			} else {
+				var _n1 = operands.a;
+				var tpl = _n1.a;
+				var op = _n1.b;
+				var tail = operands.b;
+				var $temp$input = A3(author$project$Encode$encodeOperand, input, tpl, op),
+					$temp$operands = tail;
+				input = $temp$input;
+				operands = $temp$operands;
+				continue encodeOperands;
+			}
+		}
+	});
+var author$project$Encode$encodeOpcodes = F3(
 	function (operands, opcodes, context) {
 		encodeOpcodes:
 		while (true) {
-			var _p19 = opcodes;
-			if (_p19.ctor === '[]') {
-				return _elm_lang$core$List$reverse(
-					A2(_madbrain$x86project$Encode$encodeOperands, context, operands).elements);
+			if (!opcodes.b) {
+				return elm$core$List$reverse(
+					A2(author$project$Encode$encodeOperands, context, operands).elements);
 			} else {
-				var _v18 = operands,
-					_v19 = _p19._1,
-					_v20 = A3(_madbrain$x86project$Encode$encodeOpcode, operands, _p19._0, context);
-				operands = _v18;
-				opcodes = _v19;
-				context = _v20;
+				var opcode = opcodes.a;
+				var tailOpcodes = opcodes.b;
+				var $temp$operands = operands,
+					$temp$opcodes = tailOpcodes,
+					$temp$context = A3(author$project$Encode$encodeOpcode, operands, opcode, context);
+				operands = $temp$operands;
+				opcodes = $temp$opcodes;
+				context = $temp$context;
 				continue encodeOpcodes;
 			}
 		}
 	});
-var _madbrain$x86project$Encode$encodeInstr = F3(
-	function (opcodes, operandDefs, operands) {
-		var context = {
-			elements: {ctor: '[]'},
-			reg: _elm_lang$core$Maybe$Nothing,
-			rm: _elm_lang$core$Maybe$Nothing
-		};
+var author$project$Encode$encodeInstr = F4(
+	function (is32Bits, opcodes, operandDefs, operands) {
+		var context = {elements: _List_Nil, is32Bits: is32Bits, reg: elm$core$Maybe$Nothing, rm: elm$core$Maybe$Nothing};
 		return A3(
-			_madbrain$x86project$Encode$encodeOpcodes,
+			author$project$Encode$encodeOpcodes,
 			A3(
-				_elm_lang$core$List$map2,
+				elm$core$List$map2,
 				F2(
 					function (tpl, op) {
-						return {ctor: '_Tuple2', _0: tpl, _1: op};
+						return _Utils_Tuple2(tpl, op);
 					}),
 				operandDefs,
 				operands),
 			opcodes,
 			context);
 	});
-var _madbrain$x86project$Encode$encode = F2(
-	function (_p20, operands) {
-		var _p21 = _p20;
-		var _p22 = _p21._0._2;
-		return _elm_lang$core$Native_Utils.eq(
-			_elm_lang$core$List$length(_p22),
-			_elm_lang$core$List$length(operands)) ? _elm_lang$core$Maybe$Just(
-			A3(_madbrain$x86project$Encode$encodeInstr, _p21._0._0, _p22, operands)) : _elm_lang$core$Maybe$Nothing;
+var author$project$Encode$encode = F3(
+	function (is32Bits, _n0, operands) {
+		var _n1 = _n0.a;
+		var opcodes = _n1.a;
+		var templates = _n1.c;
+		return _Utils_eq(
+			elm$core$List$length(templates),
+			elm$core$List$length(operands)) ? elm$core$Maybe$Just(
+			A4(author$project$Encode$encodeInstr, is32Bits, opcodes, templates, operands)) : elm$core$Maybe$Nothing;
 	});
-var _madbrain$x86project$Encode$Prefix = function (a) {
-	return {ctor: 'Prefix', _0: a};
-};
-
-var _madbrain$x86project$EncodeDiagram$test = {
-	ctor: '::',
-	_0: _madbrain$x86project$Encode$Opcode(129),
-	_1: {
-		ctor: '::',
-		_0: _madbrain$x86project$Encode$ModRM(
-			{ctor: '_Tuple3', _0: _madbrain$x86project$Encode$MEMORY_DISP32, _1: 0, _2: 4}),
-		_1: {
-			ctor: '::',
-			_0: _madbrain$x86project$Encode$Sib(
-				{ctor: '_Tuple3', _0: 0, _1: 3, _2: 4}),
-			_1: {
-				ctor: '::',
-				_0: _madbrain$x86project$Encode$Disp32(256),
-				_1: {
-					ctor: '::',
-					_0: _madbrain$x86project$Encode$Immediat(
-						{ctor: '_Tuple2', _0: 32, _1: 20}),
-					_1: {ctor: '[]'}
-				}
-			}
-		}
-	}
-};
-var _madbrain$x86project$EncodeDiagram$modRmEncoding = {
-	name: 'ModRM',
-	elements: {
-		ctor: '::',
-		_0: {name: 'Mode', size: 2, shift: 6},
-		_1: {
-			ctor: '::',
-			_0: {name: 'Reg', size: 3, shift: 3},
-			_1: {
-				ctor: '::',
-				_0: {name: 'RM', size: 3, shift: 0},
-				_1: {ctor: '[]'}
-			}
-		}
-	}
-};
-var _madbrain$x86project$EncodeDiagram$sibEncoding = {
-	name: 'SIB',
-	elements: {
-		ctor: '::',
-		_0: {name: 'Scale', size: 2, shift: 6},
-		_1: {
-			ctor: '::',
-			_0: {name: 'Index', size: 3, shift: 3},
-			_1: {
-				ctor: '::',
-				_0: {name: 'Base', size: 3, shift: 0},
-				_1: {ctor: '[]'}
-			}
-		}
-	}
-};
-var _madbrain$x86project$EncodeDiagram$toByteHex = function (value) {
-	return A3(
-		_elm_lang$core$String$slice,
-		1,
-		3,
-		_rtfeldman$hex$Hex$toString(value + 256));
-};
-var _madbrain$x86project$EncodeDiagram$bytes = function (values) {
-	return A2(
-		_elm_lang$core$String$join,
-		' ',
-		A2(_elm_lang$core$List$map, _madbrain$x86project$EncodeDiagram$toByteHex, values));
-};
-var _madbrain$x86project$EncodeDiagram$toLitteEndian = F2(
-	function (size, value) {
-		return A2(
-			_elm_lang$core$List$map,
-			function (i) {
-				return 255 & (value >> (i * 8));
-			},
-			A2(_elm_lang$core$List$range, 0, ((size / 8) | 0) - 1));
-	});
-var _madbrain$x86project$EncodeDiagram$toBits = F2(
-	function (size, value) {
-		return A2(
-			_elm_lang$core$String$join,
-			'',
-			_elm_lang$core$Array$toList(
-				A2(
-					_elm_lang$core$Array$initialize,
-					size,
-					function (i) {
-						return _elm_lang$core$Basics$toString(1 & (value >> ((size - i) - 1)));
-					})));
-	});
-var _madbrain$x86project$EncodeDiagram$encodeIntoByte = F2(
-	function (encoding, values) {
-		var e = _elm_lang$core$List$singleton(
-			A3(
-				_elm_lang$core$List$foldl,
-				_elm_lang$core$Bitwise$or,
-				0,
-				A3(
-					_elm_lang$core$List$map2,
-					F2(
-						function (e, v) {
-							return v << e.shift;
-						}),
-					encoding.elements,
-					values)));
-		var o = A3(
-			_elm_lang$core$List$map2,
-			F2(
-				function (e, v) {
-					return {
-						ctor: '_Tuple2',
-						_0: A2(_madbrain$x86project$EncodeDiagram$toBits, e.size, v),
-						_1: _madbrain$x86project$Diagram$Leaf(e.name)
-					};
-				}),
-			encoding.elements,
-			values);
-		return {
-			ctor: '_Tuple2',
-			_0: _madbrain$x86project$EncodeDiagram$bytes(e),
-			_1: A2(_madbrain$x86project$Diagram$Node, encoding.name, o)
-		};
-	});
-var _madbrain$x86project$EncodeDiagram$encodeElement = function (element) {
-	var _p0 = element;
-	switch (_p0.ctor) {
-		case 'Prefix':
-			return {
-				ctor: '_Tuple2',
-				_0: _madbrain$x86project$EncodeDiagram$bytes(
-					{
-						ctor: '::',
-						_0: _p0._0,
-						_1: {ctor: '[]'}
-					}),
-				_1: _madbrain$x86project$Diagram$Leaf('Prefix')
-			};
-		case 'Opcode':
-			return {
-				ctor: '_Tuple2',
-				_0: _madbrain$x86project$EncodeDiagram$bytes(
-					{
-						ctor: '::',
-						_0: _p0._0,
-						_1: {ctor: '[]'}
-					}),
-				_1: _madbrain$x86project$Diagram$Leaf('Opcode')
-			};
-		case 'OpcodeAndReg':
-			return {
-				ctor: '_Tuple2',
-				_0: _madbrain$x86project$EncodeDiagram$bytes(
-					{
-						ctor: '::',
-						_0: _p0._0._0 | _p0._0._1,
-						_1: {ctor: '[]'}
-					}),
-				_1: _madbrain$x86project$Diagram$Leaf('Opcode and Register')
-			};
-		case 'ModRM':
-			return A2(
-				_madbrain$x86project$EncodeDiagram$encodeIntoByte,
-				_madbrain$x86project$EncodeDiagram$modRmEncoding,
-				{
-					ctor: '::',
-					_0: _madbrain$x86project$Encode$encodeMode(_p0._0._0),
-					_1: {
-						ctor: '::',
-						_0: _p0._0._1,
-						_1: {
-							ctor: '::',
-							_0: _p0._0._2,
-							_1: {ctor: '[]'}
-						}
-					}
-				});
-		case 'Sib':
-			return A2(
-				_madbrain$x86project$EncodeDiagram$encodeIntoByte,
-				_madbrain$x86project$EncodeDiagram$sibEncoding,
-				{
-					ctor: '::',
-					_0: _madbrain$x86project$Encode$encodeScale(_p0._0._2),
-					_1: {
-						ctor: '::',
-						_0: _p0._0._1,
-						_1: {
-							ctor: '::',
-							_0: _p0._0._0,
-							_1: {ctor: '[]'}
-						}
-					}
-				});
-		case 'Disp8':
-			var _p1 = _p0._0;
-			return {
-				ctor: '_Tuple2',
-				_0: _madbrain$x86project$EncodeDiagram$bytes(
-					{
-						ctor: '::',
-						_0: _p1,
-						_1: {ctor: '[]'}
-					}),
-				_1: _madbrain$x86project$Diagram$Leaf(
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						'Displacement: ',
-						_elm_lang$core$Basics$toString(_p1)))
-			};
-		case 'Disp32':
-			var _p2 = _p0._0;
-			return {
-				ctor: '_Tuple2',
-				_0: _madbrain$x86project$EncodeDiagram$bytes(
-					A2(_madbrain$x86project$EncodeDiagram$toLitteEndian, 32, _p2)),
-				_1: _madbrain$x86project$Diagram$Leaf(
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						'Displacement: ',
-						_elm_lang$core$Basics$toString(_p2)))
-			};
+var author$project$Search$getSize = function (size) {
+	switch (size.$) {
+		case 'S_8':
+			return 8;
+		case 'S_16':
+			return 16;
+		case 'S_32':
+			return 32;
 		default:
-			var _p3 = _p0._0._1;
-			return {
-				ctor: '_Tuple2',
-				_0: _madbrain$x86project$EncodeDiagram$bytes(
-					A2(_madbrain$x86project$EncodeDiagram$toLitteEndian, _p0._0._0, _p3)),
-				_1: _madbrain$x86project$Diagram$Leaf(
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						'Immediat value: ',
-						_elm_lang$core$Basics$toString(_p3)))
-			};
+			return 32;
 	}
 };
-var _madbrain$x86project$EncodeDiagram$encode = function (elements) {
-	return _madbrain$x86project$Diagram$draw(
-		A2(_elm_lang$core$List$map, _madbrain$x86project$EncodeDiagram$encodeElement, elements));
-};
-var _madbrain$x86project$EncodeDiagram$main = _elm_lang$virtual_dom$Native_VirtualDom.staticProgram(
-	_madbrain$x86project$EncodeDiagram$encode(_madbrain$x86project$EncodeDiagram$test));
-var _madbrain$x86project$EncodeDiagram$EncodingBlock = F3(
-	function (a, b, c) {
-		return {name: a, size: b, shift: c};
-	});
-var _madbrain$x86project$EncodeDiagram$EncodingInfo = F2(
-	function (a, b) {
-		return {name: a, elements: b};
-	});
-
-var _madbrain$x86project$Search$regSize = function (reg) {
-	return A2(_elm_lang$core$String$startsWith, 'E', reg) ? _elm_lang$core$Maybe$Just(32) : (A2(_elm_lang$core$String$endsWith, 'X', reg) ? _elm_lang$core$Maybe$Just(16) : ((A2(_elm_lang$core$String$endsWith, 'H', reg) || A2(_elm_lang$core$String$endsWith, 'L', reg)) ? _elm_lang$core$Maybe$Just(8) : _elm_lang$core$Maybe$Nothing));
-};
-var _madbrain$x86project$Search$matchMemory = F2(
-	function (memory, tpl) {
-		var _p0 = tpl;
-		if (_p0.ctor === 'RM') {
-			return _elm_lang$core$Native_Utils.eq(memory.size, _p0._0);
+var author$project$Search$matchImm = F2(
+	function (value, tpl) {
+		var _n0 = _Utils_Tuple2(value, tpl);
+		if (_n0.b.$ === 'I') {
+			var v = _n0.a;
+			var size = _n0.b.a;
+			return _Utils_eq(size, author$project$X86$S_32) || (_Utils_eq(size, author$project$X86$S_16_32) || (_Utils_cmp(
+				v,
+				1 << author$project$Search$getSize(size)) < 0));
 		} else {
 			return false;
 		}
 	});
-var _madbrain$x86project$Search$matchImm = F2(
-	function (strValue, tpl) {
-		var _p1 = {
-			ctor: '_Tuple2',
-			_0: _madbrain$x86project$Parser$immValue(strValue),
-			_1: tpl
-		};
-		_v1_2:
-		do {
-			if (_p1.ctor === '_Tuple2') {
-				if (_p1._0.ctor === 'Err') {
-					return true;
-				} else {
-					if (_p1._1.ctor === 'I') {
-						var _p2 = _p1._1._0;
-						return _elm_lang$core$Native_Utils.eq(_p2, 32) || (_elm_lang$core$Native_Utils.cmp(_p1._0._0, 1 << _p2) < 0);
-					} else {
-						break _v1_2;
-					}
-				}
-			} else {
-				break _v1_2;
-			}
-		} while(false);
-		return false;
-	});
-var _madbrain$x86project$Search$matchReg = F2(
-	function (reg, tpl) {
-		var _p3 = {
-			ctor: '_Tuple2',
-			_0: _madbrain$x86project$Search$regSize(reg),
-			_1: tpl
-		};
-		_v2_4:
-		do {
-			if (_p3.ctor === '_Tuple2') {
-				if (_p3._0.ctor === 'Nothing') {
-					return true;
-				} else {
-					switch (_p3._1.ctor) {
-						case 'Register':
-							return A2(
-								_elm_lang$core$String$startsWith,
-								reg,
-								_madbrain$x86project$X86$regName(_p3._1._0));
-						case 'R':
-							return _elm_lang$core$Native_Utils.eq(_p3._0._0, _p3._1._0);
-						case 'RM':
-							return _elm_lang$core$Native_Utils.eq(_p3._0._0, _p3._1._0);
-						default:
-							break _v2_4;
-					}
-				}
-			} else {
-				break _v2_4;
-			}
-		} while(false);
-		return false;
-	});
-var _madbrain$x86project$Search$matchOperand = F2(
-	function (op, tpl) {
-		var _p4 = op;
-		switch (_p4.ctor) {
-			case 'AstRegister':
-				return A2(
-					_madbrain$x86project$Search$matchReg,
-					_elm_lang$core$String$toUpper(_p4._0),
-					tpl);
-			case 'AstImmediat':
-				return A2(_madbrain$x86project$Search$matchImm, _p4._0, tpl);
+var author$project$Search$matchSize = F2(
+	function (s, size) {
+		switch (size.$) {
+			case 'S_32':
+				return _Utils_eq(s, author$project$X86$S_32) || _Utils_eq(s, author$project$X86$S_16_32);
+			case 'S_16':
+				return _Utils_eq(s, author$project$X86$S_16) || _Utils_eq(s, author$project$X86$S_16_32);
+			case 'S_8':
+				return _Utils_eq(s, author$project$X86$S_8);
 			default:
-				return A2(_madbrain$x86project$Search$matchMemory, _p4._0, tpl);
+				return false;
 		}
 	});
-var _madbrain$x86project$Search$matchOperands = F2(
-	function (operands, templates) {
-		var _p5 = {ctor: '_Tuple2', _0: operands, _1: templates};
-		_v4_2:
-		do {
-			if (_p5.ctor === '_Tuple2') {
-				if (_p5._0.ctor === '::') {
-					if (_p5._1.ctor === '::') {
-						return A2(_madbrain$x86project$Search$matchOperand, _p5._0._0, _p5._1._0) && A2(_madbrain$x86project$Search$matchOperands, _p5._0._1, _p5._1._1);
-					} else {
-						break _v4_2;
-					}
-				} else {
-					return true;
-				}
-			} else {
-				break _v4_2;
-			}
-		} while(false);
-		return false;
+var author$project$Search$matchMemory = F2(
+	function (memory, tpl) {
+		if (tpl.$ === 'RM') {
+			var size = tpl.a;
+			return A2(author$project$Search$matchSize, size, memory.size);
+		} else {
+			return false;
+		}
 	});
-var _madbrain$x86project$Search$filterByOperands = F2(
+var author$project$Search$matchRegName = F3(
+	function (reg, size, r) {
+		var regs = _Utils_eq(size, author$project$X86$S_16_32) ? _List_fromArray(
+			[author$project$X86$S_16, author$project$X86$S_32]) : _List_fromArray(
+			[size]);
+		return A2(
+			elm$core$List$any,
+			elm$core$String$startsWith(reg),
+			A2(
+				elm$core$List$map,
+				function (s) {
+					return A2(author$project$X86$regName, s, r);
+				},
+				regs));
+	});
+var author$project$Search$regSize = function (reg) {
+	return A2(elm$core$String$startsWith, 'E', reg) ? elm$core$Maybe$Just(author$project$X86$S_32) : (A2(elm$core$String$endsWith, 'X', reg) ? elm$core$Maybe$Just(author$project$X86$S_16) : ((A2(elm$core$String$endsWith, 'H', reg) || A2(elm$core$String$endsWith, 'L', reg)) ? elm$core$Maybe$Just(author$project$X86$S_8) : elm$core$Maybe$Nothing));
+};
+var author$project$Search$matchReg = F2(
+	function (reg, tpl) {
+		var _n0 = _Utils_Tuple2(
+			author$project$Search$regSize(reg),
+			tpl);
+		if (_n0.a.$ === 'Nothing') {
+			var _n1 = _n0.a;
+			return true;
+		} else {
+			switch (_n0.b.$) {
+				case 'Register':
+					var size = _n0.a.a;
+					var _n2 = _n0.b.a;
+					var s = _n2.a;
+					var r = _n2.b;
+					return A3(author$project$Search$matchRegName, reg, s, r);
+				case 'R':
+					var size = _n0.a.a;
+					var s = _n0.b.a;
+					return A2(author$project$Search$matchSize, s, size);
+				case 'RM':
+					var size = _n0.a.a;
+					var s = _n0.b.a;
+					return A2(author$project$Search$matchSize, s, size);
+				default:
+					return false;
+			}
+		}
+	});
+var author$project$Search$matchOperand = F2(
+	function (op, tpl) {
+		switch (op.$) {
+			case 'AstRegister':
+				var name = op.a;
+				return A2(
+					author$project$Search$matchReg,
+					elm$core$String$toUpper(name),
+					tpl);
+			case 'AstImmediat':
+				var value = op.a;
+				return A2(author$project$Search$matchImm, value, tpl);
+			default:
+				var ea = op.a;
+				return A2(author$project$Search$matchMemory, ea, tpl);
+		}
+	});
+var author$project$Search$matchOperands = F2(
+	function (operands, templates) {
+		var _n0 = _Utils_Tuple2(operands, templates);
+		if (_n0.a.b) {
+			if (_n0.b.b) {
+				var _n1 = _n0.a;
+				var operand = _n1.a;
+				var operandsTail = _n1.b;
+				var _n2 = _n0.b;
+				var tpl = _n2.a;
+				var templatesTail = _n2.b;
+				return A2(author$project$Search$matchOperand, operand, tpl) && A2(author$project$Search$matchOperands, operandsTail, templatesTail);
+			} else {
+				return false;
+			}
+		} else {
+			return true;
+		}
+	});
+var author$project$Search$filterByOperands = F2(
 	function (operands, instrs) {
 		return A2(
-			_elm_lang$core$List$filter,
-			function (_p6) {
-				var _p7 = _p6;
-				return A2(_madbrain$x86project$Search$matchOperands, operands, _p7._0._2);
+			elm$core$List$filter,
+			function (_n0) {
+				var _n1 = _n0.a;
+				var templates = _n1.c;
+				return A2(author$project$Search$matchOperands, operands, templates);
 			},
 			instrs);
 	});
-var _madbrain$x86project$Search$search = function (instr) {
-	var _p8 = instr;
-	if ((_p8.ctor === 'Just') && (_p8._0._0.ctor === '_Tuple2')) {
-		var _p10 = _p8._0._0._1;
-		var compare = (_elm_lang$core$Native_Utils.cmp(
-			_elm_lang$core$List$length(_p10),
-			0) > 0) ? F2(
-			function (x, y) {
-				return _elm_lang$core$Native_Utils.eq(x, y);
-			}) : _elm_lang$core$String$startsWith;
+var author$project$X86$instructionsByName = A2(
+	author$project$Utils$groupBy,
+	function (_n0) {
+		var _n1 = _n0.a;
+		var name = _n1.b;
+		return name;
+	},
+	author$project$X86$instructions);
+var author$project$Search$search = F2(
+	function (_n0, is32Bits) {
+		var _n1 = _n0.a;
+		var name = _n1.a;
+		var operands = _n1.b;
+		var compare = (elm$core$List$length(operands) > 0) ? elm$core$Basics$eq : elm$core$String$startsWith;
 		var keys = A2(
-			_elm_lang$core$List$filter,
+			elm$core$List$filter,
 			compare(
-				_elm_lang$core$String$toUpper(_p8._0._0._0)),
-			_elm_lang$core$Dict$keys(_madbrain$x86project$X86$instructionsByName));
+				elm$core$String$toUpper(name)),
+			elm$core$Dict$keys(author$project$X86$instructionsByName));
 		var instrDefs = A2(
-			_elm_lang$core$List$concatMap,
+			elm$core$List$concatMap,
 			function (a) {
-				var _p9 = A2(_elm_lang$core$Dict$get, a, _madbrain$x86project$X86$instructionsByName);
-				if (_p9.ctor === 'Just') {
-					return A2(_madbrain$x86project$Search$filterByOperands, _p10, _p9._0);
+				var _n2 = A2(elm$core$Dict$get, a, author$project$X86$instructionsByName);
+				if (_n2.$ === 'Just') {
+					var value = _n2.a;
+					return A2(author$project$Search$filterByOperands, operands, value);
 				} else {
-					return {ctor: '[]'};
+					return _List_Nil;
 				}
 			},
 			keys);
 		return A2(
-			_elm_lang$core$List$map,
-			function (instr) {
-				return {
-					ctor: '_Tuple2',
-					_0: instr,
-					_1: A2(_madbrain$x86project$Encode$encode, instr, _p10)
-				};
+			elm$core$List$map,
+			function (i) {
+				return _Utils_Tuple2(
+					author$project$X86$instrToString(i),
+					A3(author$project$Encode$encode, is32Bits, i, operands));
 			},
 			instrDefs);
-	} else {
-		return {ctor: '[]'};
-	}
+	});
+var author$project$Main$encode = function (model) {
+	var _n0 = A2(author$project$Parser$parse, model.is32Bits, model.content);
+	var instr = _n0.a;
+	var context = _n0.b;
+	var instructions = function () {
+		if (instr.$ === 'Just') {
+			var i = instr.a;
+			return A2(author$project$Search$search, i, model.is32Bits);
+		} else {
+			return _List_Nil;
+		}
+	}();
+	return _Utils_Tuple2(context.errors, instructions);
 };
-
-var _madbrain$x86project$Main$makeSwitch = F5(
+var elm$html$Html$input = _VirtualDom_node('input');
+var elm$html$Html$label = _VirtualDom_node('label');
+var elm$html$Html$span = _VirtualDom_node('span');
+var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
+var elm$json$Json$Encode$bool = _Json_wrap;
+var elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$bool(bool));
+	});
+var elm$html$Html$Attributes$checked = elm$html$Html$Attributes$boolProperty('checked');
+var elm$json$Json$Encode$string = _Json_wrap;
+var elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$string(string));
+	});
+var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
+var elm$html$Html$Attributes$type_ = elm$html$Html$Attributes$stringProperty('type');
+var elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		elm$html$Html$Events$on,
+		'click',
+		elm$json$Json$Decode$succeed(msg));
+};
+var author$project$Main$makeSwitch = F5(
 	function (cls, leftLabel, rightLabel, value, handler) {
 		var textClass = function (v) {
 			return v ? 'on' : 'off';
 		};
 		return A2(
-			_elm_lang$html$Html$span,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class(cls),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$span,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class(
-							textClass(!value)),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(
-							A2(_elm_lang$core$Basics_ops['++'], leftLabel, ' ')),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$label,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('switch'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$input,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$type_('checkbox'),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Events$onClick(handler),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$checked(value),
-											_1: {ctor: '[]'}
-										}
-									}
-								},
-								{ctor: '[]'}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$span,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('slider round'),
-										_1: {ctor: '[]'}
-									},
-									{ctor: '[]'}),
-								_1: {ctor: '[]'}
-							}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$span,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class(
-									textClass(value)),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(
-									A2(_elm_lang$core$Basics_ops['++'], ' ', rightLabel)),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}
-			});
+			elm$html$Html$span,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$class(cls)
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$html$Html$span,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class(
+							textClass(!value))
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text(leftLabel + ' ')
+						])),
+					A2(
+					elm$html$Html$label,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('switch')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$input,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$type_('checkbox'),
+									elm$html$Html$Events$onClick(handler),
+									elm$html$Html$Attributes$checked(value)
+								]),
+							_List_Nil),
+							A2(
+							elm$html$Html$span,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('slider round')
+								]),
+							_List_Nil)
+						])),
+					A2(
+					elm$html$Html$span,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class(
+							textClass(value))
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text(' ' + rightLabel)
+						]))
+				]));
 	});
-var _madbrain$x86project$Main$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		switch (_p0.ctor) {
-			case 'Change':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{content: _p0._0});
-			case 'OperationModeChange':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{decode: !model.decode});
-			default:
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{is32Bits: !model.is32Bits});
-		}
-	});
-var _madbrain$x86project$Main$model = {content: 'add [eax],ebx', decode: false, is32Bits: true};
-var _madbrain$x86project$Main$Model = F3(
-	function (a, b, c) {
-		return {content: a, decode: b, is32Bits: c};
-	});
-var _madbrain$x86project$Main$BitSizeChange = {ctor: 'BitSizeChange'};
-var _madbrain$x86project$Main$OperationModeChange = {ctor: 'OperationModeChange'};
-var _madbrain$x86project$Main$Change = function (a) {
-	return {ctor: 'Change', _0: a};
+var elm$html$Html$li = _VirtualDom_node('li');
+var elm$html$Html$ul = _VirtualDom_node('ul');
+var elm$html$Html$Attributes$id = elm$html$Html$Attributes$stringProperty('id');
+var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
+var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
+var elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
 };
-var _madbrain$x86project$Main$view = function (model) {
-	var _p1 = A2(_madbrain$x86project$Parser$parse, model.is32Bits, model.content);
-	var instr = _p1._0;
-	var context = _p1._1;
-	var instructions = _madbrain$x86project$Search$search(instr);
+var elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			elm$virtual_dom$VirtualDom$on,
+			event,
+			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var elm$json$Json$Decode$field = _Json_decodeField;
+var elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
+	});
+var elm$json$Json$Decode$string = _Json_decodeString;
+var elm$html$Html$Events$targetValue = A2(
+	elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	elm$json$Json$Decode$string);
+var elm$html$Html$Events$onInput = function (tagger) {
 	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$id('container'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$id('logo'),
-					_1: {ctor: '[]'}
-				},
-				{ctor: '[]'}),
-			_1: {
-				ctor: '::',
-				_0: A5(_madbrain$x86project$Main$makeSwitch, '', 'Encode', 'Decode', model.decode, _madbrain$x86project$Main$OperationModeChange),
-				_1: {
-					ctor: '::',
-					_0: A5(_madbrain$x86project$Main$makeSwitch, 'push-right', '16bits', '32bits', model.is32Bits, _madbrain$x86project$Main$BitSizeChange),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$input,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$placeholder('Assembly'),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Events$onInput(_madbrain$x86project$Main$Change),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$type_('text'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$value(model.content),
-											_1: {ctor: '[]'}
-										}
-									}
-								}
+		elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			elm$json$Json$Decode$map,
+			elm$html$Html$Events$alwaysStop,
+			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
+};
+var author$project$Main$view = function (model) {
+	var _n0 = model.decode ? author$project$Main$decode(model) : author$project$Main$encode(model);
+	var errors = _n0.a;
+	var instructions = _n0.b;
+	return A2(
+		elm$html$Html$div,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$id('container')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$id('logo')
+					]),
+				_List_Nil),
+				A5(author$project$Main$makeSwitch, '', 'Encode', 'Decode', model.decode, author$project$Main$OperationModeChange),
+				A5(author$project$Main$makeSwitch, 'push-right', '16bits', '32bits', model.is32Bits, author$project$Main$BitSizeChange),
+				A2(
+				elm$html$Html$input,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$placeholder('Assembly'),
+						elm$html$Html$Events$onInput(author$project$Main$Change),
+						elm$html$Html$Attributes$type_('text'),
+						elm$html$Html$Attributes$value(model.content)
+					]),
+				_List_Nil),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$id('errors')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$ul,
+						_List_Nil,
+						A2(
+							elm$core$List$map,
+							function (error) {
+								return A2(
+									elm$html$Html$li,
+									_List_Nil,
+									_List_fromArray(
+										[
+											elm$html$Html$text(error.msg)
+										]));
 							},
-							{ctor: '[]'}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$id('errors'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$ul,
-										{ctor: '[]'},
-										A2(
-											_elm_lang$core$List$map,
-											function (error) {
-												return A2(
-													_elm_lang$html$Html$li,
-													{ctor: '[]'},
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text(error.msg),
-														_1: {ctor: '[]'}
-													});
-											},
-											context.errors)),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$id('instructions'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$ul,
-											{ctor: '[]'},
+							errors))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$id('instructions')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$ul,
+						_List_Nil,
+						A2(
+							elm$core$List$map,
+							function (_n1) {
+								var i = _n1.a;
+								var encoding = _n1.b;
+								return A2(
+									elm$html$Html$li,
+									_List_Nil,
+									_List_fromArray(
+										[
 											A2(
-												_elm_lang$core$List$map,
-												function (_p2) {
-													var _p3 = _p2;
-													return A2(
-														_elm_lang$html$Html$li,
-														{ctor: '[]'},
-														{
-															ctor: '::',
-															_0: A2(
-																_elm_lang$html$Html$div,
-																{
-																	ctor: '::',
-																	_0: _elm_lang$html$Html_Attributes$class('instruction'),
-																	_1: {ctor: '[]'}
-																},
-																{
-																	ctor: '::',
-																	_0: A2(
-																		_elm_lang$html$Html$span,
-																		{ctor: '[]'},
-																		{
-																			ctor: '::',
-																			_0: _elm_lang$html$Html$text(
-																				_madbrain$x86project$X86$instrToString(_p3._0)),
-																			_1: {ctor: '[]'}
-																		}),
-																	_1: {
-																		ctor: '::',
-																		_0: A2(
-																			_elm_lang$core$Maybe$withDefault,
-																			_elm_lang$html$Html$text(''),
-																			A2(_elm_lang$core$Maybe$map, _madbrain$x86project$EncodeDiagram$encode, _p3._1)),
-																		_1: {ctor: '[]'}
-																	}
-																}),
-															_1: {ctor: '[]'}
-														});
-												},
-												instructions)),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
-							}
-						}
+											elm$html$Html$div,
+											_List_fromArray(
+												[
+													elm$html$Html$Attributes$class('instruction')
+												]),
+											_List_fromArray(
+												[
+													A2(
+													elm$html$Html$span,
+													_List_Nil,
+													_List_fromArray(
+														[
+															elm$html$Html$text(i)
+														])),
+													A2(
+													elm$core$Maybe$withDefault,
+													elm$html$Html$text(''),
+													A2(elm$core$Maybe$map, author$project$EncodeDiagram$encode, encoding))
+												]))
+										]));
+							},
+							instructions))
+					]))
+			]));
+};
+var elm$core$Platform$Cmd$batch = _Platform_batch;
+var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
+var elm$core$Platform$Sub$batch = _Platform_batch;
+var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
+var elm$browser$Browser$External = function (a) {
+	return {$: 'External', a: a};
+};
+var elm$browser$Browser$Internal = function (a) {
+	return {$: 'Internal', a: a};
+};
+var elm$browser$Browser$Dom$NotFound = function (a) {
+	return {$: 'NotFound', a: a};
+};
+var elm$core$Basics$never = function (_n0) {
+	never:
+	while (true) {
+		var nvr = _n0.a;
+		var $temp$_n0 = nvr;
+		_n0 = $temp$_n0;
+		continue never;
+	}
+};
+var elm$core$Task$Perform = function (a) {
+	return {$: 'Perform', a: a};
+};
+var elm$core$Task$succeed = _Scheduler_succeed;
+var elm$core$Task$init = elm$core$Task$succeed(_Utils_Tuple0);
+var elm$core$Task$andThen = _Scheduler_andThen;
+var elm$core$Task$map = F2(
+	function (func, taskA) {
+		return A2(
+			elm$core$Task$andThen,
+			function (a) {
+				return elm$core$Task$succeed(
+					func(a));
+			},
+			taskA);
+	});
+var elm$core$Task$map2 = F3(
+	function (func, taskA, taskB) {
+		return A2(
+			elm$core$Task$andThen,
+			function (a) {
+				return A2(
+					elm$core$Task$andThen,
+					function (b) {
+						return elm$core$Task$succeed(
+							A2(func, a, b));
+					},
+					taskB);
+			},
+			taskA);
+	});
+var elm$core$Task$sequence = function (tasks) {
+	return A3(
+		elm$core$List$foldr,
+		elm$core$Task$map2(elm$core$List$cons),
+		elm$core$Task$succeed(_List_Nil),
+		tasks);
+};
+var elm$core$Platform$sendToApp = _Platform_sendToApp;
+var elm$core$Task$spawnCmd = F2(
+	function (router, _n0) {
+		var task = _n0.a;
+		return _Scheduler_spawn(
+			A2(
+				elm$core$Task$andThen,
+				elm$core$Platform$sendToApp(router),
+				task));
+	});
+var elm$core$Task$onEffects = F3(
+	function (router, commands, state) {
+		return A2(
+			elm$core$Task$map,
+			function (_n0) {
+				return _Utils_Tuple0;
+			},
+			elm$core$Task$sequence(
+				A2(
+					elm$core$List$map,
+					elm$core$Task$spawnCmd(router),
+					commands)));
+	});
+var elm$core$Task$onSelfMsg = F3(
+	function (_n0, _n1, _n2) {
+		return elm$core$Task$succeed(_Utils_Tuple0);
+	});
+var elm$core$Task$cmdMap = F2(
+	function (tagger, _n0) {
+		var task = _n0.a;
+		return elm$core$Task$Perform(
+			A2(elm$core$Task$map, tagger, task));
+	});
+_Platform_effectManagers['Task'] = _Platform_createManager(elm$core$Task$init, elm$core$Task$onEffects, elm$core$Task$onSelfMsg, elm$core$Task$cmdMap);
+var elm$core$Task$command = _Platform_leaf('Task');
+var elm$core$Task$perform = F2(
+	function (toMessage, task) {
+		return elm$core$Task$command(
+			elm$core$Task$Perform(
+				A2(elm$core$Task$map, toMessage, task)));
+	});
+var elm$core$String$dropLeft = F2(
+	function (n, string) {
+		return (n < 1) ? string : A3(
+			elm$core$String$slice,
+			n,
+			elm$core$String$length(string),
+			string);
+	});
+var elm$url$Url$Http = {$: 'Http'};
+var elm$url$Url$Https = {$: 'Https'};
+var elm$core$String$indexes = _String_indexes;
+var elm$core$String$left = F2(
+	function (n, string) {
+		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
+	});
+var elm$core$String$contains = _String_contains;
+var elm$url$Url$Url = F6(
+	function (protocol, host, port_, path, query, fragment) {
+		return {fragment: fragment, host: host, path: path, port_: port_, protocol: protocol, query: query};
+	});
+var elm$url$Url$chompBeforePath = F5(
+	function (protocol, path, params, frag, str) {
+		if (elm$core$String$isEmpty(str) || A2(elm$core$String$contains, '@', str)) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var _n0 = A2(elm$core$String$indexes, ':', str);
+			if (!_n0.b) {
+				return elm$core$Maybe$Just(
+					A6(elm$url$Url$Url, protocol, str, elm$core$Maybe$Nothing, path, params, frag));
+			} else {
+				if (!_n0.b.b) {
+					var i = _n0.a;
+					var _n1 = elm$core$String$toInt(
+						A2(elm$core$String$dropLeft, i + 1, str));
+					if (_n1.$ === 'Nothing') {
+						return elm$core$Maybe$Nothing;
+					} else {
+						var port_ = _n1;
+						return elm$core$Maybe$Just(
+							A6(
+								elm$url$Url$Url,
+								protocol,
+								A2(elm$core$String$left, i, str),
+								port_,
+								path,
+								params,
+								frag));
 					}
+				} else {
+					return elm$core$Maybe$Nothing;
 				}
 			}
+		}
+	});
+var elm$url$Url$chompBeforeQuery = F4(
+	function (protocol, params, frag, str) {
+		if (elm$core$String$isEmpty(str)) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var _n0 = A2(elm$core$String$indexes, '/', str);
+			if (!_n0.b) {
+				return A5(elm$url$Url$chompBeforePath, protocol, '/', params, frag, str);
+			} else {
+				var i = _n0.a;
+				return A5(
+					elm$url$Url$chompBeforePath,
+					protocol,
+					A2(elm$core$String$dropLeft, i, str),
+					params,
+					frag,
+					A2(elm$core$String$left, i, str));
+			}
+		}
+	});
+var elm$url$Url$chompBeforeFragment = F3(
+	function (protocol, frag, str) {
+		if (elm$core$String$isEmpty(str)) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var _n0 = A2(elm$core$String$indexes, '?', str);
+			if (!_n0.b) {
+				return A4(elm$url$Url$chompBeforeQuery, protocol, elm$core$Maybe$Nothing, frag, str);
+			} else {
+				var i = _n0.a;
+				return A4(
+					elm$url$Url$chompBeforeQuery,
+					protocol,
+					elm$core$Maybe$Just(
+						A2(elm$core$String$dropLeft, i + 1, str)),
+					frag,
+					A2(elm$core$String$left, i, str));
+			}
+		}
+	});
+var elm$url$Url$chompAfterProtocol = F2(
+	function (protocol, str) {
+		if (elm$core$String$isEmpty(str)) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var _n0 = A2(elm$core$String$indexes, '#', str);
+			if (!_n0.b) {
+				return A3(elm$url$Url$chompBeforeFragment, protocol, elm$core$Maybe$Nothing, str);
+			} else {
+				var i = _n0.a;
+				return A3(
+					elm$url$Url$chompBeforeFragment,
+					protocol,
+					elm$core$Maybe$Just(
+						A2(elm$core$String$dropLeft, i + 1, str)),
+					A2(elm$core$String$left, i, str));
+			}
+		}
+	});
+var elm$url$Url$fromString = function (str) {
+	return A2(elm$core$String$startsWith, 'http://', str) ? A2(
+		elm$url$Url$chompAfterProtocol,
+		elm$url$Url$Http,
+		A2(elm$core$String$dropLeft, 7, str)) : (A2(elm$core$String$startsWith, 'https://', str) ? A2(
+		elm$url$Url$chompAfterProtocol,
+		elm$url$Url$Https,
+		A2(elm$core$String$dropLeft, 8, str)) : elm$core$Maybe$Nothing);
+};
+var elm$browser$Browser$sandbox = function (impl) {
+	return _Browser_element(
+		{
+			init: function (_n0) {
+				return _Utils_Tuple2(impl.init, elm$core$Platform$Cmd$none);
+			},
+			subscriptions: function (_n1) {
+				return elm$core$Platform$Sub$none;
+			},
+			update: F2(
+				function (msg, model) {
+					return _Utils_Tuple2(
+						A2(impl.update, msg, model),
+						elm$core$Platform$Cmd$none);
+				}),
+			view: impl.view
 		});
 };
-var _madbrain$x86project$Main$main = _elm_lang$html$Html$beginnerProgram(
-	{model: _madbrain$x86project$Main$model, view: _madbrain$x86project$Main$view, update: _madbrain$x86project$Main$update})();
-
-var Elm = {};
-Elm['Main'] = Elm['Main'] || {};
-if (typeof _madbrain$x86project$Main$main !== 'undefined') {
-    _madbrain$x86project$Main$main(Elm['Main'], 'Main', undefined);
-}
-
-if (typeof define === "function" && define['amd'])
-{
-  define([], function() { return Elm; });
-  return;
-}
-
-if (typeof module === "object")
-{
-  module['exports'] = Elm;
-  return;
-}
-
-var globalElm = this['Elm'];
-if (typeof globalElm === "undefined")
-{
-  this['Elm'] = Elm;
-  return;
-}
-
-for (var publicModule in Elm)
-{
-  if (publicModule in globalElm)
-  {
-    throw new Error('There are two Elm modules called `' + publicModule + '` on this page! Rename one of them.');
-  }
-  globalElm[publicModule] = Elm[publicModule];
-}
-
-}).call(this);
-
+var author$project$Main$main = elm$browser$Browser$sandbox(
+	{init: author$project$Main$initialModel, update: author$project$Main$update, view: author$project$Main$view});
+_Platform_export({'Main':{'init':author$project$Main$main(
+	elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));
