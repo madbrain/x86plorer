@@ -6,6 +6,8 @@ import Hex
 import Bitwise
 import Array
 import Diagram exposing (..)
+import X86
+import Syntax
 
 type alias EncodingBlock = { name: String, size: Int, shift: Int }
 type alias EncodingInfo = { name: String, elements: List EncodingBlock }
@@ -18,12 +20,12 @@ encodeElement element =
     case element of
         Prefix value -> (bytes [ value ], Leaf "Prefix")
         Opcode value -> (bytes [ value ], Leaf "Opcode")
-        OpcodeAndReg (opcode, reg) -> (bytes [ Bitwise.or opcode reg ], Leaf "Opcode and Register")
+        OpcodeAndReg (opcode, reg) -> encodeIntoByte opRegEncoding [ opcode, reg ]
         ModRM (mode, reg, rm) -> encodeIntoByte modRmEncoding [ encodeMode mode, reg, rm ]
         Sib (base, index, scale) -> encodeIntoByte sibEncoding [ encodeScale scale, index, base ]
-        Disp8 value -> (bytes [ value ], "Displacement: " ++ (String.fromInt value) |> Leaf)
-        Disp32 value -> (toLitteEndian 32 value |> bytes, "Displacement: " ++ (String.fromInt value) |> Leaf)
-        Immediat (size, value) -> (toLitteEndian size value |> bytes, "Immediat value: " ++ (String.fromInt value) |> Leaf)
+        Disp8 value -> (bytes [ value ], "Displacement: " ++ (Syntax.toDisplayInt value) |> Leaf)
+        Disp32 value -> (toLitteEndian 32 value |> bytes, "Displacement: " ++ (Syntax.toDisplayInt value) |> Leaf)
+        Immediat (size, value) -> (toLitteEndian (X86.bitSize size) value |> bytes, "Immediat value: " ++ (Syntax.toDisplayInt value) |> Leaf)
 
 toBits: Int -> Int -> String
 toBits size value =
@@ -34,7 +36,7 @@ toBits size value =
 toLitteEndian: Int -> Int -> List Int
 toLitteEndian size value =
     List.range 0 ((size // 8) - 1)
-        |> List.map (\i -> Bitwise.shiftRightBy (i * 8) value |> Bitwise.and 0xFF)
+        |> List.map (\i -> Bitwise.shiftRightZfBy (i * 8) value |> Bitwise.and 0xFF)
 
 bytes: List Int -> String
 bytes values = String.join " " (List.map toByteHex values)
@@ -51,6 +53,15 @@ encodeIntoByte encoding values =
             |> List.singleton
     in
         (bytes e, Node encoding.name o)
+
+opRegEncoding: EncodingInfo
+opRegEncoding = {
+    name = "Opcode and Register",
+    elements =
+        [ { name = "Opcode", size = 5, shift = 3 }
+        , { name = "Reg", size = 3, shift = 0 }
+        ]
+    }
 
 sibEncoding: EncodingInfo
 sibEncoding = {
@@ -78,7 +89,7 @@ test = [
     Encode.ModRM(Encode.MEMORY_DISP32, 0, 4),
     Encode.Sib(0, 3, 4),
     Encode.Disp32(256),
-    Encode.Immediat (32, 20)
+    Encode.Immediat (X86.S_32, 20)
     ]
 
 main: Html msg

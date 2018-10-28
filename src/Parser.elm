@@ -1,19 +1,14 @@
 
-module Parser exposing (parse, immValue, ParserContext, Error, AstInstr(..), AstOperand(..), MemoryOperand)
+module Parser exposing (parse, immValue, ParserContext, Error)
 
 import Lexer exposing (Token(..))
 import Hex
+import X86
+import Syntax exposing (..)
 
 type alias Error = { msg: String }
-type alias ParserContext = { stream: Lexer.InputStream, current: Lexer.Token, errors: List Error, size: Int }
+type alias ParserContext = { stream: Lexer.InputStream, current: Lexer.Token, errors: List Error, size: X86.Size }
 type ParseResult a = OK (a, ParserContext) | NOK ParserContext
-type alias MemoryOperand = { size: Int, base: Maybe String, index: Maybe (String, Int), displacement: Int }
-
-type AstInstr = AstInstr (String, List AstOperand)
-type AstOperand =
-    AstRegister String
-    | AstImmediat String
-    | AstEffectiveAddress MemoryOperand
 
 type EffectiveAddress =
     EARegister (String, Maybe String)
@@ -28,7 +23,7 @@ makeParser is32Bits content =
         stream = Lexer.lexer content
         (token, next) = Lexer.nextToken stream
     in
-        skipErrors { stream = next, current = token, errors = [], size = if is32Bits then  32 else  16 }
+        skipErrors { stream = next, current = token, errors = [], size = if is32Bits then X86.S_32 else X86.S_16 }
 
 parseAssembly: ParserContext -> (Maybe AstInstr, ParserContext)
 parseAssembly context =
@@ -60,21 +55,21 @@ parseOperand context =
     case context.current of
         T_IDENT name ->
             if name == "byteptr" then
-                parseMemory 8 (advance context)
+                parseMemory X86.S_8 (advance context)
             else if name == "wordptr" then
-                parseMemory 16 (advance context)
+                parseMemory X86.S_16 (advance context)
             else
                 OK (AstRegister name, advance context)
 
         T_INTEGER value ->
-            OK(AstImmediat value, advance context)
+            OK (immValue value |> Maybe.withDefault 0 |> AstImmediat, advance context)
 
         T_LBRT ->
             parseMemory context.size context
         _ ->
             NOK (errorExpecting context "IDENT, INTEGER or [")
 
-parseMemory: Int -> ParserContext -> ParseResult AstOperand
+parseMemory: X86.Size -> ParserContext -> ParseResult AstOperand
 parseMemory size context =
     case parseEffectiveAddress True (advance context) [] of
         OK (elements, next) -> OK (AstEffectiveAddress (makeMemoryOperand elements (initMemoryOperand size)), next)
@@ -117,7 +112,7 @@ parseScale context =
                 NOK next -> NOK next
         _ -> OK (Nothing, context)
 
-initMemoryOperand: Int -> MemoryOperand
+initMemoryOperand: X86.Size -> MemoryOperand
 initMemoryOperand size = { size = size, base = Nothing, index = Nothing, displacement = 0 }
 
 makeMemoryOperand: List EffectiveAddress -> MemoryOperand -> MemoryOperand

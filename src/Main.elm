@@ -3,9 +3,12 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Browser
+import Array
 
 import Parser
 import Search
+import Decode
+import Encode
 import EncodeDiagram
 import X86
 
@@ -35,24 +38,40 @@ update msg model =
     BitSizeChange ->
         { model | is32Bits = not model.is32Bits }
 
+encode: Model -> (List Parser.Error, List (String, Maybe (List Encode.EncodingElement)))
+encode model =
+  let
+    (instr, context) = Parser.parse model.is32Bits model.content
+    instructions = case instr of
+      Just i -> Search.search i model.is32Bits
+      _ -> []
+  in
+    (context.errors, instructions)
+
+decode: Model -> (List Parser.Error, List (String, Maybe (List Encode.EncodingElement)))
+decode model =
+  let
+    (error, instructions) = Decode.decode model.is32Bits model.content  
+  in
+    ([ { msg = error } ], instructions)
+
 view: Model -> Html Msg
 view model =
   let
-    (instr, context) = Parser.parse model.is32Bits model.content
-    instructions = Search.search instr
+    (errors, instructions) = if model.decode then decode model else encode model
   in
     div [ id "container" ]
         [ div [ id "logo" ] []
         , makeSwitch "" "Encode" "Decode" model.decode OperationModeChange
         , makeSwitch "push-right" "16bits" "32bits" model.is32Bits BitSizeChange
         , input [ placeholder "Assembly", onInput Change, type_ "text", value (model.content) ] []
-        , div [ id "errors" ] [ ul [] (List.map (\error ->li [] [ text error.msg ]) context.errors) ]
+        , div [ id "errors" ] [ ul [] (List.map (\error ->li [] [ text error.msg ]) errors) ]
         , div [ id "instructions" ]
             [ ul []
                 (instructions |> List.map (\(i, encoding) ->
                     li []
                       [ div [ class "instruction" ]
-                          [ span [] [ text (X86.instrToString i) ]
+                          [ span [] [ text i ]
                           , Maybe.map EncodeDiagram.encode encoding |> Maybe.withDefault (text "")
                           ]
                       ]))

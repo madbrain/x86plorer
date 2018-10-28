@@ -2,43 +2,44 @@ module Encode exposing (encode, encodeMode, encodeScale, EncodingElement(..), Mo
 
 import X86
 import Parser
+import Syntax exposing(..)
 
 type Mode = REG | MEMORY | MEMORY_DISP8 | MEMORY_DISP32
 
-type EncodingElement =
-    Prefix Int
+type EncodingElement
+    = Prefix Int
     | Opcode Int
     | OpcodeAndReg (Int, Int)
-    | Immediat (Int, Int)
+    | Immediat (X86.Size, Int)
     | ModRM (Mode, Int, Int)
     | Sib (Int, Int , Int)
     | Disp8 Int
     | Disp32 Int
 
-type alias EncodingContext = { elements: List EncodingElement, reg: Maybe Int, rm: Maybe MemoryContext }
+type alias EncodingContext = { elements: List EncodingElement, reg: Maybe Int, rm: Maybe MemoryContext, is32Bits: Bool }
 type alias MemoryContext = { isReg: Bool, base: Maybe Int, index: Maybe (Int, Int), disp: Maybe Int }
 
-encode: X86.Instr -> List Parser.AstOperand -> Maybe (List EncodingElement)
-encode (X86.Instr (opcodes,_,templates)) operands =
+encode: Bool -> X86.Instr -> List AstOperand -> Maybe (List EncodingElement)
+encode is32Bits (X86.Instr (opcodes,_,templates)) operands =
     if (List.length templates) == (List.length operands) then
-        Just (encodeInstr opcodes templates operands)
+        Just (encodeInstr is32Bits opcodes templates operands)
     else
         Nothing
 
-encodeInstr: List X86.Opcode -> List X86.Operand -> List Parser.AstOperand -> List EncodingElement
-encodeInstr opcodes operandDefs operands =
+encodeInstr: Bool -> List X86.Opcode -> List X86.Operand -> List AstOperand -> List EncodingElement
+encodeInstr is32Bits opcodes operandDefs operands =
     let
-        context = { elements = [], reg = Nothing, rm = Nothing }
+        context = { elements = [], reg = Nothing, rm = Nothing, is32Bits = is32Bits }
     in
         encodeOpcodes (List.map2 (\tpl op -> (tpl, op)) operandDefs operands) opcodes context
 
-encodeOpcodes: List (X86.Operand, Parser.AstOperand) -> List X86.Opcode -> EncodingContext -> List EncodingElement
+encodeOpcodes: List (X86.Operand, AstOperand) -> List X86.Opcode -> EncodingContext -> List EncodingElement
 encodeOpcodes operands opcodes context =
     case opcodes of
         [] -> List.reverse (encodeOperands context operands).elements
         opcode :: tailOpcodes -> encodeOpcodes operands tailOpcodes (encodeOpcode operands opcode context)
 
-encodeOpcode: List (X86.Operand, Parser.AstOperand) -> X86.Opcode -> EncodingContext -> EncodingContext
+encodeOpcode: List (X86.Operand, AstOperand) -> X86.Opcode -> EncodingContext -> EncodingContext
 encodeOpcode operands opcode context =
     case opcode of
         X86.O value -> { context | elements = (Opcode value) :: context.elements }
@@ -46,29 +47,35 @@ encodeOpcode operands opcode context =
         X86.E value -> { context | reg = Just value }
         _ -> context
 
-encodeOperands: EncodingContext -> List (X86.Operand, Parser.AstOperand) -> EncodingContext
+encodeOperands: EncodingContext -> List (X86.Operand, AstOperand) -> EncodingContext
 encodeOperands input operands =
     case operands of
         [] -> input
         (tpl, op) :: tail -> encodeOperands (encodeOperand input tpl op) tail
 
-encodeOperand: EncodingContext -> X86.Operand -> Parser.AstOperand -> EncodingContext
+encodeOperand: EncodingContext -> X86.Operand -> AstOperand -> EncodingContext
 encodeOperand context operandDef operand =
     case (operandDef, operand) of
-        (X86.RM size, Parser.AstEffectiveAddress memory) -> addMemoryTo context (extractMemory memory)
-        (X86.RM size, Parser.AstRegister reg) ->
+        (X86.RM size, AstEffectiveAddress memory) -> addMemoryTo context (extractMemory memory)
+        (X86.RM size, AstRegister reg) ->
             addMemoryTo context { isReg = True, base = Just (encodeReg reg), index = Nothing, disp = Nothing }
-        (X86.R size,  Parser.AstRegister reg) ->
+        (X86.R size,  AstRegister reg) ->
             case (context.rm, encodeReg reg) of
                 (Just rm, r) -> encodeCompleteOperands r rm context
                 (_, r) -> { context | reg = Just r }
-        (X86.I size,  Parser.AstImmediat value) ->
-            case Parser.immValue value of
-                Just v -> encodeReq (Immediat (size, v)) context
-                _ -> context
+        (X86.I size,  AstImmediat value) ->
+            encodeReq (Immediat (getSize size context.is32Bits, value)) context {- TODO add prefix -}
         _ -> context
 
-extractMemory: Parser.MemoryOperand -> MemoryContext
+getSize: X86.Size -> Bool -> X86.Size
+getSize size is32Bits =
+    case size of
+        X86.S_8  -> X86.S_8
+        X86.S_16 -> X86.S_16
+        X86.S_32 -> X86.S_32
+        X86.S_16_32 -> if is32Bits then X86.S_32 else X86.S_16
+
+extractMemory: MemoryOperand -> MemoryContext
 extractMemory memory =
     let
         mi = Maybe.map (\(reg, scale) -> (encodeReg reg, scale)) memory.index
@@ -116,11 +123,11 @@ encodeCompleteOperands reg rm context =
                     |> encodeReq (rm.disp |> Maybe.withDefault 0 |> Disp32)
         _ -> context
 
-extractRegister: List (X86.Operand, Parser.AstOperand) -> Int
+extractRegister: List (X86.Operand, AstOperand) -> Int
 extractRegister operands =
     case operands of
         [] -> 0
-        (X86.R size, Parser.AstRegister name) :: _ -> encodeReg name
+        (X86.R size, AstRegister name) :: _ -> encodeReg name
         _ :: tail -> extractRegister tail
 
 encodeReg: String -> Int
